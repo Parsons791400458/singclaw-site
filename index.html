@@ -128,7 +128,6 @@
 
       .hero-orb {
         position: absolute;
-        inset: auto;
         width: 620px;
         height: 620px;
         border-radius: 50%;
@@ -179,17 +178,14 @@
       }
 
       .hero-sub {
-        max-width: 820px;
+        max-width: 860px;
         margin: 0 auto;
         font-size: clamp(18px, 2vw, 28px);
         line-height: 1.5;
         color: var(--muted);
       }
 
-      .hero-sub strong {
-        color: #fff;
-        font-weight: 700;
-      }
+      .hero-sub strong { color: #fff; font-weight: 700; }
 
       .hero-actions {
         display: flex;
@@ -230,10 +226,7 @@
         font-size: 14px;
       }
 
-      .section {
-        padding: 110px 0;
-      }
-
+      .section { padding: 110px 0; }
       .section.center { text-align: center; }
 
       .kicker {
@@ -252,7 +245,7 @@
 
       .subcopy {
         margin: 0 auto;
-        max-width: 760px;
+        max-width: 780px;
         color: var(--muted);
         font-size: clamp(17px, 1.6vw, 22px);
       }
@@ -290,23 +283,21 @@
       }
 
       .glass p { color: var(--muted); font-size: 18px; }
+      .mini-title { margin: 0 0 12px; font-size: 28px; letter-spacing: -0.03em; }
 
-      .mini-title {
-        margin: 0 0 12px;
-        font-size: 28px;
-        letter-spacing: -0.03em;
-      }
-
-      .module-grid {
+      .trust-grid, .module-grid, .sample-grid, .path-grid {
         margin-top: 46px;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
       }
 
+      .trust-card h3, .sample-card h3, .path-card h3 { margin: 0 0 14px; font-size: 26px; }
+      .trust-card p, .path-card p { margin: 0; }
+
       .module-card {
         position: relative;
-        min-height: 260px;
+        min-height: 280px;
         overflow: hidden;
       }
 
@@ -336,7 +327,16 @@
         max-width: 24em;
         color: var(--muted);
         font-size: 17px;
+        margin-bottom: 14px;
       }
+
+      .module-points {
+        margin: 0;
+        padding-left: 18px;
+        color: rgba(255,255,255,0.78);
+      }
+
+      .module-points li + li { margin-top: 8px; }
 
       .stage-row {
         margin-top: 44px;
@@ -367,25 +367,13 @@
 
       .stage-card p { color: var(--muted); margin: 0; }
 
-      .sample-grid {
-        margin-top: 46px;
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px;
-      }
-
-      .sample-card h3 {
-        margin: 0 0 18px;
-        font-size: 26px;
-      }
-
-      .sample-card ul {
+      .sample-card ul, .path-card ul {
         margin: 0;
         padding-left: 20px;
         color: var(--muted);
       }
 
-      .sample-card li + li { margin-top: 12px; }
+      .sample-card li + li, .path-card li + li { margin-top: 12px; }
 
       .final-cta {
         padding: 120px 0 140px;
@@ -414,6 +402,24 @@
         pointer-events: none;
       }
 
+      .contact-grid {
+        margin-top: 34px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        text-align: left;
+      }
+
+      .contact-card {
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .contact-card strong { display: block; margin-bottom: 8px; font-size: 18px; }
+      .contact-card span { color: var(--muted); }
+
       .footer {
         padding: 28px 0 64px;
         color: rgba(255,255,255,0.45);
@@ -423,7 +429,7 @@
 
       @media (max-width: 980px) {
         .nav-links, .watermark { font-size: 12px; }
-        .split, .module-grid, .stage-row, .sample-grid { grid-template-columns: 1fr; }
+        .split, .module-grid, .stage-row, .sample-grid, .trust-grid, .path-grid, .contact-grid { grid-template-columns: 1fr; }
         .hero { min-height: auto; padding-top: 72px; }
         .hero-orb { width: 420px; height: 420px; top: 34%; }
         .problem-item { font-size: 22px; }
@@ -447,8 +453,9 @@
         <nav class="nav-links">
           <a href="#problem">问题</a>
           <a href="#framework">框架</a>
+          <a href="#trust">适合谁</a>
           <a href="#stages">阶段</a>
-          <a href="#samples">样板</a>
+          <a href="#samples">内容</a>
           <a href="#start">开始</a>
         </nav>
       </div>
@@ -498,10 +505,11 @@
             <h2 class="headline">你需要的不是更多技巧。<br />而是一套养虾系统。</h2>
           </div>
           <div class="glass">
-            <h3 class="mini-title">SingClaw</h3>
+            <h3 class="mini-title">SingClaw 是什么？</h3>
             <p>
-              一套面向 OpenClaw / Agent 使用者的成长操作系统。
-              它帮助你从“会装、会跑”，升级到“会养、会经营、会进化”。
+              SingClaw 是一套面向 OpenClaw / Agent 使用者的成长操作系统。
+              它的目标不是教你把工具装起来，而是教你把一个会执行任务的系统，
+              养成一个能持续进化、能反哺人类判断力的数字员工。
             </p>
           </div>
         </div>
@@ -510,23 +518,72 @@
           <article class="glass module-card">
             <small>Methodology</small>
             <h3>养虾36计</h3>
-            <p>系统方法论。给出成长顺序、判断框架和升级路径。</p>
+            <p>系统方法论。告诉你每个阶段先练什么、先改什么、先建立什么系统感。</p>
+            <ul class="module-points">
+              <li>解决成长顺序问题</li>
+              <li>建立判断框架</li>
+              <li>让努力开始复利</li>
+            </ul>
           </article>
           <article class="glass module-card">
             <small>Playbook</small>
             <h3>虾81变</h3>
-            <p>真实场景打法库。让你看到龙虾能被养成的不同形态。</p>
+            <p>真实场景打法库。让你知道不同目标下，龙虾可以被养成什么样。</p>
+            <ul class="module-points">
+              <li>覆盖内容、研究、交易、管理等场景</li>
+              <li>帮助你找到适合自己的打法</li>
+              <li>从抽象理解走向具体可复制</li>
+            </ul>
           </article>
           <article class="glass module-card">
             <small>Insight</small>
             <h3>虾说</h3>
             <p>关于 Agent、成长、数字员工与组织进化的深度洞察。</p>
+            <ul class="module-points">
+              <li>提升认知，不只提升技巧</li>
+              <li>建立品牌世界观</li>
+              <li>解释为什么大多数人养不大</li>
+            </ul>
           </article>
           <article class="glass module-card">
             <small>Review</small>
             <h3>虾评</h3>
             <p>点评配置、Prompt、Workflow 与养法，帮你看清卡点与方向。</p>
+            <ul class="module-points">
+              <li>做问题校准</li>
+              <li>帮助定位瓶颈</li>
+              <li>最容易直接体现专业度</li>
+            </ul>
           </article>
+        </div>
+      </section>
+
+      <section id="trust" class="section center">
+        <div class="container">
+          <div class="kicker">who this is for</div>
+          <h2 class="headline">这不是给围观者的。<br />这是给正在养龙虾的人。</h2>
+          <p class="subcopy">
+            如果你已经开始接触 OpenClaw、Agent、Prompt、Skill、Workflow，
+            但越来越感受到“会用”和“会成长”不是一回事，这个系统就是为你准备的。
+          </p>
+          <div class="trust-grid">
+            <article class="glass trust-card">
+              <h3>适合谁</h3>
+              <p>会装但不会养、会跑但不会经营、想做多 Agent 却缺系统感的人。</p>
+            </article>
+            <article class="glass trust-card">
+              <h3>不适合谁</h3>
+              <p>只想找一个速成 Prompt、只想临时玩一下、不想建立长期系统的人。</p>
+            </article>
+            <article class="glass trust-card">
+              <h3>你会得到什么</h3>
+              <p>更清晰的成长阶段、更少的试错、更可复制的方法，以及真正能沉淀的系统能力。</p>
+            </article>
+            <article class="glass trust-card">
+              <h3>为什么是现在</h3>
+              <p>工具门槛越来越低，真正稀缺的已经不是能不能用，而是能不能持续进化。</p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -567,12 +624,56 @@
         </div>
       </section>
 
+      <section class="section center">
+        <div class="container">
+          <div class="kicker">roadmap</div>
+          <h2 class="headline">你在这里不会只看到观点。<br />还会看到一条成长路径。</h2>
+          <p class="subcopy">
+            首页只是入口。后面会逐步扩展为诊断、方法、案例、陪跑和知识资产的完整系统。
+          </p>
+          <div class="path-grid">
+            <article class="glass path-card">
+              <h3>第一阶段｜认知建立</h3>
+              <ul>
+                <li>理解什么叫养虾，而不只是用虾</li>
+                <li>识别自己当前在哪个阶段</li>
+                <li>纠正最常见的成长误区</li>
+              </ul>
+            </article>
+            <article class="glass path-card">
+              <h3>第二阶段｜方法成型</h3>
+              <ul>
+                <li>从 36 计入手，建立成长顺序</li>
+                <li>用 81 变理解不同场景打法</li>
+                <li>开始形成自己的系统结构</li>
+              </ul>
+            </article>
+            <article class="glass path-card">
+              <h3>第三阶段｜案例校准</h3>
+              <ul>
+                <li>通过虾评看清配置和 workflow 问题</li>
+                <li>学会判断什么样的系统能长大</li>
+                <li>减少反复试错与无效忙碌</li>
+              </ul>
+            </article>
+            <article class="glass path-card">
+              <h3>第四阶段｜经营升级</h3>
+              <ul>
+                <li>把 Agent 当成长期数字员工来管理</li>
+                <li>让输出反哺你的判断和成长</li>
+                <li>让系统而不是意志力驱动进化</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section id="samples" class="section">
         <div class="container center">
           <div class="kicker">first edition</div>
           <h2 class="headline">先让人看见框架。<br />再让内容持续生长。</h2>
           <p class="subcopy">
-            第一版不是把所有东西一次做完，而是先把品牌气质、方法结构和转化入口全部打通。
+            第一版不是把所有东西一次做完，而是先把品牌气质、方法结构、信任感和转化入口全部打通。
           </p>
         </div>
         <div class="container sample-grid">
@@ -623,6 +724,20 @@
           <div class="hero-actions">
             <a class="btn btn-primary" href="mailto:s791400458@gmail.com?subject=SingClaw%20%E5%85%BB%E8%99%BE%E8%AF%8A%E6%96%AD">预约 1v1 养虾诊断</a>
             <a class="btn btn-secondary" href="mailto:s791400458@gmail.com?subject=SingClaw%20%E5%85%BB%E8%99%BE%E5%85%A5%E9%97%A8%E5%9C%B0%E5%9B%BE">获取养虾入门地图</a>
+          </div>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <strong>当前形态</strong>
+              <span>高端首页 + 方法论入口 + 诊断承接</span>
+            </div>
+            <div class="contact-card">
+              <strong>接下来会有</strong>
+              <span>诊断页、36计总览页、案例页、持续更新内容</span>
+            </div>
+            <div class="contact-card">
+              <strong>更新方式</strong>
+              <span>GitHub 管理版本，Vercel 自动部署更新</span>
+            </div>
           </div>
         </div>
       </section>
