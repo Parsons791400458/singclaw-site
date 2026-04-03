@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SingClaw｜龙虾养成者的成长操作系统</title>
+    <meta name="description" content="SingClaw：把龙虾从会跑养成会成长的数字员工。" />
+    <style>
+      :root{--bg:#02040a;--text:#f5f8ff;--muted:rgba(230,238,250,.72);--line:rgba(255,255,255,.1);--glass:rgba(255,255,255,.05);--max:1280px}
+      *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:radial-gradient(circle at 12% 12%, rgba(96,165,250,.16), transparent 24%),radial-gradient(circle at 88% 16%, rgba(34,211,238,.12), transparent 20%),radial-gradient(circle at 50% 30%, rgba(192,132,252,.10), transparent 22%),linear-gradient(180deg,#02040a 0%,#040913 28%,#050a14 60%,#02040a 100%);line-height:1.55}
+      a{color:inherit;text-decoration:none}.container{width:min(calc(100% - 40px),var(--max));margin:0 auto}.nav{position:sticky;top:0;z-index:20;background:rgba(2,4,10,.58);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}.nav-inner{min-height:74px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{display:flex;gap:12px;align-items:center;font-weight:800}.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(96,165,250,.92),rgba(103,232,249,.82),rgba(192,132,252,.86));box-shadow:0 12px 36px rgba(103,232,249,.28)}
+      .nav-links{display:flex;gap:20px;color:var(--muted);font-size:14px}.nav-links a:hover{color:#fff}.watermark{position:fixed;right:18px;bottom:18px;z-index:50;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);backdrop-filter:blur(12px);font-size:13px}
+      .hero{min-height:100vh;display:flex;align-items:center;padding:56px 0 40px;position:relative}.orb{position:absolute;width:620px;height:620px;border-radius:50%;left:50%;top:44%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.55), rgba(103,232,249,.24) 18%, rgba(96,165,250,.16) 32%, rgba(192,132,252,.12) 48%, transparent 70%),radial-gradient(circle at center, rgba(103,232,249,.18), transparent 64%);filter:blur(4px);opacity:.9;pointer-events:none}
+      .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;justify-items:center;text-align:center}.eyebrow{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(147,197,253,.18);background:rgba(147,197,253,.06);font-size:13px;letter-spacing:.08em;text-transform:uppercase}.hero h1{margin:22px auto 18px;max-width:11ch;font-size:clamp(54px,9vw,132px);line-height:.94;letter-spacing:-.06em}.hero-sub{max-width:860px;margin:0 auto;font-size:clamp(18px,2vw,28px);color:var(--muted)}.hero-sub strong{color:#fff}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:34px}.btn{min-height:52px;padding:0 20px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-weight:700}.btn-primary{background:linear-gradient(135deg,#c4e1ff,#99f6e4);color:#041321}.btn-secondary{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03)}
+      .section{padding:110px 0}.center{text-align:center}.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:rgba(201,224,255,.62)}.headline{margin:16px 0;font-size:clamp(36px,5vw,76px);line-height:1.02;letter-spacing:-.05em}.subcopy{margin:0 auto;max-width:780px;color:var(--muted);font-size:clamp(17px,1.6vw,22px)}
+      .grid2,.grid4,.stages{display:grid;gap:20px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:46px}.grid4{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:46px}.stages{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:44px}.glass{padding:34px;border-radius:32px;background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid var(--line);box-shadow:0 18px 60px rgba(0,0,0,.28)}.glass p{color:var(--muted)}.glass ul{margin:0;padding-left:20px;color:var(--muted)}.glass li+li{margin-top:10px}.module h3,.card h3{margin:0 0 14px;font-size:26px}.stage h4{margin:12px 0 10px;font-size:24px}.stage .index{color:rgba(147,197,253,.88);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+      .footer{padding:28px 0 64px;color:rgba(255,255,255,.45);text-align:center;font-size:14px}
+      @media (max-width:980px){.grid2,.grid4,.stages{grid-template-columns:1fr}.orb{width:420px;height:420px;top:34%}}
+      @media (max-width:720px){.nav-links{display:none}.hero{min-height:auto;padding-top:72px}}
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="/home/"><span class="brand-mark">虾</span><span>SingClaw</span></a>
+        <nav class="nav-links">
+          <a href="#framework">框架</a>
+          <a href="/36/">养虾36计</a>
+          <a href="#stages">阶段</a>
+          <a href="#start">开始</a>
+        </nav>
+      </div>
+    </header>
+    <div class="watermark">@马星克 Maxink</div>
+    <main>
+      <section class="hero">
+        <div class="orb"></div>
+        <div class="container hero-grid">
+          <div class="eyebrow">龙虾养成者的成长操作系统</div>
+          <h1>把龙虾从会跑 养成会成长</h1>
+          <p class="hero-sub">不只是让龙虾执行任务。<br>而是让它成为<strong>持续进化的数字员工</strong>。</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="/36/">进入养虾36计</a>
+            <a class="btn btn-secondary" href="#framework">看成长框架</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="framework" class="section center">
+        <div class="container">
+          <div class="kicker">phase 1 core</div>
+          <h2 class="headline">Phase 1 的重点主线，<br>是养虾36计。</h2>
+          <p class="subcopy">每一个 tab 未来都必须能点进去、能拓展、能沉淀成长期资产。第一阶段先把养虾36计做成主线内容模块，每一计都不是一句标题，而是一篇完整的方法论文章。</p>
+          <div class="grid2">
+            <article class="glass card">
+              <h3>为什么先做 36 计</h3>
+              <ul>
+                <li>它最容易建立体系感</li>
+                <li>最适合持续连载与品牌记忆</li>
+                <li>最容易承接诊断、陪跑和方法论输出</li>
+              </ul>
+            </article>
+            <article class="glass card">
+              <h3>每一计统一框架</h3>
+              <ul>
+                <li>5 Why：连追根因</li>
+                <li>What：定义这一计是什么</li>
+                <li>Detail What：展开细节</li>
+                <li>So What：说明意义</li>
+                <li>How：给做法与举一反三</li>
+              </ul>
+            </article>
+          </div>
+          <div class="grid4">
+            <article class="glass module">
+              <h3>沿用真实三十六计原名</h3>
+              <p>名字完全跟现实三十六计一致，但解释全部贴合“养虾 / Agent 养成”语境。</p>
+            </article>
+            <article class="glass module">
+              <h3>不是硬套典故</h3>
+              <p>不是为了古风，而是借用熟悉框架，降低记忆成本、提高传播性。</p>
+            </article>
+            <article class="glass module">
+              <h3>每一计都能进入详情</h3>
+              <p>它们不是一个个标签，而是未来可以持续扩展、持续更新的独立内容单元。</p>
+            </article>
+            <article class="glass module">
+              <h3>首页只是入口</h3>
+              <p>首页负责讲清世界观，真正的内容资产会沉淀到各个模块详情页里。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="stages" class="section center">
+        <div class="container">
+          <div class="kicker">growth stages</div>
+          <h2 class="headline">成长不是跳跃。<br>而是有阶段的升级。</h2>
+          <p class="subcopy">看清自己在哪一层，比盲目加工具更重要。方向对了，进化才会开始加速。</p>
+          <div class="stages">
+            <article class="glass stage"><div class="index">Stage 01</div><h4>会装</h4><p>能装起来，但产出不稳定。</p></article>
+            <article class="glass stage"><div class="index">Stage 02</div><h4>会跑</h4><p>能执行任务，但仍依赖人工盯。</p></article>
+            <article class="glass stage"><div class="index">Stage 03</div><h4>会用</h4><p>能出结果，但还缺系统方法。</p></article>
+            <article class="glass stage"><div class="index">Stage 04</div><h4>会养</h4><p>知道如何让判断、协作和记忆持续变强。</p></article>
+            <article class="glass stage"><div class="index">Stage 05</div><h4>会经营</h4><p>把 Agent 当作真正的数字员工来运营。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="start" class="section center">
+        <div class="container">
+          <div class="kicker">start now</div>
+          <h2 class="headline">先进入养虾36计。<br>再把其他 tab 一步步做厚。</h2>
+          <p class="subcopy">当前 Phase 1 先把主线内容打穿：总览页 + 多个样板详情页。后续再扩展到虾81变、虾说、虾评与诊断页。</p>
+          <div class="actions"><a class="btn btn-primary" href="/36/">进入养虾36计</a></div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><div class="container">© 2026 SingClaw · 龙虾养成者的成长操作系统</div></footer>
+  </body>
+</html>
