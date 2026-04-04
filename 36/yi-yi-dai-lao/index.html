@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>以逸待劳｜养虾36计</title>
+    <meta name="description" content="养虾36计第四计：以逸待劳。让虾7×24值守，你只在关键节点出手。" />
+    <style>
+      :root{--bg:#02040a;--text:#f5f8ff;--muted:rgba(230,238,250,.72);--line:rgba(255,255,255,.1);--glass:rgba(255,255,255,.05);--max:980px}
+      *{box-sizing:border-box} body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:linear-gradient(180deg,#02040a 0%,#040913 28%,#050a14 60%,#02040a 100%);line-height:1.7} a{color:inherit;text-decoration:none}.container{width:min(calc(100% - 40px),var(--max));margin:0 auto}.nav{position:sticky;top:0;background:rgba(2,4,10,.58);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}.nav-inner{min-height:74px;display:flex;justify-content:space-between;align-items:center}.watermark{position:fixed;right:18px;bottom:18px;z-index:50;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);backdrop-filter:blur(12px);font-size:13px}.hero,.section{padding:72px 0}.eyebrow{display:inline-flex;min-height:36px;padding:0 14px;align-items:center;border-radius:999px;border:1px solid rgba(147,197,253,.18);background:rgba(147,197,253,.06);font-size:13px;letter-spacing:.08em;text-transform:uppercase}.headline{margin:18px 0 10px;font-size:clamp(42px,6vw,72px);line-height:1.02;letter-spacing:-.05em}.subcopy{max-width:760px;color:var(--muted);font-size:clamp(17px,1.6vw,22px)}.glass{padding:28px;border-radius:28px;background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid var(--line);box-shadow:0 18px 60px rgba(0,0,0,.28);margin-top:18px}.glass h2{margin:0 0 14px;font-size:28px}.glass p,.glass li{color:var(--muted)}.glass ul,.glass ol{margin:0;padding-left:20px}.footer{padding:28px 0 64px;color:rgba(255,255,255,.45);text-align:center;font-size:14px}
+    </style>
+  </head>
+  <body>
+    <header class="nav"><div class="container nav-inner"><a href="/36/">← 返回养虾36计</a><a href="/home/">首页</a></div></header>
+    <div class="watermark">@马星克 Maxink</div>
+    <main>
+      <section class="hero"><div class="container"><div class="eyebrow">养虾36计 · 第四计</div><h1 class="headline">以逸待劳</h1><p class="subcopy">在养虾语境里，以逸待劳不是偷懒，而是<strong>让虾替你值守，你只在关键节点出手</strong>——把重复性的巡检、监控、整理工作交给虾 7×24 运转，人只在需要判断和决策时介入。</p></div></section>
+      <section class="section"><div class="container">
+        <article class="glass"><h2>5 Why</h2><ol><li>为什么很多人养虾很累？因为他们事事亲力亲为，虾只是个听令的工具。</li><li>为什么亲力亲为不可持续？因为人的精力有限，但任务是 7×24 的。</li><li>为什么虾适合接管值守？因为虾不需要睡觉、不会忘记、不会因为枯燥而走神。</li><li>为什么人还需要出手？因为虾擅长执行规则，但不擅长处理规则之外的意外。</li><li>为什么这是"以逸待劳"？因为让虾持续消耗在琐碎上，你才能在关键时刻保持清醒和判断力。</li></ol></article>
+        <article class="glass"><h2>What</h2><p>以逸待劳，就是把能标准化的工作全部交给虾自动执行，人退到"监控+决策"的位置。虾负责巡检、采集、整理、推送；你负责看报告、做判断、处理异常。这不是放手不管，而是把精力用在最值得的地方。</p></article>
+        <article class="glass"><h2>Detail What</h2><ul><li>值守清单：列出所有需要定期检查的事项——市场数据、系统状态、内容更新、消息通知。</li><li>自动化链路：用 Cron / Heartbeat / 定时任务让虾按固定频率执行。</li><li>分级告警：正常情况静默，异常时按严重程度选择通知方式（群消息 vs 私聊）。</li><li>降级机制：外部依赖挂了，虾要能用缓存数据继续运转，不能因为一个 API 超时就全线停摆。</li><li>人机边界：哪些事虾可以自主决策，哪些事必须升级给你——这条线要画清楚。</li></ul></article>
+        <article class="glass"><h2>So What</h2><p>以逸待劳的本质是精力管理。养虾最大的错误不是虾不行，而是你把自己累死了——每天盯着虾的每一次输出，手动纠正每一个细节。当你学会让虾值守、自己待命，你的精力才能留给真正需要人脑的事：战略判断、创意思考、关系经营。虾越自主，你越自由。</p></article>
+        <article class="glass"><h2>How（举一反三）</h2><ol><li>列出你每天重复检查的 5 件事，看哪些可以变成虾的定时任务。</li><li>为每个定时任务设定"正常/异常"的判断标准，不是所有结果都需要你看。</li><li>配置分级通知：P0 私聊你、P1 发群里、P2 写日志就行。</li><li>给虾配降级方案：主数据源挂了用备用源，备用源也挂了用缓存，缓存也过期了再告警你。</li><li>每周回顾一次：虾的值守有没有误报？有没有漏报？边界是否需要调整？</li></ol><p>举一反三：交易虾可以值守行情+账户状态；内容虾可以值守热点+竞品更新；运维虾可以值守服务健康+日志异常。核心逻辑一样：虾守夜，你睡觉。</p></article>
+      </div></section>
+    </main>
+    <footer class="footer"><div class="container">© 2026 SingClaw · 以逸待劳</div></footer>
+  </body>
+</html>
