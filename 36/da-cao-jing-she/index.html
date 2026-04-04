@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>打草惊蛇｜养虾36计</title>
+    <meta name="description" content="养虾36计第十三计：打草惊蛇。用虾做小规模试探，在正式行动前暴露潜在问题。" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="打草惊蛇｜养虾36计"/>
+    <meta property="og:description" content="用虾做小规模试探，在正式行动前暴露潜在问题。"/>
+    <meta property="og:url" content="https://singclaw.xyz/36/da-cao-jing-she/"/>
+    <meta property="og:site_name" content="SingClaw"/>
+    <link rel="stylesheet" href="/css/detail.css"/>
+    <link rel="canonical" href="https://singclaw.xyz/36/da-cao-jing-she/"/>
+  </head>
+  <body>
+    <header class="nav"><div class="container nav-inner"><a href="/36/">← 返回养虾36计</a><a href="/home/">首页</a></div></header>
+    <div class="watermark">@马星克 Maxink</div>
+    <main>
+      <section class="hero"><div class="container"><div class="eyebrow">养虾36计 · 第十三计</div><h1 class="headline">打草惊蛇</h1><p class="subcopy">在养虾语境里，打草惊蛇不是打草，而是<strong>用虾做一次小规模试探，把隐藏的问题提前暴露出来</strong>——与其等上线后翻车，不如先"打一下草"看看有没有蛇。</p></div></section>
+      <section class="section"><div class="container">
+        <article class="glass"><h2>5 Why</h2><ol><li>为什么很多项目上线就翻车？因为测试不充分，隐藏的问题没暴露。</li><li>为什么隐藏问题难发现？因为它们只在特定条件下触发——边界情况、异常输入、依赖故障。</li><li>为什么虾适合做试探？因为虾可以快速构造各种边界条件和异常场景来"打草"。</li><li>为什么要提前暴露？因为问题在测试阶段发现的修复成本是上线后的 1/10。</li><li>为什么叫"惊蛇"？因为蛇（问题）藏在草（系统）里，你不打它不出来。</li></ol></article>
+        <article class="glass"><h2>What</h2><p>打草惊蛇，就是在正式上线或大规模执行前，让虾用各种边界条件做一轮试探。故意给异常输入、故意断依赖、故意加压力——看系统在什么条件下会出问题。</p></article>
+        <article class="glass"><h2>Detail What</h2><ul><li>边界测试：空输入、超长输入、格式错误、特殊字符——虾一个一个试。</li><li>依赖故障模拟：如果 API 超时了会怎样？如果数据源返回空了会怎样？</li><li>压力测试：连续调用 100 次、并发 10 个请求——在压力下哪里最先崩？</li><li>回归验证：每次改代码后重跑一遍所有"打草"用例，确认没引入新蛇。</li><li>蛇的记录：每发现一个问题就记录下来，形成"已知蛇清单"，持续维护。</li></ul></article>
+        <article class="glass"><h2>So What</h2><p>打草惊蛇的本质是主动寻找问题而不是被动等待问题。大多数人的习惯是"没出问题就是好的"——直到出了大问题。虾可以帮你持续、低成本地"打草"，把蛇在它还小的时候就惊出来。越早发现，修复成本越低。</p></article>
+        <article class="glass"><h2>How（举一反三）</h2><ol><li>列出你系统中最脆弱的 3 个环节（最容易出问题的地方）。</li><li>为每个环节设计 5 个"打草"用例——异常输入、依赖中断、极端条件。</li><li>让虾定期（每次部署后、每周一次）自动跑这些用例。</li><li>任何一个用例失败就生成告警，附带失败条件和错误信息。</li><li>维护"已知蛇清单"——哪些问题已修复、哪些是已知风险、哪些需要监控。</li></ol><p>举一反三：新策略上线前让虾用历史数据回测"打草"；新模板上线前让虾用各种边界内容"打草"；新流程上线前让虾模拟各种异常场景"打草"。正式出手之前，先打一轮草。</p></article>
+      </div></section>
+    <nav class="pn"><a href="/36/shun-shou-qian-yang/"><div class="label">← 上一计</div><div class="title">第十二计 · 顺手牵羊</div></a><a class="next" href="/36/jie-shi-huan-hun/"><div class="label">下一计 →</div><div class="title">第十四计 · 借尸还魂</div></a></nav></main>
+    <footer class="footer"><div class="container">© 2026 SingClaw · 打草惊蛇</div></footer>
+  </body>
+</html>
