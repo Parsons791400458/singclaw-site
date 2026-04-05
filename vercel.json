@@ -8,6 +8,8 @@
     { "source": "/36/:path*", "destination": "/36/:path*/index.html" },
     { "source": "/24", "destination": "/24/index.html" },
     { "source": "/24/:path*", "destination": "/24/:path*/index.html" },
-    { "source": "/home", "destination": "/home/index.html" }
+    { "source": "/home", "destination": "/home/index.html" },
+    { "source": "/game", "destination": "/game/index.html" },
+    { "source": "/game/", "destination": "/game/index.html" }
   ]
 }
