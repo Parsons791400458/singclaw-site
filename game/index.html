@@ -725,6 +725,7 @@
             <div class="nav-item" data-tab="skills"><span class="nav-icon">📖</span>36计技能</div>
             <div class="nav-item" data-tab="evolve"><span class="nav-icon">🔄</span>进化</div>
             <div class="nav-item" data-tab="market"><span class="nav-icon">🏪</span>市场</div>
+            <div class="nav-item" data-tab="achieve"><span class="nav-icon">🏆</span>成就</div>
             <div class="nav-item" data-tab="social"><span class="nav-icon">💬</span>社交<span style="font-size:10px;color:var(--text-dim);margin-left:4px">Soon</span></div>
         </nav>
 
@@ -849,7 +850,12 @@
             <!-- 36计技能面板 -->
             <div id="skillsView" style="display:none">
                 <h2 style="margin-bottom:8px">📖 养虾36计 · 技能树</h2>
-                <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px">阅读文章 → 通过问答 → 解锁技能。每条计策对应一个战斗/养殖技能。</p>
+                <p style="color:var(--text-dim);font-size:13px;margin-bottom:12px">阅读文章 → 通过问答 → 解锁技能。点击已学技能可查看案例和提示词。</p>
+                <div style="display:flex;gap:16px;margin-bottom:20px;font-size:12px">
+                    <span>✅ 已学 <strong id="skillLearnedCount">0</strong>/36</span>
+                    <span style="color:var(--rare)">🔵 可学</span>
+                    <span style="color:var(--text-dim)">🔒 未解锁</span>
+                </div>
 
                 <div class="panel-card" style="margin-bottom:12px">
                     <div class="panel-title">🌱 基础养殖 · 第1-9计 (Lv1+)</div>
@@ -863,15 +869,33 @@
                     <div class="panel-title">🛡️ 疾病防控 · 第19-27计 (Lv20+)</div>
                     <div class="skills-grid" id="skillGroup3"></div>
                 </div>
-                <div class="panel-card">
+                <div class="panel-card" style="margin-bottom:12px">
                     <div class="panel-title">⚔️ 高级战术 · 第28-36计 (Lv30+)</div>
                     <div class="skills-grid" id="skillGroup4"></div>
                 </div>
+
+                <!-- 技能详情面板 -->
+                <div class="panel-card" id="skillDetailPanel" style="display:none;margin-top:16px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <div class="panel-title" id="skillDetailTitle">技能详情</div>
+                        <button onclick="document.getElementById('skillDetailPanel').style.display='none'" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px">✕</button>
+                    </div>
+                    <div id="skillDetailContent"></div>
+                </div>
             </div>
 
-            <!-- 进化面板 -->
+            <!-- 进化面板 (增强版) -->
             <div id="evolveView" style="display:none">
                 <h2 style="margin-bottom:16px">🔄 进化路线</h2>
+
+                <!-- 当前进度 -->
+                <div class="panel-card" style="margin-bottom:16px">
+                    <div class="panel-title">📊 当前进度</div>
+                    <div id="evolveProgress" style="text-align:center;padding:12px">
+                        <p style="color:var(--text-dim)">请先孵化一只虾</p>
+                    </div>
+                </div>
+
                 <div class="panel-card" style="text-align:center;padding:32px">
                     <div style="font-size:48px;margin-bottom:16px">🥚 → 🦐 → 🦞 → 👑</div>
                     <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px">
@@ -917,6 +941,51 @@
                 </div>
             </div>
 
+            <!-- 市场页面 -->
+            <div id="marketView" style="display:none">
+                <h2 style="margin-bottom:16px">🏪 市场</h2>
+                <div class="panel-card" style="text-align:center;padding:40px">
+                    <div style="font-size:64px;margin-bottom:16px">🏗️</div>
+                    <h3 style="margin-bottom:8px">NFT市场即将上线</h3>
+                    <p style="color:var(--text-dim);max-width:400px;margin:0 auto 20px;font-size:13px">
+                        在这里你可以交易虾NFT、购买装备、出售稀有道具。<br>
+                        合约部署到 Base 测试网后开放。
+                    </p>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:0 auto">
+                        <div class="panel-card" style="padding:16px;text-align:center">
+                            <div style="font-size:28px">🦐</div>
+                            <div style="font-size:12px;font-weight:600;margin-top:4px">虾NFT</div>
+                            <div style="font-size:11px;color:var(--text-dim)">交易你的虾</div>
+                        </div>
+                        <div class="panel-card" style="padding:16px;text-align:center">
+                            <div style="font-size:28px">⚔️</div>
+                            <div style="font-size:12px;font-weight:600;margin-top:4px">装备</div>
+                            <div style="font-size:11px;color:var(--text-dim)">Phase 2</div>
+                        </div>
+                        <div class="panel-card" style="padding:16px;text-align:center">
+                            <div style="font-size:28px">🧪</div>
+                            <div style="font-size:12px;font-weight:600;margin-top:4px">道具</div>
+                            <div style="font-size:11px;color:var(--text-dim)">Phase 2</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:24px;padding:16px;background:var(--bg-deep);border-radius:8px">
+                        <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px">📊 经济预览</div>
+                        <div style="display:flex;justify-content:space-around;font-size:12px">
+                            <div><div style="color:var(--text-dim)">$FEED 日产出</div><div style="font-weight:700">100,000</div></div>
+                            <div><div style="color:var(--text-dim)">虾NFT上限</div><div style="font-weight:700">10,000</div></div>
+                            <div><div style="color:var(--text-dim)">进化销毁率</div><div style="font-weight:700;color:var(--danger)">50%</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成就页面 -->
+            <div id="achieveView" style="display:none">
+                <h2 style="margin-bottom:16px">🏆 成就</h2>
+                <div id="achieveList" class="panel-card" style="padding:16px">
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -925,7 +994,7 @@
         <div class="status-item"><span class="status-dot" id="chainDot"></span><span id="chainStatus">Base · 未连接</span></div>
         <div class="status-item">💰 $FEED: <span id="feedBalance">0</span></div>
         <div class="status-item">🦐 虾: <span id="shrimpCount">0</span></div>
-        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.3.0 · Phase 1</div>
+        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.4.0 · Phase 1</div>
     </div>
 
 <script>
@@ -1100,12 +1169,117 @@ document.querySelectorAll('.nav-item').forEach(item => {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         item.classList.add('active');
         const tab = item.dataset.tab;
-        document.getElementById('pondView').style.display = tab === 'pond' && gameState.shrimp ? 'grid' : 'none';
-        document.getElementById('emptyState').style.display = tab === 'pond' && !gameState.shrimp ? 'flex' : 'none';
-        document.getElementById('skillsView').style.display = tab === 'skills' ? 'block' : 'none';
-        document.getElementById('evolveView').style.display = tab === 'evolve' ? 'block' : 'none';
+        switchTab(tab);
     });
 });
+
+function switchTab(tab) {
+    document.getElementById('pondView').style.display = tab === 'pond' && gameState.shrimp ? 'grid' : 'none';
+    document.getElementById('emptyState').style.display = tab === 'pond' && !gameState.shrimp ? 'flex' : 'none';
+    document.getElementById('skillsView').style.display = tab === 'skills' ? 'block' : 'none';
+    document.getElementById('evolveView').style.display = tab === 'evolve' ? 'block' : 'none';
+    document.getElementById('marketView').style.display = tab === 'market' ? 'block' : 'none';
+    document.getElementById('achieveView').style.display = tab === 'achieve' ? 'block' : 'none';
+    if (tab === 'skills') { renderSkillsGrid(); updateSkillCount(); }
+    if (tab === 'evolve') updateEvolveProgress();
+    if (tab === 'achieve') renderAchievePage();
+}
+
+function updateSkillCount() {
+    const el = document.getElementById('skillLearnedCount');
+    if (el && gameState.shrimp) el.textContent = gameState.shrimp.skills.filter(Boolean).length;
+}
+
+// ── 技能详情查看 ──
+function showSkillDetail(index) {
+    const skill = SKILL_QUIZ[index];
+    const sc = SKILL_CASES[index];
+    if (!skill || !sc) return;
+    const panel = document.getElementById('skillDetailPanel');
+    const title = document.getElementById('skillDetailTitle');
+    const content = document.getElementById('skillDetailContent');
+    title.innerHTML = `📖 第${index+1}计「${skill.name}」`;
+    content.innerHTML = `
+        <div class="quiz-effect" style="margin-bottom:12px">🎮 ${skill.gameEffect}</div>
+        <div class="skill-case">
+            <div class="skill-case-title">📋 实战案例</div>
+            <div class="skill-case-text">${sc.c}</div>
+        </div>
+        <div class="skill-prompt" style="position:relative">
+            <div class="skill-prompt-title">💬 提示词（可直接使用）</div>
+            <button class="copy-btn" onclick="copyPrompt(${index})">📋 复制</button>
+            <div class="skill-prompt-text">${sc.p}</div>
+        </div>
+        <div class="skill-result">✅ ${sc.r}</div>
+        <a class="read-article-btn" href="/36/${skill.slug}/" target="_blank" style="margin-top:12px">📖 阅读完整文章</a>
+    `;
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── 进化进度更新 ──
+function updateEvolveProgress() {
+    const div = document.getElementById('evolveProgress');
+    if (!div) return;
+    const s = gameState.shrimp;
+    if (!s) { div.innerHTML = '<p style="color:var(--text-dim)">请先孵化一只虾</p>'; return; }
+
+    const stages = ['Egg','Larva','Juvenile','Adult','King'];
+    const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
+    const stageEmoji = {Egg:'🥚',Larva:'🦐',Juvenile:'🦞',Adult:'🦞',King:'👑'};
+    const stageIdx = stages.indexOf(s.stage);
+    const skills = s.skills.filter(Boolean).length;
+    const nextReqs = [
+        { stage: 'Larva', level: 10, skills: 9, label: '幼虾' },
+        { stage: 'Juvenile', level: 20, skills: 18, label: '成虾' },
+        { stage: 'Adult', level: 35, skills: 27, label: '虾王' },
+    ];
+
+    let nextHtml = '';
+    if (stageIdx < 4) {
+        const req = nextReqs[Math.min(stageIdx, 2)];
+        if (req) {
+            const lvPct = Math.min(100, Math.floor(s.level / req.level * 100));
+            const skPct = Math.min(100, Math.floor(skills / req.skills * 100));
+            nextHtml = `
+                <div style="margin-top:12px;text-align:left">
+                    <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">下一次进化 → ${req.label}</div>
+                    <div style="margin-bottom:6px">
+                        <div style="display:flex;justify-content:space-between;font-size:11px"><span>等级 Lv.${s.level}/${req.level}</span><span>${lvPct}%</span></div>
+                        <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:${lvPct}%;background:var(--accent);border-radius:2px;transition:width 0.5s"></div></div>
+                    </div>
+                    <div>
+                        <div style="display:flex;justify-content:space-between;font-size:11px"><span>技能 ${skills}/${req.skills}</span><span>${skPct}%</span></div>
+                        <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:${skPct}%;background:var(--rare);border-radius:2px;transition:width 0.5s"></div></div>
+                    </div>
+                </div>`;
+        }
+    }
+
+    div.innerHTML = `
+        <div style="font-size:48px">${stageEmoji[s.stage]}</div>
+        <div style="font-size:18px;font-weight:700;margin:8px 0">${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}</div>
+        <div style="font-size:13px;color:var(--text-dim)">Lv.${s.level} · ${skills}/36 技能 · ${s.rarity}${s.breed !== 'None' ? ' · '+s.breed : ''}</div>
+        ${stageIdx >= 4 ? '<div style="color:var(--legendary);font-weight:700;margin-top:8px">👑 已达虾王终极形态！</div>' : nextHtml}
+    `;
+}
+
+// ── 成就页面渲染 ──
+function renderAchievePage() {
+    const list = document.getElementById('achieveList');
+    if (!list) return;
+    list.innerHTML = ACHIEVEMENTS.map(ach => {
+        const unlocked = gameState.achievements.includes(ach.id);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);${unlocked ? '' : 'opacity:0.4'}">
+            <span style="font-size:24px">${ach.icon}</span>
+            <div style="flex:1">
+                <div style="font-size:13px;font-weight:600">${ach.name}</div>
+                <div style="font-size:11px;color:var(--text-dim)">${ach.desc}</div>
+            </div>
+            <span style="font-size:12px;color:${unlocked ? 'var(--success)' : 'var(--text-dim)'}">${unlocked ? '✅' : '🔒'}</span>
+        </div>`;
+    }).join('');
+}
 
 // ── 钱包连接 (模拟) ──
 async function connectWallet() {
@@ -1297,7 +1471,12 @@ function triggerRandomEvent() {
         {type:'🦠 白斑病',effect:() => { gameState.shrimp.exp = Math.max(0, gameState.shrimp.exp - 10); return '经验 -10'; }},
         {type:'🌞 丰收季',effect:() => { gameState.feedBalance += 20; return '$FEED +20'; }},
         {type:'🧬 变异',effect:() => { gameState.shrimp.exp += 50; return '经验 +50！'; }},
-        {type:'👀 访客',effect:() => '有一只虾来串门了（Phase 3 开放）'}
+        {type:'👀 访客',effect:() => '有一只虾来串门了（Phase 3 开放）'},
+        {type:'🌊 潮汐',effect:() => { gameState.shrimp.waterQuality.oxygen += 5; return '溶氧提升！'; }},
+        {type:'🦀 入侵者',effect:() => { gameState.shrimp.hp = Math.max(10, gameState.shrimp.hp - 3); return 'HP -3，有螃蟹入侵！'; }},
+        {type:'💎 宝箱',effect:() => { gameState.feedBalance += 50; return '发现宝箱！$FEED +50'; }},
+        {type:'🌡️ 高温',effect:() => { gameState.shrimp.waterQuality.temp = Math.min(38, gameState.shrimp.waterQuality.temp + 3); return '温度上升！注意调水'; }},
+        {type:'🍀 幸运',effect:() => { gameState.shrimp.exp += 100; return '幸运加成！经验 +100'; }},
     ];
     const e = events[Math.floor(Math.random()*events.length)];
     const result = e.effect();
@@ -1694,6 +1873,7 @@ function renderSkillsGrid() {
             cell.title = skill ? `${skill.name} — ${skill.gameEffect}${sc ? '\n案例: '+sc.c.slice(0,60)+'...' : ''}` : SKILLS_36[i];
             if (s && s.skills[i]) {
                 cell.classList.add('learned');
+                cell.onclick = () => showSkillDetail(i);
             } else if (s && s.level >= requiredLevel(i)) {
                 cell.classList.add('available');
                 cell.onclick = () => learnSkill(i);
@@ -1779,14 +1959,10 @@ document.querySelectorAll('.mobile-nav-item').forEach(item => {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         item.classList.add('active');
         const tab = item.dataset.tab;
-        // Find matching sidebar item and activate it
         document.querySelectorAll('.nav-item').forEach(n => {
             if (n.dataset.tab === tab) n.classList.add('active');
         });
-        document.getElementById('pondView').style.display = tab === 'pond' && gameState.shrimp ? 'grid' : 'none';
-        document.getElementById('emptyState').style.display = tab === 'pond' && !gameState.shrimp ? 'flex' : 'none';
-        document.getElementById('skillsView').style.display = tab === 'skills' ? 'block' : 'none';
-        document.getElementById('evolveView').style.display = tab === 'evolve' ? 'block' : 'none';
+        switchTab(tab);
     });
 });
 
@@ -1804,7 +1980,7 @@ if (!loaded) renderSkillsGrid();
         <div class="mobile-nav-item active" data-tab="pond"><span class="mn-icon">🏊</span>虾池</div>
         <div class="mobile-nav-item" data-tab="skills"><span class="mn-icon">📖</span>技能</div>
         <div class="mobile-nav-item" data-tab="evolve"><span class="mn-icon">🔄</span>进化</div>
-        <div class="mobile-nav-item" data-tab="market"><span class="mn-icon">🏪</span>市场</div>
+        <div class="mobile-nav-item" data-tab="achieve"><span class="mn-icon">🏆</span>成就</div>
     </div>
 </nav>
 
