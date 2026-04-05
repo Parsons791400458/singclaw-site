@@ -1,171 +1,323 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SingClaw｜龙虾养成者的成长操作系统</title>
-    <meta name="description" content="SingClaw：把龙虾从会跑养成会成长的数字员工。" />
-    <style>
-      :root{--bg:#02040a;--text:#f5f8ff;--muted:rgba(230,238,250,.72);--line:rgba(255,255,255,.1);--glass:rgba(255,255,255,.05);--max:1280px}
-      *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:radial-gradient(circle at 12% 12%, rgba(96,165,250,.16), transparent 24%),radial-gradient(circle at 88% 16%, rgba(34,211,238,.12), transparent 20%),radial-gradient(circle at 50% 30%, rgba(192,132,252,.10), transparent 22%),linear-gradient(180deg,#02040a 0%,#040913 28%,#050a14 60%,#02040a 100%);line-height:1.55}
-      a{color:inherit;text-decoration:none}.container{width:min(calc(100% - 40px),var(--max));margin:0 auto}.nav{position:sticky;top:0;z-index:20;background:rgba(2,4,10,.58);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}.nav-inner{min-height:74px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{display:flex;gap:12px;align-items:center;font-weight:800}.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(96,165,250,.92),rgba(103,232,249,.82),rgba(192,132,252,.86));box-shadow:0 12px 36px rgba(103,232,249,.28)}
-      .nav-links{display:flex;gap:20px;color:var(--muted);font-size:14px}.nav-links a:hover{color:#fff}.watermark{position:fixed;right:18px;bottom:18px;z-index:50;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);backdrop-filter:blur(12px);font-size:13px}
-      .hero{min-height:100vh;display:flex;align-items:center;padding:56px 0 40px;position:relative}.orb{position:absolute;width:620px;height:620px;border-radius:50%;left:50%;top:44%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.55), rgba(103,232,249,.24) 18%, rgba(96,165,250,.16) 32%, rgba(192,132,252,.12) 48%, transparent 70%),radial-gradient(circle at center, rgba(103,232,249,.18), transparent 64%);filter:blur(4px);opacity:.9;pointer-events:none}
-      .hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1fr;justify-items:center;text-align:center}.eyebrow{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(147,197,253,.18);background:rgba(147,197,253,.06);font-size:13px;letter-spacing:.08em;text-transform:uppercase}.hero h1{margin:22px auto 18px;max-width:11ch;font-size:clamp(54px,9vw,132px);line-height:.94;letter-spacing:-.06em}.hero-sub{max-width:860px;margin:0 auto;font-size:clamp(18px,2vw,28px);color:var(--muted)}.hero-sub strong{color:#fff}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:34px}.btn{min-height:52px;padding:0 20px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-weight:700}.btn-primary{background:linear-gradient(135deg,#c4e1ff,#99f6e4);color:#041321}.btn-secondary{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03)}
-      .section{padding:110px 0}.center{text-align:center}.kicker{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:rgba(201,224,255,.62)}.headline{margin:16px 0;font-size:clamp(36px,5vw,76px);line-height:1.02;letter-spacing:-.05em}.subcopy{margin:0 auto;max-width:820px;color:var(--muted);font-size:clamp(17px,1.6vw,22px)}
-      .grid2,.grid4,.stages{display:grid;gap:20px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:46px}.grid4{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:46px}.stages{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:44px}.glass{padding:34px;border-radius:32px;background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid var(--line);box-shadow:0 18px 60px rgba(0,0,0,.28)}.glass p{color:var(--muted)}.glass ul{margin:0;padding-left:20px;color:var(--muted)}.glass li+li{margin-top:10px}.module h3,.card h3{margin:0 0 14px;font-size:26px}.stage h4{margin:12px 0 10px;font-size:24px}.stage .index{color:rgba(147,197,253,.88);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
-      .footer{padding:28px 0 64px;color:rgba(255,255,255,.45);text-align:center;font-size:14px}
-      @media (max-width:980px){.grid2,.grid4,.stages{grid-template-columns:1fr}.orb{width:420px;height:420px;top:34%}}
-      @media (max-width:720px){.nav-links{display:none}.hero{min-height:auto;padding-top:72px}}
-    </style>
-  </head>
-  <body>
-    <header class="nav">
-      <div class="container nav-inner">
-        <a class="brand" href="/home/"><span class="brand-mark">虾</span><span>SingClaw</span></a>
-        <nav class="nav-links">
-          <a href="/36/">养虾36计</a>
-          <a href="/24/">虾24章经</a>
-          <a href="/game/">ShrimpFi 🎮</a>
-          <a href="#modules">模块</a>
-          <a href="#stages">阶段</a>
-        </nav>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SingClaw · 养虾方法论 × 链上游戏</title>
+  <meta name="description" content="36计养虾方法论 + ShrimpFi链上养虾游戏。学真实方法，养链上的虾。Built on Base."/>
+  <meta property="og:title" content="SingClaw · 养虾方法论 × 链上游戏"/>
+  <meta property="og:description" content="36计养虾方法论 + ShrimpFi链上养虾游戏"/>
+  <meta property="og:url" content="https://singclaw.xyz"/>
+  <style>
+    :root{--bg:#020408;--bg2:#080d18;--card:rgba(255,255,255,.04);--card-hover:rgba(255,255,255,.07);--border:rgba(255,255,255,.08);--text:#e8ecf4;--dim:rgba(200,215,240,.55);--accent:#00d4aa;--accent2:#00ff88;--accent-glow:rgba(0,212,170,.2);--blue:#4d8ffa;--purple:#a855f7;--gold:#fbbf24;--max:1100px}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro','PingFang SC',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .w{width:min(calc(100% - 40px),var(--max));margin:0 auto}
+
+    /* ── Nav ── */
+    nav{position:sticky;top:0;z-index:50;background:rgba(2,4,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .logo-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:16px}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--dim);transition:all .2s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+    .nav-links a.active{color:var(--accent);background:rgba(0,212,170,.08)}
+    .nav-cta{background:var(--accent);color:#000;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;transition:all .2s}
+    .nav-cta:hover{opacity:.85;transform:translateY(-1px)}
+
+    /* ── Hero ── */
+    .hero{min-height:90vh;display:flex;align-items:center;position:relative;padding:80px 0 60px}
+    .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .hero-bg .orb1{position:absolute;width:600px;height:600px;border-radius:50%;top:-10%;right:-10%;background:radial-gradient(circle,rgba(0,212,170,.12),transparent 60%)}
+    .hero-bg .orb2{position:absolute;width:400px;height:400px;border-radius:50%;bottom:10%;left:-5%;background:radial-gradient(circle,rgba(77,143,250,.1),transparent 60%)}
+    .hero-content{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .hero-text .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);font-size:12px;color:var(--accent);font-weight:600;margin-bottom:20px}
+    .hero-text h1{font-size:clamp(36px,5vw,56px);line-height:1.08;letter-spacing:-.04em;font-weight:800;margin-bottom:16px}
+    .hero-text h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-text p{font-size:17px;color:var(--dim);max-width:480px;margin-bottom:28px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-weight:700;font-size:14px;transition:all .2s;border:none;cursor:pointer}
+    .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+    .btn-secondary{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn-secondary:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.03)}
+    .hero-visual{display:flex;align-items:center;justify-content:center}
+    .hero-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:420px;position:relative;overflow:hidden}
+    .hero-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle at 70% 30%,rgba(0,212,170,.06),transparent 50%);pointer-events:none}
+    .hero-shrimp{font-size:80px;text-align:center;animation:swim 3s ease-in-out infinite;margin-bottom:16px}
+    @keyframes swim{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(10px) rotate(2deg)}75%{transform:translateX(-10px) rotate(-2deg)}}
+    .hero-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center}
+    .hcs-val{font-size:22px;font-weight:800}
+    .hcs-label{font-size:11px;color:var(--dim)}
+
+    /* ── Section ── */
+    section{padding:100px 0}
+    .section-label{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);font-weight:600;margin-bottom:10px}
+    .section-title{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:12px}
+    .section-desc{color:var(--dim);font-size:16px;max-width:600px;margin-bottom:40px}
+
+    /* ── Tabs (核心模块) ── */
+    .tabs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .tab-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s;cursor:pointer;position:relative;overflow:hidden}
+    .tab-card:hover{background:var(--card-hover);border-color:rgba(255,255,255,.12);transform:translateY(-4px)}
+    .tab-card.featured{border-color:rgba(0,212,170,.25);background:linear-gradient(180deg,rgba(0,212,170,.06),var(--card))}
+    .tab-card .tc-icon{font-size:36px;margin-bottom:12px}
+    .tab-card h3{font-size:18px;font-weight:700;margin-bottom:6px}
+    .tab-card p{font-size:13px;color:var(--dim);line-height:1.5}
+    .tab-card .tc-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:700;margin-top:12px}
+    .tag-content{background:rgba(77,143,250,.12);color:var(--blue)}
+    .tag-game{background:rgba(0,212,170,.12);color:var(--accent)}
+    .tag-wisdom{background:rgba(168,85,247,.12);color:var(--purple)}
+
+    /* ── How it works ── */
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:step}
+    .step{text-align:center;padding:24px 16px;position:relative}
+    .step::before{counter-increment:step;content:counter(step);display:flex;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-weight:800;font-size:16px;align-items:center;justify-content:center;margin:0 auto 14px}
+    .step h4{font-size:15px;margin-bottom:6px}
+    .step p{font-size:12px;color:var(--dim)}
+    .step-arrow{position:absolute;right:-16px;top:42px;color:var(--dim);font-size:18px}
+
+    /* ── 36计预览 ── */
+    .skills-preview{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+    .sp-cell{aspect-ratio:1;background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:600;transition:all .2s;cursor:pointer}
+    .sp-cell:hover{background:var(--card-hover);border-color:var(--accent);color:var(--accent);transform:scale(1.05)}
+    .sp-cell .sp-num{font-size:16px;font-weight:800;margin-bottom:2px}
+
+    /* ── FAQ ── */
+    .faq-list{max-width:700px}
+    .faq-item{border-bottom:1px solid var(--border);padding:18px 0}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;font-size:15px}
+    .faq-q .arrow{transition:transform .3s;color:var(--dim)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;font-size:14px;color:var(--dim);line-height:1.7}
+    .faq-item.open .faq-a{max-height:300px}
+    .faq-item.open .arrow{transform:rotate(180deg)}
+
+    /* ── Footer ── */
+    footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;color:var(--dim);font-size:13px}
+    footer a{color:var(--accent)}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .hero-content{grid-template-columns:1fr;text-align:center}
+      .hero-text p{margin:0 auto 28px}
+      .hero-actions{justify-content:center}
+      .hero-visual{margin-top:20px}
+      .tabs-grid{grid-template-columns:1fr}
+      .steps{grid-template-columns:repeat(2,1fr)}
+      .step-arrow{display:none}
+      .skills-preview{grid-template-columns:repeat(6,1fr)}
+      .nav-links{display:none}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="w nav-inner">
+      <a class="logo" href="/"><span class="logo-mark">🦐</span>SingClaw</a>
+      <div class="nav-links">
+        <a href="/36/">养虾36计</a>
+        <a href="/24/">虾24章经</a>
+        <a href="/game/" class="active">ShrimpFi 🎮</a>
+        <a href="#faq">FAQ</a>
       </div>
-    </header>
-    <div class="watermark">@马星克 Maxink</div>
-    <main>
-      <section class="hero">
-        <div class="orb"></div>
-        <div class="container hero-grid">
-          <div class="eyebrow">龙虾养成者的成长操作系统</div>
-          <h1>把龙虾从会跑 养成会成长</h1>
-          <p class="hero-sub">不只是让龙虾执行任务。<br>而是让它成为<strong>持续进化的数字员工</strong>。</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="/36/">进入养虾36计</a>
-            <a class="btn btn-primary" href="/game/" style="background:linear-gradient(135deg,#00d4aa,#00ff88);color:#000">🦐 ShrimpFi 养虾链游</a>
-            <a class="btn btn-secondary" href="#framework">看成长框架</a>
-          </div>
-        </div>
-      </section>
+      <a class="nav-cta" href="/game/">开始养虾</a>
+    </div>
+  </nav>
 
-      <section id="framework" class="section center">
-        <div class="container">
-          <div class="kicker">phase 1 core</div>
-          <h2 class="headline">Phase 1 的重点主线，<br>是养虾36计。</h2>
-          <p class="subcopy">每一个 tab 未来都必须能点进去、能拓展、能沉淀成长期资产。第一阶段先把养虾36计做成主线内容模块，每一计都不是一句标题，而是一篇完整的方法论文章。它不是内容摆设，而是未来整个网站最重要的方法骨架。</p>
-          <div class="grid2">
-            <article class="glass card">
-              <h3>为什么先做 36 计</h3>
-              <ul>
-                <li>它最容易建立体系感</li>
-                <li>最适合持续连载与品牌记忆</li>
-                <li>最容易承接诊断、陪跑和方法论输出</li>
-                <li>最适合作为 Phase 1 的核心内容工程</li>
-              </ul>
-            </article>
-            <article class="glass card">
-              <h3>每一计统一框架</h3>
-              <ul>
-                <li>5 Why：连追根因</li>
-                <li>What：定义这一计是什么</li>
-                <li>Detail What：展开细节</li>
-                <li>So What：说明意义</li>
-                <li>How：给做法与举一反三</li>
-              </ul>
-            </article>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"><div class="orb1"></div><div class="orb2"></div></div>
+    <div class="w hero-content">
+      <div class="hero-text">
+        <div class="badge">🔵 Built on Base · 免费开玩</div>
+        <h1>学真实养虾方法<br>养<em>链上的虾</em></h1>
+        <p>36计养虾攻略不是纸上谈兵——每一条都变成游戏里的可执行技能。读文章、答题、解锁技能、进化虾王。知识即装备。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="/game/">🦐 开始养虾</a>
+          <a class="btn btn-secondary" href="/36/">📖 先看36计攻略</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-shrimp">🦐</div>
+          <div style="text-align:center;margin-bottom:16px">
+            <div style="font-size:18px;font-weight:800">虾王 · Legendary</div>
+            <div style="font-size:12px;color:var(--dim)">掌握全部36计 · 终极进化形态</div>
           </div>
-          <div class="grid4">
-            <article class="glass module">
-              <h3>沿用真实三十六计原名</h3>
-              <p>名字完全跟现实三十六计一致，但解释全部贴合“养虾 / Agent 养成”语境。</p>
-            </article>
-            <article class="glass module">
-              <h3>不是硬套典故</h3>
-              <p>不是为了古风，而是借用熟悉框架，降低记忆成本、提高传播性。</p>
-            </article>
-            <article class="glass module">
-              <h3>每一计都能进入详情</h3>
-              <p>它们不是一个个标签，而是未来可以持续扩展、持续更新的独立内容单元。</p>
-            </article>
-            <article class="glass module">
-              <h3>首页只是入口</h3>
-              <p>首页负责讲清世界观，真正的内容资产会沉淀到各个模块详情页里。</p>
-            </article>
+          <div class="hero-card-stats">
+            <div><div class="hcs-val" style="color:var(--accent)">Lv.36</div><div class="hcs-label">等级</div></div>
+            <div><div class="hcs-val" style="color:var(--gold)">36/36</div><div class="hcs-label">技能</div></div>
+            <div><div class="hcs-val" style="color:var(--blue)">👑</div><div class="hcs-label">虾王</div></div>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <section id="modules" class="section center">
-        <div class="container">
-          <div class="kicker">content architecture</div>
-          <h2 class="headline">这个网站不是单页海报。<br>而是一个持续扩张的内容系统。</h2>
-          <p class="subcopy">首页只负责讲清价值和导流。真正的长期价值，会沉淀在一个个可以点进去、可以扩展、可以持续更新的内容模块里。Phase 1 先打穿 36 计，Phase 2 再把其他模块逐步做厚。</p>
-          <div class="grid4">
-            <article class="glass module">
-              <h3><a href="/36/">养虾36计</a></h3>
-              <p>策略与方法主线。当前 Phase 1 的绝对重点。每一计对应一篇方法论 + 一个可执行的AI提示词。</p>
-            </article>
-            <article class="glass module">
-              <h3><a href="/24/">虾24章经</a></h3>
-              <p>原则、认知与修炼模块。承接长期心法与判断框架。</p>
-            </article>
-            <article class="glass module" style="border-color:rgba(0,212,170,.3);background:linear-gradient(180deg, rgba(0,212,170,.08), rgba(255,255,255,.03))">
-              <h3><a href="/game/" style="color:#00d4aa">🦐 ShrimpFi</a></h3>
-              <p>养虾链游 · Built on Base。用真实养虾知识养链上的虾——进化、对战、社交、赚钱。36计驱动的 GameFi。</p>
-            </article>
-            <article class="glass module">
-              <h3>虾说 · 虾评</h3>
-              <p>洞察与案例点评。解释为什么大多数人养虾养不大，帮你看清配置和养法卡在哪里。</p>
-            </article>
-          </div>
-          <div class="grid2">
-            <article class="glass card">
-              <h3>为什么每个 tab 都必须能进去</h3>
-              <ul>
-                <li>不能只是首页展示名词</li>
-                <li>必须能承载持续更新的内容</li>
-                <li>未来要形成真正的知识资产与品牌资产</li>
-              </ul>
-            </article>
-            <article class="glass card">
-              <h3>为什么网站内容必须足够</h3>
-              <ul>
-                <li>高级感只能吸引第一眼</li>
-                <li>真正让人停留和信任的是内容厚度</li>
-                <li>有内容，才有转化、传播与长期沉淀的可能</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
+  <!-- 核心模块 -->
+  <section>
+    <div class="w">
+      <div class="section-label">核心模块</div>
+      <div class="section-title">三个 Tab，一个体系</div>
+      <div class="section-desc">攻略是骨架，游戏是皮肤，知识是灵魂。每个模块独立可用，串起来就是完整的养虾成长路径。</div>
+      <div class="tabs-grid">
+        <a class="tab-card" href="/36/">
+          <div class="tc-icon">📖</div>
+          <h3>养虾36计</h3>
+          <p>36篇方法论攻略。每一计用统一框架展开：5 Why → What → Detail → So What → How。不是鸡汤，是可执行的操作手册。</p>
+          <span class="tc-tag tag-content">36篇攻略 · 已全部上线</span>
+        </a>
+        <a class="tab-card featured" href="/game/">
+          <div class="tc-icon">🎮</div>
+          <h3>ShrimpFi</h3>
+          <p>把36计变成游戏。读文章解锁技能，喂养升级进化。你的虾是你知识水平的映射——学得越多，虾越强。</p>
+          <span class="tc-tag tag-game">GameFi · Base链 · 免费开玩</span>
+        </a>
+        <a class="tab-card" href="/24/">
+          <div class="tc-icon">📜</div>
+          <h3>虾24章经</h3>
+          <p>如果36计是战术，24章经就是心法。认知框架、判断原则、长期修炼。让你知道什么该做，更知道为什么做。</p>
+          <span class="tc-tag tag-wisdom">心法 · 持续更新中</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-      <section id="stages" class="section center">
-        <div class="container">
-          <div class="kicker">growth stages</div>
-          <h2 class="headline">成长不是跳跃。<br>而是有阶段的升级。</h2>
-          <p class="subcopy">看清自己在哪一层，比盲目加工具更重要。方向对了，进化才会开始加速。</p>
-          <div class="stages">
-            <article class="glass stage"><div class="index">Stage 01</div><h4>会装</h4><p>能装起来，但产出不稳定。</p></article>
-            <article class="glass stage"><div class="index">Stage 02</div><h4>会跑</h4><p>能执行任务，但仍依赖人工盯。</p></article>
-            <article class="glass stage"><div class="index">Stage 03</div><h4>会用</h4><p>能出结果，但还缺系统方法。</p></article>
-            <article class="glass stage"><div class="index">Stage 04</div><h4>会养</h4><p>知道如何让判断、协作和记忆持续变强。</p></article>
-            <article class="glass stage"><div class="index">Stage 05</div><h4>会经营</h4><p>把 Agent 当作真正的数字员工来运营。</p></article>
-          </div>
+  <!-- How it works -->
+  <section style="background:var(--bg2)">
+    <div class="w">
+      <div class="section-label">怎么玩</div>
+      <div class="section-title">4步，从方法论到链上资产</div>
+      <div class="section-desc">不只是读文章，也不只是玩游戏。SingClaw 让知识变成可量化、可展示、可交易的链上资产。</div>
+      <div class="steps">
+        <div class="step">
+          <h4>📖 读攻略</h4>
+          <p>36计方法论，每篇都有真实案例和可复制的AI提示词</p>
+          <span class="step-arrow">→</span>
         </div>
-      </section>
+        <div class="step">
+          <h4>🧠 答题解锁</h4>
+          <p>每条计策对应2道知识问答，答对才能解锁对应游戏技能</p>
+          <span class="step-arrow">→</span>
+        </div>
+        <div class="step">
+          <h4>🦐 养虾进化</h4>
+          <p>喂养、管理水质、学习技能。虾苗→幼虾→成虾→虾王</p>
+          <span class="step-arrow">→</span>
+        </div>
+        <div class="step">
+          <h4>⛓️ 链上资产</h4>
+          <p>铸造NFT上链。你的虾是你知识水平的证明，可展示、可交易</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <section id="start" class="section center">
-        <div class="container">
-          <div class="kicker">start now</div>
-          <h2 class="headline">先进入养虾36计。<br>再把其他 tab 一步步做厚。</h2>
-          <p class="subcopy">当前 Phase 1 先把主线内容打穿：总览页 + 多个样板详情页。后续再扩展到虾24章经、虾说、虾评与诊断页。SingClaw 的目标不是做一个好看的站，而是做一个可持续生长的内容操作系统。</p>
-          <div class="actions">
-            <a class="btn btn-primary" href="/36/">进入养虾36计</a>
-            <a class="btn btn-primary" href="/game/" style="background:linear-gradient(135deg,#00d4aa,#00ff88);color:#000">🦐 进入 ShrimpFi</a>
-          </div>
+  <!-- 36计预览 -->
+  <section>
+    <div class="w">
+      <div class="section-label">养虾36计</div>
+      <div class="section-title">每一计都是一个可执行的方法</div>
+      <div class="section-desc">不是三十六计的古风复读，是贴合AI养虾语境的实战攻略。每篇配有真实案例 + 可直接复制给AI的提示词。</div>
+      <div class="skills-preview">
+        <a class="sp-cell" href="/36/man-tian-guo-hai/"><span class="sp-num">1</span>瞒天过海</a>
+        <a class="sp-cell" href="/36/wei-wei-jiu-zhao/"><span class="sp-num">2</span>围魏救赵</a>
+        <a class="sp-cell" href="/36/jie-dao-sha-ren/"><span class="sp-num">3</span>借刀杀人</a>
+        <a class="sp-cell" href="/36/yi-yi-dai-lao/"><span class="sp-num">4</span>以逸待劳</a>
+        <a class="sp-cell" href="/36/chen-huo-da-jie/"><span class="sp-num">5</span>趁火打劫</a>
+        <a class="sp-cell" href="/36/sheng-dong-ji-xi/"><span class="sp-num">6</span>声东击西</a>
+        <a class="sp-cell" href="/36/wu-zhong-sheng-you/"><span class="sp-num">7</span>无中生有</a>
+        <a class="sp-cell" href="/36/an-du-chen-cang/"><span class="sp-num">8</span>暗渡陈仓</a>
+        <a class="sp-cell" href="/36/ge-an-guan-huo/"><span class="sp-num">9</span>隔岸观火</a>
+        <a class="sp-cell" href="/36/xiao-li-cang-dao/"><span class="sp-num">10</span>笑里藏刀</a>
+        <a class="sp-cell" href="/36/li-dai-tao-jiang/"><span class="sp-num">11</span>李代桃僵</a>
+        <a class="sp-cell" href="/36/shun-shou-qian-yang/"><span class="sp-num">12</span>顺手牵羊</a>
+        <a class="sp-cell" href="/36/da-cao-jing-she/"><span class="sp-num">13</span>打草惊蛇</a>
+        <a class="sp-cell" href="/36/jie-shi-huan-hun/"><span class="sp-num">14</span>借尸还魂</a>
+        <a class="sp-cell" href="/36/tiao-hu-li-shan/"><span class="sp-num">15</span>调虎离山</a>
+        <a class="sp-cell" href="/36/yu-qin-gu-zong/"><span class="sp-num">16</span>欲擒故纵</a>
+        <a class="sp-cell" href="/36/pao-zhuan-yu-yin/"><span class="sp-num">17</span>抛砖引玉</a>
+        <a class="sp-cell" href="/36/qin-zei-qin-wang/"><span class="sp-num">18</span>擒贼擒王</a>
+        <a class="sp-cell" href="/36/fu-di-chou-xin/"><span class="sp-num">19</span>釜底抽薪</a>
+        <a class="sp-cell" href="/36/hun-shui-mo-yu/"><span class="sp-num">20</span>浑水摸鱼</a>
+        <a class="sp-cell" href="/36/jin-chan-tuo-qiao/"><span class="sp-num">21</span>金蝉脱壳</a>
+        <a class="sp-cell" href="/36/guan-men-zhuo-zei/"><span class="sp-num">22</span>关门捉贼</a>
+        <a class="sp-cell" href="/36/yuan-jiao-jin-gong/"><span class="sp-num">23</span>远交近攻</a>
+        <a class="sp-cell" href="/36/jia-dao-fa-guo/"><span class="sp-num">24</span>假道伐虢</a>
+        <a class="sp-cell" href="/36/tou-liang-huan-zhu/"><span class="sp-num">25</span>偷梁换柱</a>
+        <a class="sp-cell" href="/36/zhi-sang-ma-huai/"><span class="sp-num">26</span>指桑骂槐</a>
+        <a class="sp-cell" href="/36/jia-chi-bu-dian/"><span class="sp-num">27</span>假痴不癫</a>
+        <a class="sp-cell" href="/36/shang-wu-chou-ti/"><span class="sp-num">28</span>上屋抽梯</a>
+        <a class="sp-cell" href="/36/shu-shang-kai-hua/"><span class="sp-num">29</span>树上开花</a>
+        <a class="sp-cell" href="/36/fan-ke-wei-zhu/"><span class="sp-num">30</span>反客为主</a>
+        <a class="sp-cell" href="/36/mei-ren-ji/"><span class="sp-num">31</span>美人计</a>
+        <a class="sp-cell" href="/36/kong-cheng-ji/"><span class="sp-num">32</span>空城计</a>
+        <a class="sp-cell" href="/36/fan-jian-ji/"><span class="sp-num">33</span>反间计</a>
+        <a class="sp-cell" href="/36/ku-rou-ji/"><span class="sp-num">34</span>苦肉计</a>
+        <a class="sp-cell" href="/36/lian-huan-ji/"><span class="sp-num">35</span>连环计</a>
+        <a class="sp-cell" href="/36/zou-wei-shang-ji/"><span class="sp-num">36</span>走为上计</a>
+      </div>
+      <div style="text-align:center;margin-top:28px">
+        <a class="btn btn-secondary" href="/36/">查看全部36计 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" style="background:var(--bg2)">
+    <div class="w">
+      <div class="section-label">常见问题</div>
+      <div class="section-title">FAQ</div>
+      <div class="faq-list">
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>SingClaw 是什么？</span><span class="arrow">▼</span></div>
+          <div class="faq-a"><p style="padding-top:10px">SingClaw 是一个「养虾方法论 + 链上游戏」平台。核心内容是养虾36计——36篇实战攻略，每篇都有真实案例和可复制的AI提示词。ShrimpFi 是把这些方法论游戏化的链上养虾游戏，让学习变得好玩且有价值。</p></div>
         </div>
-      </section>
-    </main>
-    <footer class="footer"><div class="container">© 2026 SingClaw · 龙虾养成者的成长操作系统</div></footer>
-  </body>
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>需要花钱吗？</span><span class="arrow">▼</span></div>
+          <div class="faq-a"><p style="padding-top:10px">36计攻略完全免费阅读。ShrimpFi 游戏免费开玩，所有功能（养殖、进化、技能学习）都可以在链下体验。只有想把虾铸造成 NFT 上链时才需要少量 Gas 费（Base 链上通常几美分）。</p></div>
+        </div>
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>36计和游戏是什么关系？</span><span class="arrow">▼</span></div>
+          <div class="faq-a"><p style="padding-top:10px">36计是内容（方法论攻略），ShrimpFi 是载体（游戏化体验）。在游戏中，每条计策对应一个技能——你必须读完文章、通过问答才能解锁。虾的强度 = 你的知识水平。掌握全部36计才能进化成虾王。</p></div>
+        </div>
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>为什么叫"养虾"？</span><span class="arrow">▼</span></div>
+          <div class="faq-a"><p style="padding-top:10px">虾（AI Agent）是需要养的——不是装好就行，而是需要持续喂养（数据）、调水（环境）、进化（迭代）。三十六计的每一计都是养虾过程中的一个实战方法。这不是比喻，是方法论。</p></div>
+        </div>
+        <div class="faq-item" onclick="this.classList.toggle('open')">
+          <div class="faq-q"><span>ShrimpFi 部署在哪条链？</span><span class="arrow">▼</span></div>
+          <div class="faq-a"><p style="padding-top:10px">Base（Coinbase 的 L2 链）。低 Gas、快速确认、Coinbase 生态背书。智能合约包括虾 NFT（ERC-721）、$FEED 代币（ERC-20）、进化合约和游戏逻辑合约，全部开源。</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="text-align:center;padding:80px 0">
+    <div class="w">
+      <div style="font-size:48px;margin-bottom:16px">🦐</div>
+      <div class="section-title" style="margin-bottom:8px">开始你的养虾之旅</div>
+      <p style="color:var(--dim);margin-bottom:28px;font-size:16px">先读攻略，再养虾。知识即装备。</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-primary" href="/game/">🦐 进入 ShrimpFi</a>
+        <a class="btn btn-secondary" href="/36/">📖 阅读养虾36计</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="w">
+      <p>© 2026 <a href="/">SingClaw</a> · 养虾方法论 × 链上游戏 · Built on <a href="https://base.org" target="_blank">Base</a></p>
+      <p style="margin-top:6px;font-size:11px">@马星克 Maxink</p>
+    </div>
+  </footer>
+
+</body>
 </html>
