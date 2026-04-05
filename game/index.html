@@ -410,6 +410,7 @@
             filter: drop-shadow(0 0 20px var(--accent-glow));
             transition: filter 0.3s;
             cursor: pointer;
+            position: relative;
         }
         .shrimp-sprite:hover { filter: drop-shadow(0 0 40px var(--accent-glow)) brightness(1.2); }
         .shrimp-sprite.feeding { animation: feedBounce 0.4s ease !important; }
@@ -423,6 +424,192 @@
             30% { transform: scale(1.25) rotate(5deg); }
             60% { transform: scale(0.95) rotate(-3deg); }
             100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* ── CSS Shrimp Art ── */
+        .css-shrimp {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: inline-block;
+            animation: swim 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .css-shrimp:hover { filter: brightness(1.2); }
+        .css-shrimp .body {
+            position: absolute;
+            width: 70px; height: 50px;
+            border-radius: 50% 50% 30% 30%;
+            top: 30px; left: 25px;
+            transition: all 0.3s;
+        }
+        .css-shrimp .head {
+            position: absolute;
+            width: 35px; height: 30px;
+            border-radius: 50% 50% 20% 40%;
+            top: 20px; left: 55px;
+            transition: all 0.3s;
+        }
+        .css-shrimp .eye {
+            position: absolute;
+            width: 8px; height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            top: 25px; left: 72px;
+            box-shadow: inset 2px 0 0 #111;
+        }
+        .css-shrimp .tail {
+            position: absolute;
+            width: 25px; height: 20px;
+            border-radius: 0 0 50% 50%;
+            top: 55px; left: 15px;
+            transition: all 0.3s;
+        }
+        .css-shrimp .antenna {
+            position: absolute;
+            width: 2px; height: 20px;
+            top: 5px;
+            border-radius: 1px;
+            transform-origin: bottom;
+            animation: antennaWave 2s ease-in-out infinite;
+        }
+        .css-shrimp .antenna.l { left: 70px; transform: rotate(-30deg); }
+        .css-shrimp .antenna.r { left: 78px; transform: rotate(30deg); animation-delay: 0.3s; }
+        @keyframes antennaWave {
+            0%, 100% { transform: rotate(-30deg); }
+            50% { transform: rotate(-15deg); }
+        }
+        .css-shrimp .legs { position: absolute; bottom: 20px; left: 30px; }
+        .css-shrimp .leg {
+            display: inline-block;
+            width: 2px; height: 12px;
+            margin: 0 3px;
+            border-radius: 1px;
+            animation: legWiggle 0.6s ease-in-out infinite;
+        }
+        .css-shrimp .leg:nth-child(2) { animation-delay: 0.1s; }
+        .css-shrimp .leg:nth-child(3) { animation-delay: 0.2s; }
+        .css-shrimp .leg:nth-child(4) { animation-delay: 0.3s; }
+        @keyframes legWiggle {
+            0%, 100% { transform: rotate(0); }
+            50% { transform: rotate(15deg); }
+        }
+        /* Rarity color schemes */
+        .css-shrimp.common .body { background: linear-gradient(135deg, #4a9e8e, #357a6d); }
+        .css-shrimp.common .head { background: linear-gradient(135deg, #5ab8a5, #4a9e8e); }
+        .css-shrimp.common .tail { background: #357a6d; }
+        .css-shrimp.common .antenna, .css-shrimp.common .leg { background: #357a6d; }
+
+        .css-shrimp.rare .body { background: linear-gradient(135deg, #4d8ffa, #2563eb); }
+        .css-shrimp.rare .head { background: linear-gradient(135deg, #60a5fa, #4d8ffa); }
+        .css-shrimp.rare .tail { background: #2563eb; }
+        .css-shrimp.rare .antenna, .css-shrimp.rare .leg { background: #2563eb; }
+
+        .css-shrimp.epic .body { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+        .css-shrimp.epic .head { background: linear-gradient(135deg, #c084fc, #a855f7); }
+        .css-shrimp.epic .tail { background: #7c3aed; }
+        .css-shrimp.epic .antenna, .css-shrimp.epic .leg { background: #7c3aed; }
+
+        .css-shrimp.legendary .body { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 0 20px rgba(251,191,36,0.4); }
+        .css-shrimp.legendary .head { background: linear-gradient(135deg, #fcd34d, #fbbf24); }
+        .css-shrimp.legendary .tail { background: #f59e0b; }
+        .css-shrimp.legendary .antenna, .css-shrimp.legendary .leg { background: #f59e0b; }
+
+        /* Breed variants */
+        .css-shrimp.warrior .body { border: 2px solid rgba(239,68,68,0.5); }
+        .css-shrimp.tank .body { border: 2px solid rgba(59,130,246,0.5); border-radius: 40%; }
+        .css-shrimp.support .body { box-shadow: 0 0 15px rgba(168,85,247,0.3); }
+
+        /* King crown */
+        .css-shrimp .crown {
+            position: absolute;
+            top: 5px; left: 52px;
+            font-size: 20px;
+            display: none;
+            animation: crownBob 2s ease-in-out infinite;
+        }
+        .css-shrimp.king .crown { display: block; }
+        @keyframes crownBob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* ── Rename input ── */
+        .rename-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--text-dim);
+            color: var(--text-bright);
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            width: 200px;
+            outline: none;
+            padding: 2px 4px;
+        }
+        .rename-input:focus { border-color: var(--accent); }
+
+        /* ── Share card ── */
+        .share-card {
+            background: linear-gradient(135deg, #0c1929, #1a2332);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 360px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .share-card .sc-title { font-size: 11px; color: var(--text-dim); letter-spacing: 2px; }
+        .share-card .sc-name { font-size: 20px; font-weight: 800; margin: 8px 0; }
+        .share-card .sc-stats { display: flex; justify-content: space-around; margin: 12px 0; font-size: 12px; }
+        .share-card .sc-stat-val { font-size: 18px; font-weight: 700; }
+        .share-card .sc-footer { font-size: 10px; color: var(--text-dim); margin-top: 12px; }
+
+        /* ── Tutorial overlay ── */
+        .tutorial-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tutorial-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+        }
+        .tutorial-card .t-icon { font-size: 48px; margin-bottom: 12px; }
+        .tutorial-card h3 { margin-bottom: 8px; }
+        .tutorial-card p { font-size: 13px; color: var(--text-dim); margin-bottom: 20px; line-height: 1.6; }
+        .tutorial-steps { text-align: left; margin-bottom: 20px; }
+        .tutorial-steps .step {
+            display: flex; gap: 10px; padding: 8px 0;
+            font-size: 13px;
+        }
+        .tutorial-steps .step-num {
+            background: var(--accent);
+            color: #000;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 11px;
+            flex-shrink: 0;
+        }
+        .tutorial-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
         }
         .shrimp-name {
             font-size: 20px;
@@ -748,10 +935,14 @@
                     <div class="pond-bubbles" id="bubbles"></div>
                     <div class="pond-floor"></div>
                     <div class="shrimp-visual">
-                        <div class="shrimp-sprite" id="shrimpSprite">🦐</div>
-                        <div class="shrimp-name" id="shrimpName">虾苗 #0001</div>
+                        <div id="cssShrimpContainer"></div>
+                        <div class="shrimp-sprite" id="shrimpSprite" style="display:none">🦐</div>
+                        <div id="shrimpNameWrap">
+                            <input class="rename-input" id="shrimpName" value="虾苗 #0001" onchange="renameShrimp(this.value)" onclick="this.select()">
+                        </div>
                         <div class="shrimp-stage" id="shrimpStage">🥚 Egg → 等待孵化</div>
                         <div class="rarity-badge rarity-common" id="rarityBadge">Common</div>
+                        <button onclick="showShareCard()" style="margin-top:8px;background:none;border:1px solid var(--border);color:var(--text-dim);padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer">📤 分享名片</button>
                     </div>
                 </div>
 
@@ -994,7 +1185,7 @@
         <div class="status-item"><span class="status-dot" id="chainDot"></span><span id="chainStatus">Base · 未连接</span></div>
         <div class="status-item">💰 $FEED: <span id="feedBalance">0</span></div>
         <div class="status-item">🦐 虾: <span id="shrimpCount">0</span></div>
-        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.4.0 · Phase 1</div>
+        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.5.0 · Phase 1</div>
     </div>
 
 <script>
@@ -1389,9 +1580,11 @@ async function feedShrimp() {
     addEvent(`🍤 喂养成功！+${exp} EXP（水质加成${wScore}%）`);
 
     // 增强动画
-    const sprite = document.getElementById('shrimpSprite');
-    sprite.classList.add('feeding');
-    setTimeout(() => sprite.classList.remove('feeding'), 400);
+    const cssShrimp = document.querySelector('.css-shrimp');
+    if (cssShrimp) {
+        cssShrimp.style.animation = 'feedBounce 0.4s ease';
+        setTimeout(() => cssShrimp.style.animation = 'swim 3s ease-in-out infinite', 400);
+    }
     spawnFoodParticles();
     spawnFloatText(`+${exp} EXP`, 'exp');
     spawnFloatText(`-10 FEED`, 'feed');
@@ -1516,9 +1709,11 @@ function doEvolve(breedChoice) {
     addEvent(`🔄 进化成功！→ ${s.stage}${s.breed !== 'None' ? ' ('+s.breed+')' : ''}`);
 
     // 进化动画
-    const sprite = document.getElementById('shrimpSprite');
-    sprite.style.animation = 'evolveGlow 1.5s ease';
-    setTimeout(() => sprite.style.animation = '', 1500);
+    const cssShrimp2 = document.querySelector('.css-shrimp');
+    if (cssShrimp2) {
+        cssShrimp2.style.filter = 'brightness(2) drop-shadow(0 0 30px rgba(168,85,247,0.6))';
+        setTimeout(() => cssShrimp2.style.filter = '', 1500);
+    }
     spawnFloatText('✨ 进化！', 'exp');
 
     checkAchievements();
@@ -1539,8 +1734,11 @@ function updateUI() {
     const stageEmoji = {Egg:'🥚',Larva:'🦐',Juvenile:'🦞',Adult:'🦞',King:'👑'};
     const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
 
-    document.getElementById('shrimpSprite').textContent = stageEmoji[s.stage] || '🦐';
-    document.getElementById('shrimpName').textContent = `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
+    // CSS Shrimp
+    renderCSSShrimp();
+
+    const displayName = s.customName || `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
+    document.getElementById('shrimpName').value = displayName;
     document.getElementById('shrimpStage').textContent = `${stageEmoji[s.stage]} ${s.stage}${s.breed !== 'None' ? ' · '+s.breed : ''} · 已学 ${s.skills.filter(Boolean).length}/36 计`;
 
     const rb = document.getElementById('rarityBadge');
@@ -1966,12 +2164,135 @@ document.querySelectorAll('.mobile-nav-item').forEach(item => {
     });
 });
 
+// ═══════════════════════════════════════════
+//  CSS Shrimp Renderer
+// ═══════════════════════════════════════════
+function renderCSSShrimp() {
+    const s = gameState.shrimp;
+    const container = document.getElementById('cssShrimpContainer');
+    if (!s || !container) return;
+
+    const rarityClass = s.rarity.toLowerCase();
+    const breedClass = s.breed !== 'None' ? s.breed.toLowerCase() : '';
+    const isKing = s.stage === 'King';
+
+    container.innerHTML = `
+        <div class="css-shrimp ${rarityClass} ${breedClass} ${isKing ? 'king' : ''}" onclick="this.style.animation='feedBounce 0.4s ease';setTimeout(()=>this.style.animation='swim 3s ease-in-out infinite',400)">
+            <div class="crown">👑</div>
+            <div class="antenna l"></div>
+            <div class="antenna r"></div>
+            <div class="head"></div>
+            <div class="eye"></div>
+            <div class="body"></div>
+            <div class="tail"></div>
+            <div class="legs">
+                <div class="leg"></div>
+                <div class="leg"></div>
+                <div class="leg"></div>
+                <div class="leg"></div>
+            </div>
+        </div>
+    `;
+}
+
+// ═══════════════════════════════════════════
+//  Rename
+// ═══════════════════════════════════════════
+function renameShrimp(name) {
+    if (!gameState.shrimp) return;
+    name = name.trim().slice(0, 20);
+    if (!name) name = `虾 #${String(gameState.shrimp.id).padStart(4,'0')}`;
+    gameState.shrimp.customName = name;
+    addEvent(`✏️ 虾改名为「${name}」`);
+    saveGame();
+}
+
+// ═══════════════════════════════════════════
+//  Share Card
+// ═══════════════════════════════════════════
+function showShareCard() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    const skills = s.skills.filter(Boolean).length;
+    const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
+    const name = s.customName || `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
+
+    const overlay = document.getElementById('quizOverlay');
+    const content = document.getElementById('quizContent');
+    document.querySelector('#quizOverlay .modal h3').textContent = '📤 虾的名片';
+    content.innerHTML = `
+        <div class="share-card">
+            <div class="sc-title">S H R I M P F I</div>
+            <div class="sc-name">${name}</div>
+            <div class="rarity-badge rarity-${s.rarity.toLowerCase()}" style="margin-bottom:8px">${s.rarity}</div>
+            <div style="font-size:13px;color:var(--text-dim)">${stageNames[s.stage]}${s.breed !== 'None' ? ' · '+s.breed : ''}</div>
+            <div class="sc-stats">
+                <div><div class="sc-stat-val" style="color:var(--accent)">Lv.${s.level}</div><div style="color:var(--text-dim)">等级</div></div>
+                <div><div class="sc-stat-val" style="color:var(--rare)">${skills}/36</div><div style="color:var(--text-dim)">技能</div></div>
+                <div><div class="sc-stat-val" style="color:var(--success)">${s.hp}</div><div style="color:var(--text-dim)">HP</div></div>
+                <div><div class="sc-stat-val" style="color:var(--danger)">${s.atk}</div><div style="color:var(--text-dim)">ATK</div></div>
+            </div>
+            <div style="display:flex;justify-content:center;gap:12px;margin:12px 0">
+                <div style="font-size:11px;padding:4px 8px;background:var(--bg-deep);border-radius:4px">🏆 ${gameState.achievements.length}个成就</div>
+                <div style="font-size:11px;padding:4px 8px;background:var(--bg-deep);border-radius:4px">🍤 喂养${gameState.totalFeeds}次</div>
+            </div>
+            <div class="sc-footer">singclaw.xyz/game · Built on Base 🔵</div>
+        </div>
+        <button onclick="copyShareText()" class="action-btn primary" style="margin-top:12px;display:inline-block;width:auto;padding:10px 20px">📋 复制分享文案</button>
+        <button onclick="closeQuiz()" class="action-btn" style="margin-top:8px;display:inline-block;width:auto;padding:10px 20px">关闭</button>
+    `;
+    overlay.classList.add('active');
+}
+
+function copyShareText() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
+    const name = s.customName || `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
+    const skills = s.skills.filter(Boolean).length;
+    const text = `🦐 我在 ShrimpFi 养了一只${s.rarity}品质的${stageNames[s.stage]}「${name}」！\n📊 Lv.${s.level} | ${skills}/36技能 | HP:${s.hp} ATK:${s.atk}\n🏆 已解锁${gameState.achievements.length}个成就\n\n来养你自己的虾 👉 singclaw.xyz/game`;
+    navigator.clipboard.writeText(text).catch(() => {});
+    addEvent('📋 分享文案已复制！');
+}
+
+// ═══════════════════════════════════════════
+//  Tutorial (新手引导)
+// ═══════════════════════════════════════════
+function showTutorial() {
+    if (localStorage.getItem('shrimpfi_tutorial_done')) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'tutorial-overlay';
+    overlay.id = 'tutorialOverlay';
+    overlay.innerHTML = `
+        <div class="tutorial-card">
+            <div class="t-icon">🦐</div>
+            <h3>欢迎来到 ShrimpFi！</h3>
+            <p>用真实养虾知识养链上的虾。<br>学习36计，让你的虾进化成虾王。</p>
+            <div class="tutorial-steps">
+                <div class="step"><span class="step-num">1</span><span>🥚 <strong>孵化</strong>一只虾苗开始</span></div>
+                <div class="step"><span class="step-num">2</span><span>🍤 <strong>喂养</strong>获得经验，升级变强</span></div>
+                <div class="step"><span class="step-num">3</span><span>📖 <strong>学习36计</strong>解锁技能（要读文章答题哦）</span></div>
+                <div class="step"><span class="step-num">4</span><span>🔄 满足条件后<strong>进化</strong>，选择品种分支</span></div>
+                <div class="step"><span class="step-num">5</span><span>💧 管理<strong>水质</strong>，水质好经验加成高</span></div>
+            </div>
+            <button class="tutorial-btn" onclick="closeTutorial()">开始养虾！🦐</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
+
+function closeTutorial() {
+    localStorage.setItem('shrimpfi_tutorial_done', '1');
+    const el = document.getElementById('tutorialOverlay');
+    if (el) el.remove();
+}
+
 // ── Auto-save every 30s ──
 setInterval(saveGame, 30000);
 
 // ── Init ──
 const loaded = loadGame();
-if (!loaded) renderSkillsGrid();
+if (!loaded) { renderSkillsGrid(); showTutorial(); }
 </script>
 
 <!-- Mobile Bottom Nav -->
