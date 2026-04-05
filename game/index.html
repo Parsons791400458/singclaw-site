@@ -8,7 +8,71 @@
     <meta property="og:title" content="ShrimpFi — 养虾链游">
     <meta property="og:description" content="36计驱动的链上养虾GameFi">
     <meta property="og:type" content="website">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.11.1/dist/ethers.umd.min.js"></script>
     <style>
+        /* ── Quiz Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 520px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal h3 { color: var(--accent); margin-bottom: 16px; }
+        .modal .quiz-q { font-size: 15px; margin-bottom: 12px; font-weight: 600; }
+        .quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+        .quiz-opt {
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .quiz-opt:hover { border-color: var(--accent); background: rgba(0,212,170,0.05); }
+        .quiz-opt.correct { border-color: var(--success); background: rgba(34,197,94,0.15); color: var(--success); }
+        .quiz-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.15); color: var(--danger); }
+        .quiz-progress { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+        .quiz-result { text-align: center; padding: 20px; }
+        .quiz-result .big-icon { font-size: 48px; margin-bottom: 12px; }
+        .quiz-effect { font-size: 12px; color: var(--accent); margin-top: 8px; padding: 8px; background: rgba(0,212,170,0.08); border-radius: 6px; }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .read-article-btn {
+            display: inline-block;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid var(--rare);
+            color: var(--rare);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .read-article-btn:hover { background: rgba(59,130,246,0.25); }
         :root {
             --bg-deep: #0a0e1a;
             --bg-card: #111827;
@@ -1026,9 +1090,238 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function clamp(v,min,max) { return Math.max(min,Math.min(max,v)); }
 function randInt(a,b) { return a + Math.floor(Math.random()*(b-a+1)); }
 
+// ═══════════════════════════════════════════
+//  36计问答系统
+// ═══════════════════════════════════════════
+
+const SKILL_QUIZ = [
+  {id:0,name:"瞒天过海",slug:"man-tian-guo-hai",gameEffect:"渗透率+10%：虾的每日被动产出提升10%",quiz:[{q:"瞒天过海在养虾中的核心策略是什么？",opts:["高调宣布AI转型","无声嵌入日常流程","完全隐藏虾的存在","只在夜间运行"],ans:1},{q:"为什么高调推广养虾反而不好？",opts:["成本太高","人天然抗拒被改变流程","技术不成熟","领导不支持"],ans:1}]},
+  {id:1,name:"围魏救赵",slug:"wei-wei-jiu-zhao",gameEffect:"转移伤害：受攻击时30%概率转移给对手",quiz:[{q:"围魏救赵的核心思路是什么？",opts:["正面硬刚","不攻其守，攻其必救","等待时机","全面撤退"],ans:1},{q:"在养虾中，围魏救赵指的是？",opts:["直接解决问题","绕过卡点，从依赖端切入","放弃困难任务","增加更多资源"],ans:1}]},
+  {id:2,name:"借刀杀人",slug:"jie-dao-sha-ren",gameEffect:"借力：可调用其他虾的一个技能",quiz:[{q:"借刀杀人的本质是什么？",opts:["让别人背锅","借用外部力量完成目标","偷取资源","欺骗对手"],ans:1},{q:"养虾中'借刀'的对象可以是？",opts:["只能是人","API、工具、外部服务","只能是其他AI","只能是硬件"],ans:1}]},
+  {id:3,name:"以逸待劳",slug:"yi-yi-dai-lao",gameEffect:"休息回复：每回合恢复5%HP",quiz:[{q:"以逸待劳在养虾中的策略是？",opts:["什么都不做","让虾自动运转，人只在关键时介入","拼命干活","找人代替"],ans:1},{q:"以逸待劳要求的前提是？",opts:["虾足够聪明","系统已搭好自动化流程","完全不管","资金充足"],ans:1}]},
+  {id:4,name:"趁火打劫",slug:"chen-huo-da-jie",gameEffect:"机会捕捉：对手状态异常时伤害+50%",quiz:[{q:"趁火打劫在养虾中指什么？",opts:["破坏别人的系统","在变化窗口快速切入","趁乱偷东西","制造混乱"],ans:1},{q:"趁火打劫成功的关键？",opts:["动作要快，准备要早","运气好","资金充足","人脉广"],ans:0}]},
+  {id:5,name:"声东击西",slug:"sheng-dong-ji-xi",gameEffect:"迷惑：攻击时30%概率让对手防御失效",quiz:[{q:"声东击西的核心是？",opts:["大声喊叫","用表面行动掩护真实目标","分散自己精力","同时做很多事"],ans:1},{q:"声东击西的风险是？",opts:["没有风险","真正目标暴露或声东消耗过多资源","太简单","效果太好"],ans:1}]},
+  {id:6,name:"无中生有",slug:"wu-zhong-sheng-you",gameEffect:"创造：从无到有生成一个临时道具",quiz:[{q:"无中生有在养虾中的含义？",opts:["编造假数据","从零开始创造新的能力或流程","凭空想象","欺骗用户"],ans:1},{q:"无中生有最适合什么场景？",opts:["资源充足时","现有工具无法满足需求，需要创造新方案","一切正常时","结束收尾时"],ans:1}]},
+  {id:7,name:"暗度陈仓",slug:"an-du-chen-cang",gameEffect:"隐蔽行动：下一次攻击必定暴击",quiz:[{q:"暗度陈仓与瞒天过海的区别是？",opts:["完全一样","瞒天过海是隐藏存在，暗度陈仓是隐藏真实路径","一个进攻一个防守","没有区别"],ans:1},{q:"暗度陈仓适合什么情况？",opts:["正面路径受阻或有太多审批时","一切顺利时","刚开始时","资源充足时"],ans:0}]},
+  {id:8,name:"隔岸观火",slug:"ge-an-guan-huo",gameEffect:"观察者：跳过一回合，下回合伤害翻倍",quiz:[{q:"隔岸观火的核心策略？",opts:["袖手旁观","在局势不明时先观察再行动","完全不参与","等别人做完"],ans:1},{q:"隔岸观火≠不作为，区别在于？",opts:["没区别","观火是在观察中积累信息和判断","一个主动一个被动","取决于心情"],ans:1}]},
+  {id:9,name:"笑里藏刀",slug:"xiao-li-cang-dao",gameEffect:"友善外表：降低对手警惕，首击伤害+30%",quiz:[{q:"笑里藏刀在养虾中指？",opts:["假装友好","用友好的界面包裹强大的底层能力","欺骗用户","隐藏bug"],ans:1},{q:"笑里藏刀的'刀'是什么？",opts:["武器","虾的核心能力和底层逻辑","秘密","代码"],ans:1}]},
+  {id:10,name:"李代桃僵",slug:"li-dai-tao-jiang",gameEffect:"替身：受致命伤害时消耗道具存活",quiz:[{q:"李代桃僵的核心是？",opts:["牺牲","用小代价换大收益","逃跑","隐藏"],ans:1},{q:"什么是'桃'（必须保护的）？",opts:["所有东西","核心数据、关键流程、用户信任","界面美观","运行速度"],ans:1}]},
+  {id:11,name:"顺手牵羊",slug:"shun-shou-qian-yang",gameEffect:"拾取：战斗中有概率获取对手的buff",quiz:[{q:"顺手牵羊在养虾中的含义？",opts:["偷东西","完成主任务时顺带收集副产品","不专心","贪心"],ans:1},{q:"顺手牵羊的前提？",opts:["要有贼心","主线任务要先做好","放弃主线","专门去抢"],ans:1}]},
+  {id:12,name:"打草惊蛇",slug:"da-cao-jing-she",gameEffect:"探测：揭示对手下一回合的行动",quiz:[{q:"打草惊蛇的目的？",opts:["吓唬人","通过小动作试探暴露隐藏问题","随便试试","制造混乱"],ans:1},{q:"养虾中怎么'打草'？",opts:["发布测试版、灰度、A/B测试","直接上线","什么都不做","问别人"],ans:0}]},
+  {id:13,name:"借尸还魂",slug:"jie-shi-huan-hun",gameEffect:"复活：战败后可复活一次（50%HP）",quiz:[{q:"借尸还魂在养虾中的含义？",opts:["复活死去的虾","用旧框架承载新的能力","死而复生","重新开始"],ans:1},{q:"为什么要'借尸'而不是'造新体'？",opts:["省钱","旧框架已有用户基础和信任","懒","没能力"],ans:1}]},
+  {id:14,name:"调虎离山",slug:"tiao-hu-li-shan",gameEffect:"引诱：强制对手攻击指定目标",quiz:[{q:"调虎离山的核心？",opts:["赶走老虎","把阻碍从关键位置引开","搬家","换环境"],ans:1},{q:"调虎离山后应该做什么？",opts:["休息","迅速完成被阻碍的核心动作","等虎回来","庆祝"],ans:1}]},
+  {id:15,name:"欲擒故纵",slug:"yu-qin-gu-zong",gameEffect:"放长线：累计3回合不攻击，第4回合伤害×3",quiz:[{q:"欲擒故纵的策略是？",opts:["直接抓住","先给予自由和空间","放弃","不管"],ans:1},{q:"欲擒故纵的前提？",opts:["不在乎结果","确信方案能解决问题，只是时机未到","运气好","资源多"],ans:1}]},
+  {id:16,name:"抛砖引玉",slug:"pao-zhuan-yu-yin",gameEffect:"引导：消耗普通道具获得稀有道具",quiz:[{q:"抛砖引玉中的'砖'是什么？",opts:["真砖头","先给出粗糙但有启发性的方案","废物","错误答案"],ans:1},{q:"抛砖引玉的关键心态？",opts:["砖一定要完美","不怕砖丑，关键是能引出玉","只要砖就够了","砖越多越好"],ans:1}]},
+  {id:17,name:"擒贼擒王",slug:"qin-zei-qin-wang",gameEffect:"斩首：对Boss类目标伤害+100%",quiz:[{q:"擒贼擒王的核心是？",opts:["抓小兵","找到问题根源集中解决","全面出击","随机攻击"],ans:1},{q:"擒贼擒王的前提？",opts:["有很多兵","准确识别出谁是'王'","运气好","资源充足"],ans:1}]},
+  {id:18,name:"釜底抽薪",slug:"fu-di-chou-xin",gameEffect:"断根：移除对手一个buff",quiz:[{q:"釜底抽薪vs扬汤止沸的区别？",opts:["一样","釜底抽薪解决根本原因","一个快一个慢","没有区别"],ans:1},{q:"什么时候该釜底抽薪？",opts:["问题反复出现治标不治本时","第一次出现时","问题很小时","已经解决时"],ans:0}]},
+  {id:19,name:"混水摸鱼",slug:"hun-shui-mo-yu",gameEffect:"浑水：降低所有参战者的命中率",quiz:[{q:"混水摸鱼在养虾中的正面含义？",opts:["制造混乱","在信息不完整时快速行动","浑水摸鱼","摆烂"],ans:1},{q:"混水摸鱼的风险是？",opts:["没风险","方向可能走偏需要快速调整","太简单","太慢"],ans:1}]},
+  {id:20,name:"金蝉脱壳",slug:"jin-chan-tuo-qiao",gameEffect:"脱壳：受控制技能时自动解除",quiz:[{q:"金蝉脱壳的核心是？",opts:["逃跑","保留核心价值放弃外壳","变形","隐藏"],ans:1},{q:"金蝉脱壳后的'蝉'是什么？",opts:["一只虫","核心能力和数据资产","新代码","新设备"],ans:1}]},
+  {id:21,name:"关门捉贼",slug:"guan-men-zhuo-zei",gameEffect:"封锁：限制对手只能用普通攻击",quiz:[{q:"关门捉贼的策略？",opts:["开门放贼","先封闭环境再集中解决问题","锁门不管","等贼自己走"],ans:1},{q:"关门捉贼适合什么问题？",opts:["所有问题","问题明确但难以在开放环境中定位时","简单问题","已解决的问题"],ans:1}]},
+  {id:22,name:"远交近攻",slug:"yuan-jiao-jin-gong",gameEffect:"外交：与非相邻虾结盟共享buff",quiz:[{q:"远交近攻的核心逻辑？",opts:["远近都打","联合远处盟友攻击近处对手","只打远的","只打近的"],ans:1},{q:"养虾中'近攻'指什么？",opts:["攻击邻居","优先解决眼前直接影响的问题","打近战","近距离观察"],ans:1}]},
+  {id:23,name:"假道伐虢",slug:"jia-dao-fa-guo",gameEffect:"借道：穿过对手防御攻击后排",quiz:[{q:"假道伐虢的策略是？",opts:["借路","以合理名义获取资源用于更大目标","修路","造桥"],ans:1},{q:"假道伐虢的道德边界？",opts:["没有边界","借道理由必须真实，只是目标更大","随便编","看心情"],ans:1}]},
+  {id:24,name:"偷梁换柱",slug:"tou-liang-huan-zhu",gameEffect:"替换：将对手buff替换为debuff",quiz:[{q:"偷梁换柱在养虾中指？",opts:["偷东西","不改外在接口替换底层实现","换家具","搬家"],ans:1},{q:"偷梁换柱的关键？",opts:["速度快","接口不变用户无感知","偷得巧","柱子够大"],ans:1}]},
+  {id:25,name:"指桑骂槐",slug:"zhi-sang-ma-huai",gameEffect:"间接影响：debuff扩散到相邻目标",quiz:[{q:"指桑骂槐的策略核心？",opts:["骂人","通过影响A间接影响目标B","指鹿为马","混淆视听"],ans:1},{q:"指桑骂槐的风险？",opts:["没有风险","间接沟通可能导致信息失真","太简单","太直接"],ans:1}]},
+  {id:26,name:"假痴不癫",slug:"jia-chi-bu-dian",gameEffect:"扮猪吃虎：被低估时反击伤害×2",quiz:[{q:"假痴不癫的策略？",opts:["真的装傻","表面低调暗中积蓄力量","放弃思考","不参与"],ans:1},{q:"假痴不癫的关键？",opts:["真的不懂","内心清醒外表低调时机到了果断出手","一直装","永远不出手"],ans:1}]},
+  {id:27,name:"上屋抽梯",slug:"shang-wu-chou-ti",gameEffect:"断退路：对手无法使用逃跑/切换",quiz:[{q:"上屋抽梯的策略？",opts:["帮人上楼","引导目标进入后切断退路","拆梯子","建房子"],ans:1},{q:"上屋抽梯的前提？",opts:["不在乎后果","确信新方案更好防止回退","想控制人","没有梯子"],ans:1}]},
+  {id:28,name:"树上开花",slug:"shu-shang-kai-hua",gameEffect:"虚张声势：让对手以为你更强",quiz:[{q:"树上开花的核心？",opts:["种花","用有限资源创造超出实际的影响力","吹牛","装饰"],ans:1},{q:"树上开花vs无中生有的区别？",opts:["一样","树上开花是放大真实能力，无中生有是创造新能力","一个大一个小","没区别"],ans:1}]},
+  {id:29,name:"反客为主",slug:"fan-ke-wei-zhu",gameEffect:"夺权：接管对手一个技能槽",quiz:[{q:"反客为主的策略？",opts:["抢主人位置","从配角逐步成为核心","反叛","投诉"],ans:1},{q:"反客为主成功的标志？",opts:["抢到控制权","大家自然把虾当作不可或缺的核心","被依赖","被崇拜"],ans:1}]},
+  {id:30,name:"美人计",slug:"mei-ren-ji",gameEffect:"魅惑：使对手跳过一回合",quiz:[{q:"美人计在养虾中的正面含义？",opts:["用美女","用极致的用户体验吸引用户","色诱","贿赂"],ans:1},{q:"美人计的本质？",opts:["外表","用吸引力降低用户防御心理和使用门槛","欺骗","营销"],ans:1}]},
+  {id:31,name:"空城计",slug:"kong-cheng-ji",gameEffect:"虚实：50%概率完全闪避攻击",quiz:[{q:"空城计的核心是？",opts:["真的空城","资源不足时用自信和策略制造假象","放弃防守","投降"],ans:1},{q:"空城计失败的后果？",opts:["没后果","对手识破后全面进攻损失更大","无所谓","可以重来"],ans:1}]},
+  {id:32,name:"反间计",slug:"fan-jian-ji",gameEffect:"反情报：将侦查信息变为虚假信息",quiz:[{q:"反间计的核心？",opts:["当间谍","利用对手信息渠道传递有利信息","反叛","告密"],ans:1},{q:"反间计的前提？",opts:["有间谍","了解对手的信息获取渠道和决策逻辑","运气好","人多"],ans:1}]},
+  {id:33,name:"苦肉计",slug:"ku-rou-ji",gameEffect:"以伤换伤：牺牲10%HP造成对手30%HP伤害",quiz:[{q:"苦肉计的本质？",opts:["自残","主动承受短期痛苦换取更大长期收益","受虐","表演"],ans:1},{q:"苦肉计的关键？",opts:["越惨越好","痛苦可控有目的且有明确回收路径","随机受苦","长期受苦"],ans:1}]},
+  {id:34,name:"连环计",slug:"lian-huan-ji",gameEffect:"连锁：攻击命中后追加一次攻击",quiz:[{q:"连环计的核心？",opts:["一个计策","多个计策环环相扣","很多锁链","复杂"],ans:1},{q:"连环计的风险？",opts:["没有风险","一环断则全链崩","太复杂","太简单"],ans:1}]},
+  {id:35,name:"走为上计",slug:"zou-wei-shang-ji",gameEffect:"战略撤退：安全退出保留所有经验",quiz:[{q:"走为上计的核心？",opts:["逃跑","局势不利时果断撤退保存实力","放弃","投降"],ans:1},{q:"走为上计≠失败，因为？",opts:["走就是失败","保存实力是为了下次更好地出击","没区别","看心情"],ans:1}]},
+];
+
+let quizState = { skillIndex: -1, questionIndex: 0, correct: 0, total: 0 };
+
+function openQuiz(skillIndex) {
+    const skill = SKILL_QUIZ[skillIndex];
+    if (!skill) return;
+    quizState = { skillIndex, questionIndex: 0, correct: 0, total: skill.quiz.length };
+
+    const overlay = document.getElementById('quizOverlay');
+    overlay.classList.add('active');
+    renderQuizQuestion();
+}
+
+function closeQuiz() {
+    document.getElementById('quizOverlay').classList.remove('active');
+}
+
+function renderQuizQuestion() {
+    const skill = SKILL_QUIZ[quizState.skillIndex];
+    const qIdx = quizState.questionIndex;
+    const modal = document.getElementById('quizContent');
+
+    if (qIdx >= skill.quiz.length) {
+        // 结果
+        const passed = quizState.correct >= Math.ceil(quizState.total * 0.5);
+        if (passed && gameState.shrimp) {
+            gameState.shrimp.skills[quizState.skillIndex] = true;
+            if (gameState.feedBalance >= 50) gameState.feedBalance -= 50;
+            updateUI();
+            renderSkillsGrid();
+            addEvent(`📖 学会技能「${skill.name}」（第${skill.id+1}计）— ${skill.gameEffect}`);
+            checkEvolveReady();
+        }
+        modal.innerHTML = `
+            <div class="quiz-result">
+                <div class="big-icon">${passed ? '🎉' : '❌'}</div>
+                <h3>${passed ? '技能解锁成功！' : '未通过，再读一遍文章吧'}</h3>
+                <p>答对 ${quizState.correct}/${quizState.total}</p>
+                ${passed ? `<div class="quiz-effect">🎮 ${skill.gameEffect}</div>` : ''}
+                <br>
+                <button class="action-btn primary" onclick="closeQuiz()" style="display:inline-block;width:auto;padding:10px 24px">
+                    ${passed ? '收下！' : '关闭'}
+                </button>
+            </div>`;
+        return;
+    }
+
+    const q = skill.quiz[qIdx];
+    modal.innerHTML = `
+        <div class="quiz-progress">第${skill.id+1}计「${skill.name}」· 问题 ${qIdx+1}/${skill.quiz.length}</div>
+        <a class="read-article-btn" href="/36/${skill.slug}/" target="_blank">📖 先读文章再答题</a>
+        <div class="quiz-q">${q.q}</div>
+        <div class="quiz-opts">
+            ${q.opts.map((o,i) => `<div class="quiz-opt" onclick="answerQuiz(${i},${q.ans})">${o}</div>`).join('')}
+        </div>`;
+}
+
+function answerQuiz(chosen, correct) {
+    const opts = document.querySelectorAll('.quiz-opt');
+    opts.forEach((o,i) => {
+        o.onclick = null;
+        if (i === correct) o.classList.add('correct');
+        if (i === chosen && chosen !== correct) o.classList.add('wrong');
+    });
+    if (chosen === correct) quizState.correct++;
+    quizState.questionIndex++;
+    setTimeout(renderQuizQuestion, 800);
+}
+
+// Override learnSkill to use quiz
+function learnSkill(index) {
+    const s = gameState.shrimp;
+    if (!s) return;
+    if (index === undefined) {
+        for (let i = 0; i < 36; i++) {
+            if (!s.skills[i] && s.level >= requiredLevel(i)) { index = i; break; }
+        }
+        if (index === undefined) { addEvent('📖 没有可学习的新技能'); return; }
+    }
+    if (s.skills[index]) { addEvent('已学过此技能'); return; }
+    if (s.level < requiredLevel(index)) { addEvent(`等级不足（需要 Lv.${requiredLevel(index)}）`); return; }
+    if (gameState.feedBalance < 50) { addEvent('❌ $FEED 不足（需要50）'); return; }
+    openQuiz(index);
+}
+
+// Override skill cell click in renderSkillsGrid
+function renderSkillsGrid() {
+    const s = gameState.shrimp;
+    const groups = [[0,8,'skillGroup1'],[9,17,'skillGroup2'],[18,26,'skillGroup3'],[27,35,'skillGroup4']];
+    for (const [from, to, containerId] of groups) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        for (let i = from; i <= to; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'skill-cell';
+            const skill = SKILL_QUIZ[i];
+            cell.textContent = i+1;
+            cell.title = skill ? `${skill.name} — ${skill.gameEffect}` : SKILLS_36[i];
+            if (s && s.skills[i]) {
+                cell.classList.add('learned');
+            } else if (s && s.level >= requiredLevel(i)) {
+                cell.classList.add('available');
+                cell.onclick = () => learnSkill(i);
+            } else {
+                cell.classList.add('locked');
+            }
+            container.appendChild(cell);
+        }
+    }
+}
+
+// ═══════════════════════════════════════════
+//  Real Wallet Connection (ethers.js)
+// ═══════════════════════════════════════════
+
+const BASE_SEPOLIA_CHAIN = {
+    chainId: '0x14a34', // 84532
+    chainName: 'Base Sepolia',
+    rpcUrls: ['https://sepolia.base.org'],
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    blockExplorerUrls: ['https://sepolia.basescan.org'],
+};
+
+async function connectWallet() {
+    const btn = document.getElementById('connectBtn');
+    if (gameState.connected) return;
+
+    if (typeof window.ethereum !== 'undefined') {
+        try {
+            btn.textContent = '连接中...';
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            await provider.send('eth_requestAccounts', []);
+
+            // Switch to Base Sepolia
+            try {
+                await provider.send('wallet_switchEthereumChain', [{ chainId: BASE_SEPOLIA_CHAIN.chainId }]);
+            } catch (e) {
+                if (e.code === 4902) {
+                    await provider.send('wallet_addEthereumChain', [BASE_SEPOLIA_CHAIN]);
+                }
+            }
+
+            const signer = await provider.getSigner();
+            const address = await signer.getAddress();
+            const shortAddr = address.slice(0,6) + '...' + address.slice(-4);
+
+            gameState.connected = true;
+            gameState.address = address;
+            gameState.provider = provider;
+            gameState.signer = signer;
+            gameState.feedBalance = 100; // Initial balance for demo
+
+            btn.textContent = shortAddr;
+            btn.classList.add('connected');
+            document.getElementById('chainDot').classList.remove('offline');
+            document.getElementById('chainStatus').textContent = 'Base Sepolia · ' + shortAddr;
+            document.getElementById('feedBalance').textContent = gameState.feedBalance;
+            addEvent('✅ 钱包已连接: ' + shortAddr + ' (Base Sepolia)');
+        } catch (e) {
+            btn.textContent = '连接钱包';
+            addEvent('❌ 钱包连接失败: ' + e.message);
+        }
+    } else {
+        // No wallet — demo mode
+        btn.textContent = '连接中...';
+        await sleep(800);
+        gameState.connected = true;
+        gameState.address = '0x' + Array.from({length:8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...';
+        gameState.feedBalance = 100;
+        btn.textContent = '演示模式';
+        btn.classList.add('connected');
+        document.getElementById('chainDot').classList.remove('offline');
+        document.getElementById('chainStatus').textContent = 'Demo · 无钱包';
+        document.getElementById('feedBalance').textContent = gameState.feedBalance;
+        addEvent('ℹ️ 未检测到钱包，进入演示模式');
+    }
+}
+
 // ── Init ──
 renderSkillsGrid();
 </script>
+
+<!-- Quiz Modal -->
+<div class="modal-overlay" id="quizOverlay">
+    <div class="modal" style="position:relative">
+        <button class="modal-close" onclick="closeQuiz()">✕</button>
+        <h3>📖 技能解锁问答</h3>
+        <div id="quizContent"></div>
+    </div>
+</div>
 
 </body>
 </html>
