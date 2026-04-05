@@ -73,6 +73,134 @@
             transition: all 0.2s;
         }
         .read-article-btn:hover { background: rgba(59,130,246,0.25); }
+
+        /* ── Floating exp/damage numbers ── */
+        .float-text {
+            position: absolute;
+            font-weight: 800;
+            font-size: 18px;
+            pointer-events: none;
+            animation: floatUp 1.2s ease-out forwards;
+            z-index: 10;
+        }
+        .float-text.exp { color: var(--accent); }
+        .float-text.feed { color: var(--warning); }
+        .float-text.damage { color: var(--danger); }
+        .float-text.heal { color: var(--success); }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.3); opacity: 0; }
+        }
+
+        /* ── Feed animation ── */
+        .food-particle {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            animation: foodFall 1s ease-in forwards;
+            z-index: 5;
+        }
+        @keyframes foodFall {
+            0% { transform: translateY(-60px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(60px) rotate(180deg); opacity: 0; }
+        }
+
+        /* ── Pond floor ── */
+        .pond-floor {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: linear-gradient(0deg, #1a3a2a 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .pond-floor::before {
+            content: '🪨  🌿  🪸  🌿  🪨  🌿  🪸';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            letter-spacing: 12px;
+            opacity: 0.5;
+            white-space: nowrap;
+        }
+
+        /* ── Achievement toast ── */
+        .achievement-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--bg-card), #1a2332);
+            border: 1px solid var(--legendary);
+            padding: 12px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 200;
+            animation: achieveIn 0.5s ease, achieveOut 0.5s ease 2.5s forwards;
+            box-shadow: 0 0 30px rgba(251,191,36,0.3);
+        }
+        @keyframes achieveIn { from { transform: translateX(-50%) translateY(-30px); opacity: 0; } }
+        @keyframes achieveOut { to { transform: translateX(-50%) translateY(-30px); opacity: 0; } }
+        .achievement-toast .ach-icon { font-size: 28px; }
+        .achievement-toast .ach-title { font-weight: 700; color: var(--legendary); font-size: 13px; }
+        .achievement-toast .ach-desc { font-size: 11px; color: var(--text-dim); }
+
+        /* ── Hunger bar ── */
+        .hunger-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .hunger-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        /* ── Mobile bottom nav ── */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(10,14,26,0.98);
+            border-top: 1px solid var(--border);
+            z-index: 100;
+            padding: 8px 0 env(safe-area-inset-bottom, 8px);
+        }
+        .mobile-nav-inner {
+            display: flex;
+            justify-content: space-around;
+        }
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            color: var(--text-dim);
+            font-size: 10px;
+            cursor: pointer;
+            padding: 4px 12px;
+        }
+        .mobile-nav-item.active { color: var(--accent); }
+        .mobile-nav-item .mn-icon { font-size: 20px; }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .mobile-nav { display: block; }
+            .status-bar { display: none; }
+            body { padding-bottom: 70px; }
+            .pond-container { grid-template-columns: 1fr; }
+            .content { padding: 16px; }
+            .pond { min-height: 300px; }
+            .shrimp-sprite { font-size: 80px; }
+        }
+
         :root {
             --bg-deep: #0a0e1a;
             --bg-card: #111827;
@@ -212,11 +340,21 @@
             font-size: 120px;
             animation: swim 3s ease-in-out infinite;
             filter: drop-shadow(0 0 20px var(--accent-glow));
+            transition: filter 0.3s;
+            cursor: pointer;
         }
+        .shrimp-sprite:hover { filter: drop-shadow(0 0 40px var(--accent-glow)) brightness(1.2); }
+        .shrimp-sprite.feeding { animation: feedBounce 0.4s ease !important; }
         @keyframes swim {
             0%, 100% { transform: translateX(0) rotate(0deg); }
             25% { transform: translateX(15px) rotate(3deg); }
             75% { transform: translateX(-15px) rotate(-3deg); }
+        }
+        @keyframes feedBounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.25) rotate(5deg); }
+            60% { transform: scale(0.95) rotate(-3deg); }
+            100% { transform: scale(1) rotate(0deg); }
         }
         .shrimp-name {
             font-size: 20px;
@@ -537,8 +675,9 @@
             <!-- 养殖界面 -->
             <div class="pond-container" id="pondView" style="display:none">
                 <!-- 虾池 -->
-                <div class="pond">
+                <div class="pond" id="pondArea">
                     <div class="pond-bubbles" id="bubbles"></div>
+                    <div class="pond-floor"></div>
                     <div class="shrimp-visual">
                         <div class="shrimp-sprite" id="shrimpSprite">🦐</div>
                         <div class="shrimp-name" id="shrimpName">虾苗 #0001</div>
@@ -718,7 +857,7 @@
         <div class="status-item"><span class="status-dot" id="chainDot"></span><span id="chainStatus">Base · 未连接</span></div>
         <div class="status-item">💰 $FEED: <span id="feedBalance">0</span></div>
         <div class="status-item">🦐 虾: <span id="shrimpCount">0</span></div>
-        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.1.0 · Phase 1 MVP</div>
+        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.3.0 · Phase 1</div>
     </div>
 
 <script>
@@ -738,8 +877,154 @@ let gameState = {
     address: null,
     shrimp: null,
     feedBalance: 0,
-    events: []
+    events: [],
+    achievements: [],
+    totalFeeds: 0,
+    totalSkills: 0,
+    checkinStreak: 0,
+    lastCheckinDay: 0,
 };
+
+// ═══════════════════════════════════════════
+//  LocalStorage Save/Load
+// ═══════════════════════════════════════════
+function saveGame() {
+    try {
+        const data = { ...gameState, provider: undefined, signer: undefined };
+        localStorage.setItem('shrimpfi_save', JSON.stringify(data));
+    } catch(e) {}
+}
+function loadGame() {
+    try {
+        const raw = localStorage.getItem('shrimpfi_save');
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        Object.assign(gameState, data);
+        if (gameState.shrimp) {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('pondView').style.display = 'grid';
+            document.getElementById('shrimpCount').textContent = '1';
+            updateUI();
+            generateBubbles();
+            renderSkillsGrid();
+            addEvent('💾 存档已恢复');
+            if (gameState.connected) {
+                const btn = document.getElementById('connectBtn');
+                btn.textContent = gameState.address?.slice(0,10) || '已连接';
+                btn.classList.add('connected');
+            }
+        }
+        return !!gameState.shrimp;
+    } catch(e) { return false; }
+}
+
+// ═══════════════════════════════════════════
+//  Achievement System
+// ═══════════════════════════════════════════
+const ACHIEVEMENTS = [
+    { id: 'first_hatch', name: '初来乍到', desc: '孵化第一只虾', icon: '🥚', check: () => gameState.shrimp != null },
+    { id: 'first_feed', name: '开饭啦', desc: '第一次喂养', icon: '🍤', check: () => gameState.totalFeeds >= 1 },
+    { id: 'feed_10', name: '饲养员', desc: '累计喂养10次', icon: '🧑‍🌾', check: () => gameState.totalFeeds >= 10 },
+    { id: 'feed_50', name: '虾的铲屎官', desc: '累计喂养50次', icon: '🏅', check: () => gameState.totalFeeds >= 50 },
+    { id: 'level_10', name: '初具规模', desc: '虾达到Lv.10', icon: '📈', check: () => gameState.shrimp?.level >= 10 },
+    { id: 'level_20', name: '渐入佳境', desc: '虾达到Lv.20', icon: '🚀', check: () => gameState.shrimp?.level >= 20 },
+    { id: 'level_36', name: '虾王驾到', desc: '虾达到Lv.36', icon: '👑', check: () => gameState.shrimp?.level >= 36 },
+    { id: 'skill_9', name: '初窥门径', desc: '学会9个技能', icon: '📖', check: () => (gameState.shrimp?.skills?.filter(Boolean).length || 0) >= 9 },
+    { id: 'skill_18', name: '小有所成', desc: '学会18个技能', icon: '🎓', check: () => (gameState.shrimp?.skills?.filter(Boolean).length || 0) >= 18 },
+    { id: 'skill_36', name: '三十六计全通', desc: '学会全部36个技能', icon: '🏆', check: () => (gameState.shrimp?.skills?.filter(Boolean).length || 0) >= 36 },
+    { id: 'evolve_larva', name: '破壳而出', desc: '进化为虾苗', icon: '🦐', check: () => ['Larva','Juvenile','Adult','King'].includes(gameState.shrimp?.stage) },
+    { id: 'evolve_adult', name: '品种确立', desc: '选择品种进化为成虾', icon: '🦞', check: () => ['Adult','King'].includes(gameState.shrimp?.stage) },
+    { id: 'evolve_king', name: '一代虾王', desc: '进化为虾王', icon: '👑', check: () => gameState.shrimp?.stage === 'King' },
+    { id: 'water_100', name: '水质大师', desc: '水质满分100', icon: '💧', check: () => calcWaterScore() === 100 },
+    { id: 'streak_3', name: '连续签到', desc: '连续签到3天', icon: '🔥', check: () => gameState.checkinStreak >= 3 },
+    { id: 'streak_7', name: '坚持一周', desc: '连续签到7天', icon: '💎', check: () => gameState.checkinStreak >= 7 },
+];
+
+function checkAchievements() {
+    for (const ach of ACHIEVEMENTS) {
+        if (gameState.achievements.includes(ach.id)) continue;
+        if (ach.check()) {
+            gameState.achievements.push(ach.id);
+            showAchievement(ach);
+        }
+    }
+}
+
+function showAchievement(ach) {
+    const toast = document.createElement('div');
+    toast.className = 'achievement-toast';
+    toast.innerHTML = `<span class="ach-icon">${ach.icon}</span><div><div class="ach-title">🏆 ${ach.name}</div><div class="ach-desc">${ach.desc}</div></div>`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+    addEvent(`🏆 成就解锁：${ach.name} — ${ach.desc}`);
+}
+
+// ═══════════════════════════════════════════
+//  Hunger System (水质自动恶化)
+// ═══════════════════════════════════════════
+function updateHunger() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    const now = Date.now();
+    const timeSinceFed = now - (s.lastFed || now);
+    const maxHunger = 60000; // 60秒演示（实际可调为小时）
+    const hunger = Math.max(0, 100 - Math.floor(timeSinceFed / maxHunger * 100));
+
+    const fill = document.getElementById('hungerFill');
+    const text = document.getElementById('hungerText');
+    const timer = document.getElementById('hungerTimer');
+    if (fill) fill.style.width = hunger + '%';
+    if (text) {
+        if (hunger > 70) text.textContent = '饱食';
+        else if (hunger > 40) text.textContent = '有点饿';
+        else if (hunger > 10) { text.textContent = '很饿！'; text.style.color = 'var(--warning)'; }
+        else { text.textContent = '饥饿！经验减半'; text.style.color = 'var(--danger)'; }
+    }
+    if (timer) {
+        const cd = Math.max(0, 5000 - timeSinceFed);
+        timer.textContent = cd > 0 ? `冷却 ${Math.ceil(cd/1000)}s` : '可喂养';
+    }
+
+    // 水质自动恶化
+    if (hunger < 30 && Math.random() < 0.02) {
+        const wq = s.waterQuality;
+        wq.ammonia = Math.min(50, wq.ammonia + 1);
+        wq.oxygen = Math.max(20, wq.oxygen - 1);
+        updateUI();
+    }
+}
+setInterval(updateHunger, 1000);
+
+// ═══════════════════════════════════════════
+//  Animation Helpers
+// ═══════════════════════════════════════════
+function spawnFloatText(text, type) {
+    const pond = document.getElementById('pondArea');
+    if (!pond) return;
+    const el = document.createElement('div');
+    el.className = 'float-text ' + type;
+    el.textContent = text;
+    el.style.left = (30 + Math.random() * 40) + '%';
+    el.style.top = (30 + Math.random() * 20) + '%';
+    pond.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+}
+
+function spawnFoodParticles() {
+    const pond = document.getElementById('pondArea');
+    if (!pond) return;
+    const foods = ['🍤','🌾','🥬','🫘','🦠'];
+    for (let i = 0; i < 5; i++) {
+        const el = document.createElement('div');
+        el.className = 'food-particle';
+        el.textContent = foods[Math.floor(Math.random()*foods.length)];
+        el.style.left = (20 + Math.random() * 60) + '%';
+        el.style.top = (20 + Math.random() * 30) + '%';
+        el.style.animationDelay = (Math.random() * 0.3) + 's';
+        pond.appendChild(el);
+        setTimeout(() => el.remove(), 1200);
+    }
+}
 
 // ── 导航 ──
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -818,6 +1103,8 @@ async function hatchShrimp() {
 
     addEvent(`🎉 孵化成功！获得 ${rarity} 虾苗 #${String(gameState.shrimp.id).padStart(4,'0')}`);
     if (rarity !== 'Common') addEvent(`✨ 恭喜！${rarity} 品质！`);
+    checkAchievements();
+    saveGame();
 }
 
 // ── 喂养 ──
@@ -855,13 +1142,20 @@ async function feedShrimp() {
     // 随机事件 10%
     if (Math.random() < 0.1) triggerRandomEvent();
 
+    gameState.totalFeeds++;
     updateUI();
     addEvent(`🍤 喂养成功！+${exp} EXP（水质加成${wScore}%）`);
 
-    // 动画
+    // 增强动画
     const sprite = document.getElementById('shrimpSprite');
-    sprite.style.transform = 'scale(1.2)';
-    setTimeout(() => sprite.style.transform = '', 300);
+    sprite.classList.add('feeding');
+    setTimeout(() => sprite.classList.remove('feeding'), 400);
+    spawnFoodParticles();
+    spawnFloatText(`+${exp} EXP`, 'exp');
+    spawnFloatText(`-10 FEED`, 'feed');
+
+    checkAchievements();
+    saveGame();
 }
 
 // ── 调水 ──
@@ -876,6 +1170,7 @@ function adjustWater() {
     wq.ammonia = clamp(wq.ammonia + randInt(-3,3), 0, 50);
     updateUI();
     addEvent('💧 水质已调节');
+    saveGame();
 }
 
 // ── 技能学习 ──
@@ -905,9 +1200,26 @@ function learnSkill(index) {
 
 // ── 签到 ──
 function checkin() {
-    gameState.feedBalance += 5;
+    const today = Math.floor(Date.now() / 86400000);
+    if (gameState.lastCheckinDay === today) {
+        addEvent('⏳ 今天已签到过了');
+        return;
+    }
+    if (gameState.lastCheckinDay === today - 1) {
+        gameState.checkinStreak++;
+    } else {
+        gameState.checkinStreak = 1;
+    }
+    gameState.lastCheckinDay = today;
+
+    const bonus = Math.min(gameState.checkinStreak, 7);
+    const reward = 5 + bonus;
+    gameState.feedBalance += reward;
     updateUI();
-    addEvent('✅ 每日签到！+5 $FEED');
+    spawnFloatText(`+${reward} FEED`, 'feed');
+    addEvent(`✅ 签到第${gameState.checkinStreak}天！+${reward} $FEED${bonus > 1 ? '（连续签到加成）' : ''}`);
+    checkAchievements();
+    saveGame();
 }
 
 // ── 随机事件 ──
@@ -955,6 +1267,15 @@ function doEvolve(breedChoice) {
     updateUI();
     checkEvolveReady();
     addEvent(`🔄 进化成功！→ ${s.stage}${s.breed !== 'None' ? ' ('+s.breed+')' : ''}`);
+
+    // 进化动画
+    const sprite = document.getElementById('shrimpSprite');
+    sprite.style.animation = 'evolveGlow 1.5s ease';
+    setTimeout(() => sprite.style.animation = '', 1500);
+    spawnFloatText('✨ 进化！', 'exp');
+
+    checkAchievements();
+    saveGame();
 }
 
 function hasSkillRange(from, to) {
@@ -1310,9 +1631,41 @@ async function connectWallet() {
     }
 }
 
+// ── Mobile Nav ──
+document.querySelectorAll('.mobile-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.mobile-nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        const tab = item.dataset.tab;
+        // Find matching sidebar item and activate it
+        document.querySelectorAll('.nav-item').forEach(n => {
+            if (n.dataset.tab === tab) n.classList.add('active');
+        });
+        document.getElementById('pondView').style.display = tab === 'pond' && gameState.shrimp ? 'grid' : 'none';
+        document.getElementById('emptyState').style.display = tab === 'pond' && !gameState.shrimp ? 'flex' : 'none';
+        document.getElementById('skillsView').style.display = tab === 'skills' ? 'block' : 'none';
+        document.getElementById('evolveView').style.display = tab === 'evolve' ? 'block' : 'none';
+    });
+});
+
+// ── Auto-save every 30s ──
+setInterval(saveGame, 30000);
+
 // ── Init ──
-renderSkillsGrid();
+const loaded = loadGame();
+if (!loaded) renderSkillsGrid();
 </script>
+
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-nav">
+    <div class="mobile-nav-inner">
+        <div class="mobile-nav-item active" data-tab="pond"><span class="mn-icon">🏊</span>虾池</div>
+        <div class="mobile-nav-item" data-tab="skills"><span class="mn-icon">📖</span>技能</div>
+        <div class="mobile-nav-item" data-tab="evolve"><span class="mn-icon">🔄</span>进化</div>
+        <div class="mobile-nav-item" data-tab="market"><span class="mn-icon">🏪</span>市场</div>
+    </div>
+</nav>
 
 <!-- Quiz Modal -->
 <div class="modal-overlay" id="quizOverlay">
