@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShrimpFi — 养虾链游</title>
+    <meta name="description" content="用真实养虾知识养链上的虾。进化、对战、社交、赚钱。Built on Base.">
+    <meta property="og:title" content="ShrimpFi — 养虾链游">
+    <meta property="og:description" content="36计驱动的链上养虾GameFi">
+    <meta property="og:type" content="website">
+    <style>
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-card: #111827;
+            --bg-card-hover: #1a2332;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --accent2: #ff6b35;
+            --text: #e2e8f0;
+            --text-dim: #64748b;
+            --text-bright: #f8fafc;
+            --border: #1e293b;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --legendary: #fbbf24;
+            --epic: #a855f7;
+            --rare: #3b82f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        .logo-icon { font-size: 28px; }
+        .chain-badge {
+            font-size: 11px;
+            background: #0052ff22;
+            color: #4d8ffa;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .wallet-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .wallet-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+        .wallet-btn.connected { background: var(--bg-card); color: var(--accent); border: 1px solid var(--accent); }
+
+        /* ── Main Layout ── */
+        .main { display: flex; min-height: calc(100vh - 60px); }
+        .sidebar {
+            width: 220px;
+            border-right: 1px solid var(--border);
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .nav-item:hover { background: var(--bg-card); color: var(--text); }
+        .nav-item.active { color: var(--accent); background: rgba(0, 212, 170, 0.08); border-right: 2px solid var(--accent); }
+        .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+
+        .content { flex: 1; padding: 24px; max-width: 1200px; }
+
+        /* ── 虾池（主养殖界面）── */
+        .pond-container {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+        }
+        .pond {
+            background: linear-gradient(180deg, #0c1929 0%, #0f2744 50%, #0a1a2e 100%);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pond-bubbles {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 212, 170, 0.06);
+            animation: rise 8s infinite;
+        }
+        @keyframes rise {
+            0% { transform: translateY(100%) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100%) scale(1.2); opacity: 0; }
+        }
+
+        /* 虾的可视化 */
+        .shrimp-visual {
+            text-align: center;
+            z-index: 1;
+        }
+        .shrimp-sprite {
+            font-size: 120px;
+            animation: swim 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+        }
+        @keyframes swim {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(15px) rotate(3deg); }
+            75% { transform: translateX(-15px) rotate(-3deg); }
+        }
+        .shrimp-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 12px;
+            color: var(--text-bright);
+        }
+        .shrimp-stage {
+            font-size: 13px;
+            color: var(--accent);
+            margin-top: 4px;
+        }
+        .rarity-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        .rarity-common { background: #374151; color: #9ca3af; }
+        .rarity-rare { background: #1e3a5f; color: var(--rare); }
+        .rarity-epic { background: #3b1f6e; color: var(--epic); }
+        .rarity-legendary { background: #4a3000; color: var(--legendary); }
+
+        /* ── 右侧面板 ── */
+        .side-panel { display: flex; flex-direction: column; gap: 16px; }
+        .panel-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 16px;
+        }
+        .panel-title {
+            font-size: 13px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        /* 属性条 */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .stat-label { font-size: 13px; color: var(--text-dim); }
+        .stat-bar-wrap {
+            width: 140px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .stat-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        .stat-hp { background: var(--success); }
+        .stat-atk { background: var(--danger); }
+        .stat-def { background: var(--rare); }
+        .stat-spd { background: var(--warning); }
+        .stat-value { font-size: 13px; font-weight: 600; width: 32px; text-align: right; }
+
+        /* 经验条 */
+        .exp-bar-container { margin-bottom: 16px; }
+        .exp-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .exp-bar-wrap {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .exp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00ff88);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .level-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #000;
+            font-size: 18px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* 水质仪表 */
+        .water-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .water-param {
+            text-align: center;
+            padding: 10px;
+            background: var(--bg-deep);
+            border-radius: 8px;
+        }
+        .water-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .water-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+        .water-good { color: var(--success); }
+        .water-warn { color: var(--warning); }
+        .water-bad { color: var(--danger); }
+
+        /* 操作按钮 */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .action-btn {
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 14px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .action-btn:hover { border-color: var(--accent); background: rgba(0, 212, 170, 0.05); }
+        .action-btn .action-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+        .action-btn.primary { border-color: var(--accent); background: rgba(0, 212, 170, 0.1); }
+        .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* 技能网格 */
+        .skills-section { margin-top: 20px; }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .skill-cell {
+            aspect-ratio: 1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: var(--bg-deep);
+            color: var(--text-dim);
+        }
+        .skill-cell.learned { background: rgba(0, 212, 170, 0.15); border-color: var(--accent); color: var(--accent); }
+        .skill-cell.available { background: rgba(59, 130, 246, 0.1); border-color: var(--rare); color: var(--rare); }
+        .skill-cell.locked { opacity: 0.3; cursor: not-allowed; }
+        .skill-cell:hover:not(.locked) { transform: scale(1.1); }
+
+        .skill-group-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            text-align: center;
+            padding: 4px 0;
+            grid-column: span 9;
+        }
+
+        /* 进化提示 */
+        .evolve-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 20px 5px var(--accent-glow); }
+        }
+        .evolve-banner h3 { color: var(--accent); margin-bottom: 8px; }
+        .evolve-btn {
+            background: linear-gradient(135deg, var(--accent), #00ff88);
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        /* 事件日志 */
+        .event-log {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .event-item {
+            display: flex;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+        }
+        .event-time { color: var(--text-dim); white-space: nowrap; }
+        .event-text { color: var(--text); }
+
+        /* 底部状态栏 */
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            padding: 12px 24px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+        .status-item { display: flex; align-items: center; gap: 6px; }
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        .status-dot.offline { background: var(--danger); }
+
+        /* ── 无虾状态 ── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            text-align: center;
+        }
+        .empty-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.6; }
+        .empty-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+        .empty-desc { color: var(--text-dim); margin-bottom: 24px; max-width: 400px; }
+        .hatch-btn {
+            background: linear-gradient(135deg, var(--accent), #00ff88);
+            color: #000;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .hatch-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--accent-glow); }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .pond-container { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: repeat(6, 1fr); }
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🦐</span>
+            <span>ShrimpFi</span>
+            <span class="chain-badge">Base</span>
+        </div>
+        <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">连接钱包</button>
+    </header>
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-item active" data-tab="pond"><span class="nav-icon">🏊</span>虾池</div>
+            <div class="nav-item" data-tab="skills"><span class="nav-icon">📖</span>36计技能</div>
+            <div class="nav-item" data-tab="evolve"><span class="nav-icon">🔄</span>进化</div>
+            <div class="nav-item" data-tab="market"><span class="nav-icon">🏪</span>市场</div>
+            <div class="nav-item" data-tab="social"><span class="nav-icon">💬</span>社交<span style="font-size:10px;color:var(--text-dim);margin-left:4px">Soon</span></div>
+        </nav>
+
+        <!-- Content -->
+        <main class="content" id="mainContent">
+
+            <!-- 无虾状态 -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">🥚</div>
+                <h2 class="empty-title">你的虾池还是空的</h2>
+                <p class="empty-desc">孵化一只虾苗开始你的养虾之旅。学习36计，让你的虾进化成虾王。</p>
+                <button class="hatch-btn" onclick="hatchShrimp()">🥚 孵化虾苗</button>
+                <p style="margin-top:12px;font-size:12px;color:var(--text-dim)">免费体验 · 上链可选</p>
+            </div>
+
+            <!-- 养殖界面 -->
+            <div class="pond-container" id="pondView" style="display:none">
+                <!-- 虾池 -->
+                <div class="pond">
+                    <div class="pond-bubbles" id="bubbles"></div>
+                    <div class="shrimp-visual">
+                        <div class="shrimp-sprite" id="shrimpSprite">🦐</div>
+                        <div class="shrimp-name" id="shrimpName">虾苗 #0001</div>
+                        <div class="shrimp-stage" id="shrimpStage">🥚 Egg → 等待孵化</div>
+                        <div class="rarity-badge rarity-common" id="rarityBadge">Common</div>
+                    </div>
+                </div>
+
+                <!-- 右侧面板 -->
+                <div class="side-panel">
+                    <!-- 等级 & 经验 -->
+                    <div class="panel-card">
+                        <span class="level-badge" id="levelBadge">Lv.0</span>
+                        <div class="exp-bar-container">
+                            <div class="exp-info">
+                                <span id="expText">EXP: 0 / 100</span>
+                                <span id="expPercent">0%</span>
+                            </div>
+                            <div class="exp-bar-wrap">
+                                <div class="exp-bar" id="expBar" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <!-- 属性 -->
+                        <div class="stat-row">
+                            <span class="stat-label">❤️ HP</span>
+                            <div class="stat-bar-wrap"><div class="stat-bar stat-hp" id="barHp" style="width:50%"></div></div>
+                            <span class="stat-value" id="valHp">60</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">⚔️ ATK</span>
+                            <div class="stat-bar-wrap"><div class="stat-bar stat-atk" id="barAtk" style="width:20%"></div></div>
+                            <span class="stat-value" id="valAtk">20</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">🛡️ DEF</span>
+                            <div class="stat-bar-wrap"><div class="stat-bar stat-def" id="barDef" style="width:20%"></div></div>
+                            <span class="stat-value" id="valDef">20</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">💨 SPD</span>
+                            <div class="stat-bar-wrap"><div class="stat-bar stat-spd" id="barSpd" style="width:18%"></div></div>
+                            <span class="stat-value" id="valSpd">22</span>
+                        </div>
+                    </div>
+
+                    <!-- 水质 -->
+                    <div class="panel-card">
+                        <div class="panel-title">🌊 水质监测</div>
+                        <div class="water-grid">
+                            <div class="water-param">
+                                <div class="water-value water-good" id="wPh">7.2</div>
+                                <div class="water-label">pH</div>
+                            </div>
+                            <div class="water-param">
+                                <div class="water-value water-good" id="wOxygen">6.5</div>
+                                <div class="water-label">溶氧 mg/L</div>
+                            </div>
+                            <div class="water-param">
+                                <div class="water-value water-good" id="wTemp">26</div>
+                                <div class="water-label">温度 °C</div>
+                            </div>
+                            <div class="water-param">
+                                <div class="water-value water-good" id="wAmmonia">0.2</div>
+                                <div class="water-label">氨氮 ppm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 操作 -->
+                    <div class="panel-card">
+                        <div class="panel-title">⚡ 操作</div>
+                        <div class="action-grid">
+                            <button class="action-btn primary" onclick="feedShrimp()">
+                                <span class="action-icon">🍤</span>喂养
+                            </button>
+                            <button class="action-btn" onclick="adjustWater()">
+                                <span class="action-icon">💧</span>调水
+                            </button>
+                            <button class="action-btn" onclick="learnSkill()">
+                                <span class="action-icon">📖</span>学习
+                            </button>
+                            <button class="action-btn" onclick="checkin()">
+                                <span class="action-icon">✅</span>签到
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 事件日志 -->
+                    <div class="panel-card">
+                        <div class="panel-title">📋 事件</div>
+                        <div class="event-log" id="eventLog">
+                            <div class="event-item">
+                                <span class="event-time">刚刚</span>
+                                <span class="event-text">欢迎来到 ShrimpFi！🦐</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 36计技能面板 -->
+            <div id="skillsView" style="display:none">
+                <h2 style="margin-bottom:8px">📖 养虾36计 · 技能树</h2>
+                <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px">阅读文章 → 通过问答 → 解锁技能。每条计策对应一个战斗/养殖技能。</p>
+
+                <div class="panel-card" style="margin-bottom:12px">
+                    <div class="panel-title">🌱 基础养殖 · 第1-9计 (Lv1+)</div>
+                    <div class="skills-grid" id="skillGroup1"></div>
+                </div>
+                <div class="panel-card" style="margin-bottom:12px">
+                    <div class="panel-title">🌊 环境管理 · 第10-18计 (Lv10+)</div>
+                    <div class="skills-grid" id="skillGroup2"></div>
+                </div>
+                <div class="panel-card" style="margin-bottom:12px">
+                    <div class="panel-title">🛡️ 疾病防控 · 第19-27计 (Lv20+)</div>
+                    <div class="skills-grid" id="skillGroup3"></div>
+                </div>
+                <div class="panel-card">
+                    <div class="panel-title">⚔️ 高级战术 · 第28-36计 (Lv30+)</div>
+                    <div class="skills-grid" id="skillGroup4"></div>
+                </div>
+            </div>
+
+            <!-- 进化面板 -->
+            <div id="evolveView" style="display:none">
+                <h2 style="margin-bottom:16px">🔄 进化路线</h2>
+                <div class="panel-card" style="text-align:center;padding:32px">
+                    <div style="font-size:48px;margin-bottom:16px">🥚 → 🦐 → 🦞 → 👑</div>
+                    <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px">
+                        <div>
+                            <div style="font-size:11px;color:var(--text-dim)">虾苗</div>
+                            <div style="font-size:13px">Lv1-10</div>
+                        </div>
+                        <div style="color:var(--text-dim)">→</div>
+                        <div>
+                            <div style="font-size:11px;color:var(--text-dim)">幼虾</div>
+                            <div style="font-size:13px">Lv11-20</div>
+                        </div>
+                        <div style="color:var(--text-dim)">→</div>
+                        <div>
+                            <div style="font-size:11px;color:var(--text-dim)">成虾</div>
+                            <div style="font-size:13px">Lv21-35</div>
+                        </div>
+                        <div style="color:var(--text-dim)">→</div>
+                        <div>
+                            <div style="font-size:11px;color:var(--accent)">虾王</div>
+                            <div style="font-size:13px;color:var(--accent)">Lv36</div>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom:12px">品种分支 (Lv20 选择)</h3>
+                    <div style="display:flex;justify-content:center;gap:16px">
+                        <div class="panel-card" style="flex:1;max-width:200px">
+                            <div style="font-size:32px">🗡️</div>
+                            <div style="font-weight:700;margin:4px 0">战士虾</div>
+                            <div style="font-size:12px;color:var(--text-dim)">高攻低防<br>战斗型</div>
+                        </div>
+                        <div class="panel-card" style="flex:1;max-width:200px">
+                            <div style="font-size:32px">🛡️</div>
+                            <div style="font-weight:700;margin:4px 0">铁甲虾</div>
+                            <div style="font-size:12px;color:var(--text-dim)">高防高HP<br>坦克型</div>
+                        </div>
+                        <div class="panel-card" style="flex:1;max-width:200px">
+                            <div style="font-size:32px">💫</div>
+                            <div style="font-weight:700;margin:4px 0">灵虾</div>
+                            <div style="font-size:12px;color:var(--text-dim)">特殊技能<br>辅助型</div>
+                        </div>
+                    </div>
+                    <div id="evolveAction" style="margin-top:24px"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item"><span class="status-dot" id="chainDot"></span><span id="chainStatus">Base · 未连接</span></div>
+        <div class="status-item">💰 $FEED: <span id="feedBalance">0</span></div>
+        <div class="status-item">🦐 虾: <span id="shrimpCount">0</span></div>
+        <div class="status-item" style="margin-left:auto;color:var(--text-dim)">ShrimpFi v0.1.0 · Phase 1 MVP</div>
+    </div>
+
+<script>
+// ═══════════════════════════════════════════
+//  ShrimpFi Game Engine (链下模拟 + 链上预留)
+// ═══════════════════════════════════════════
+
+const SKILLS_36 = [
+    '选苗','肥水','投饵','控温','增氧','解毒','改底','补菌','稳水',
+    '测水','调碱','控藻','换水','遮阳','防风','控密','分塘','轮养',
+    '防白斑','防红体','防弧菌','防肝胰','药浴','断料','隔离','消毒','复养',
+    '诱食','追肥','拌料','矿补','抗应激','促蜕壳','夜巡','清淤','收虾'
+];
+
+let gameState = {
+    connected: false,
+    address: null,
+    shrimp: null,
+    feedBalance: 0,
+    events: []
+};
+
+// ── 导航 ──
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        const tab = item.dataset.tab;
+        document.getElementById('pondView').style.display = tab === 'pond' && gameState.shrimp ? 'grid' : 'none';
+        document.getElementById('emptyState').style.display = tab === 'pond' && !gameState.shrimp ? 'flex' : 'none';
+        document.getElementById('skillsView').style.display = tab === 'skills' ? 'block' : 'none';
+        document.getElementById('evolveView').style.display = tab === 'evolve' ? 'block' : 'none';
+    });
+});
+
+// ── 钱包连接 (模拟) ──
+async function connectWallet() {
+    const btn = document.getElementById('connectBtn');
+    if (gameState.connected) return;
+    btn.textContent = '连接中...';
+    await sleep(800);
+    gameState.connected = true;
+    gameState.address = '0x' + Array.from({length:8}, () => Math.floor(Math.random()*16).toString(16)).join('') + '...';
+    gameState.feedBalance = 100;
+    btn.textContent = gameState.address;
+    btn.classList.add('connected');
+    document.getElementById('chainDot').classList.remove('offline');
+    document.getElementById('chainStatus').textContent = 'Base · ' + gameState.address;
+    document.getElementById('feedBalance').textContent = gameState.feedBalance;
+    addEvent('✅ 钱包已连接: ' + gameState.address);
+}
+
+// ── 孵化 ──
+async function hatchShrimp() {
+    if (!gameState.connected) {
+        await connectWallet();
+    }
+    addEvent('🥚 正在孵化虾苗...');
+    await sleep(1500);
+
+    const rarities = [{name:'Common',w:850},{name:'Rare',w:120},{name:'Epic',w:25},{name:'Legendary',w:5}];
+    const roll = Math.random() * 1000;
+    let rarity = 'Common', cumul = 0;
+    for (const r of rarities) {
+        cumul += r.w;
+        if (roll < cumul) { rarity = r.name; break; }
+    }
+
+    const baseStats = {
+        Common:     {hp:60,atk:20,def:20,spd:22},
+        Rare:       {hp:80,atk:30,def:30,spd:28},
+        Epic:       {hp:100,atk:40,def:40,spd:35},
+        Legendary:  {hp:120,atk:50,def:50,spd:40}
+    };
+
+    const stats = baseStats[rarity];
+    gameState.shrimp = {
+        id: Math.floor(Math.random()*9999)+1,
+        stage: 'Egg',
+        breed: 'None',
+        rarity: rarity,
+        level: 0,
+        exp: 0,
+        expToNext: 100,
+        ...stats,
+        skills: new Array(36).fill(false),
+        lastFed: 0,
+        waterQuality: {ph:72,oxygen:65,temp:26,ammonia:2}
+    };
+
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('pondView').style.display = 'grid';
+    document.getElementById('shrimpCount').textContent = '1';
+    updateUI();
+    generateBubbles();
+    renderSkillsGrid();
+
+    addEvent(`🎉 孵化成功！获得 ${rarity} 虾苗 #${String(gameState.shrimp.id).padStart(4,'0')}`);
+    if (rarity !== 'Common') addEvent(`✨ 恭喜！${rarity} 品质！`);
+}
+
+// ── 喂养 ──
+async function feedShrimp() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    if (gameState.feedBalance < 10) { addEvent('❌ $FEED 不足（需要10）'); return; }
+
+    const now = Date.now();
+    if (now - s.lastFed < 5000) { addEvent('⏳ 冷却中...'); return; } // 演示用5秒冷却
+
+    gameState.feedBalance -= 10;
+    s.lastFed = now;
+
+    // 水质加成
+    const wScore = calcWaterScore();
+    const baseExp = 20;
+    const exp = baseExp + Math.floor(baseExp * wScore / 100);
+
+    s.exp += exp;
+    while (s.exp >= s.expToNext && s.level < 36) {
+        s.exp -= s.expToNext;
+        s.level++;
+        s.expToNext = calcExpForLevel(s.level);
+        s.hp += 5; s.atk += 2; s.def += 2; s.spd += 1;
+        addEvent(`⬆️ 升级！Lv.${s.level}`);
+    }
+
+    // Egg→Larva 自动进化
+    if (s.stage === 'Egg' && s.level >= 1) {
+        s.stage = 'Larva';
+        addEvent('🔄 进化：Egg → Larva（虾苗）！');
+    }
+
+    // 随机事件 10%
+    if (Math.random() < 0.1) triggerRandomEvent();
+
+    updateUI();
+    addEvent(`🍤 喂养成功！+${exp} EXP（水质加成${wScore}%）`);
+
+    // 动画
+    const sprite = document.getElementById('shrimpSprite');
+    sprite.style.transform = 'scale(1.2)';
+    setTimeout(() => sprite.style.transform = '', 300);
+}
+
+// ── 调水 ──
+function adjustWater() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    // 模拟随机微调
+    const wq = s.waterQuality;
+    wq.ph = clamp(wq.ph + randInt(-5,5), 40, 100);
+    wq.oxygen = clamp(wq.oxygen + randInt(-5,5), 20, 120);
+    wq.temp = clamp(wq.temp + randInt(-2,2), 15, 38);
+    wq.ammonia = clamp(wq.ammonia + randInt(-3,3), 0, 50);
+    updateUI();
+    addEvent('💧 水质已调节');
+}
+
+// ── 技能学习 ──
+function learnSkill(index) {
+    const s = gameState.shrimp;
+    if (!s) return;
+    if (index === undefined) {
+        // 找到第一个可学的技能
+        for (let i = 0; i < 36; i++) {
+            if (!s.skills[i] && s.level >= requiredLevel(i)) { index = i; break; }
+        }
+        if (index === undefined) { addEvent('📖 没有可学习的新技能'); return; }
+    }
+    if (s.skills[index]) { addEvent('已学过此技能'); return; }
+    if (s.level < requiredLevel(index)) { addEvent(`等级不足（需要 Lv.${requiredLevel(index)}）`); return; }
+    if (gameState.feedBalance < 50) { addEvent('❌ $FEED 不足（需要50）'); return; }
+
+    gameState.feedBalance -= 50;
+    s.skills[index] = true;
+    updateUI();
+    renderSkillsGrid();
+    addEvent(`📖 学会技能「${SKILLS_36[index]}」（第${index+1}计）`);
+
+    // 检查进化条件
+    checkEvolveReady();
+}
+
+// ── 签到 ──
+function checkin() {
+    gameState.feedBalance += 5;
+    updateUI();
+    addEvent('✅ 每日签到！+5 $FEED');
+}
+
+// ── 随机事件 ──
+function triggerRandomEvent() {
+    const events = [
+        {type:'🌧️ 暴雨',effect:() => { gameState.shrimp.waterQuality.ph -= 10; return '水质骤变！pH下降'; }},
+        {type:'🦠 白斑病',effect:() => { gameState.shrimp.exp = Math.max(0, gameState.shrimp.exp - 10); return '经验 -10'; }},
+        {type:'🌞 丰收季',effect:() => { gameState.feedBalance += 20; return '$FEED +20'; }},
+        {type:'🧬 变异',effect:() => { gameState.shrimp.exp += 50; return '经验 +50！'; }},
+        {type:'👀 访客',effect:() => '有一只虾来串门了（Phase 3 开放）'}
+    ];
+    const e = events[Math.floor(Math.random()*events.length)];
+    const result = e.effect();
+    addEvent(`${e.type} — ${result}`);
+}
+
+// ── 进化检查 ──
+function checkEvolveReady() {
+    const s = gameState.shrimp;
+    if (!s) return;
+    const evolveDiv = document.getElementById('evolveAction');
+    let msg = '';
+
+    if (s.stage === 'Larva' && s.level >= 10 && hasSkillRange(0,8)) {
+        msg = '<div class="evolve-banner"><h3>🔄 可以进化为幼虾！</h3><p>已满足：Lv10 + 第1-9计</p><button class="evolve-btn" onclick="doEvolve()">进化！</button></div>';
+    } else if (s.stage === 'Juvenile' && s.level >= 20 && hasSkillRange(9,17)) {
+        msg = '<div class="evolve-banner"><h3>🔄 可以进化为成虾！</h3><p>选择品种分支</p><div style="display:flex;gap:8px;justify-content:center;margin-top:8px"><button class="evolve-btn" onclick="doEvolve(1)">🗡️ 战士虾</button><button class="evolve-btn" onclick="doEvolve(2)">🛡️ 铁甲虾</button><button class="evolve-btn" onclick="doEvolve(3)">💫 灵虾</button></div></div>';
+    } else if (s.stage === 'Adult' && s.level >= 35 && hasSkillRange(18,26)) {
+        msg = '<div class="evolve-banner"><h3>👑 可以进化为虾王！</h3><button class="evolve-btn" onclick="doEvolve()">终极进化！</button></div>';
+    }
+    evolveDiv.innerHTML = msg;
+}
+
+function doEvolve(breedChoice) {
+    const s = gameState.shrimp;
+    const stages = ['Egg','Larva','Juvenile','Adult','King'];
+    const idx = stages.indexOf(s.stage);
+    if (idx >= 4) return;
+    s.stage = stages[idx+1];
+    if (breedChoice) s.breed = ['None','Warrior','Tank','Support'][breedChoice];
+
+    const bonus = (idx+1) * 10;
+    s.hp += bonus; s.atk += Math.floor(bonus/2); s.def += Math.floor(bonus/2); s.spd += Math.floor(bonus/3);
+
+    updateUI();
+    checkEvolveReady();
+    addEvent(`🔄 进化成功！→ ${s.stage}${s.breed !== 'None' ? ' ('+s.breed+')' : ''}`);
+}
+
+function hasSkillRange(from, to) {
+    const s = gameState.shrimp;
+    for (let i = from; i <= to; i++) { if (!s.skills[i]) return false; }
+    return true;
+}
+
+// ── UI 更新 ──
+function updateUI() {
+    const s = gameState.shrimp;
+    if (!s) return;
+
+    const stageEmoji = {Egg:'🥚',Larva:'🦐',Juvenile:'🦞',Adult:'🦞',King:'👑'};
+    const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
+
+    document.getElementById('shrimpSprite').textContent = stageEmoji[s.stage] || '🦐';
+    document.getElementById('shrimpName').textContent = `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
+    document.getElementById('shrimpStage').textContent = `${stageEmoji[s.stage]} ${s.stage}${s.breed !== 'None' ? ' · '+s.breed : ''} · 已学 ${s.skills.filter(Boolean).length}/36 计`;
+
+    const rb = document.getElementById('rarityBadge');
+    rb.textContent = s.rarity;
+    rb.className = 'rarity-badge rarity-' + s.rarity.toLowerCase();
+
+    document.getElementById('levelBadge').textContent = `Lv.${s.level}`;
+    const expPct = s.level >= 36 ? 100 : Math.floor(s.exp/s.expToNext*100);
+    document.getElementById('expText').textContent = `EXP: ${s.exp} / ${s.expToNext}`;
+    document.getElementById('expPercent').textContent = expPct + '%';
+    document.getElementById('expBar').style.width = expPct + '%';
+
+    const maxStat = 200;
+    setBars('Hp', s.hp, maxStat);
+    setBars('Atk', s.atk, maxStat);
+    setBars('Def', s.def, maxStat);
+    setBars('Spd', s.spd, maxStat);
+
+    // 水质
+    const wq = s.waterQuality;
+    setWater('wPh', (wq.ph/10).toFixed(1), wq.ph>=65&&wq.ph<=85);
+    setWater('wOxygen', (wq.oxygen/10).toFixed(1), wq.oxygen>=50&&wq.oxygen<=80);
+    setWater('wTemp', wq.temp, wq.temp>=22&&wq.temp<=30);
+    setWater('wAmmonia', (wq.ammonia/10).toFixed(1), wq.ammonia<=5);
+
+    document.getElementById('feedBalance').textContent = gameState.feedBalance;
+}
+
+function setBars(name, val, max) {
+    document.getElementById('bar'+name).style.width = Math.min(val/max*100,100)+'%';
+    document.getElementById('val'+name).textContent = val;
+}
+function setWater(id, val, good) {
+    const el = document.getElementById(id);
+    el.textContent = val;
+    el.className = 'water-value ' + (good ? 'water-good' : 'water-warn');
+}
+
+// ── 技能网格渲染 ──
+function renderSkillsGrid() {
+    const s = gameState.shrimp;
+    const groups = [[0,8,'skillGroup1'],[9,17,'skillGroup2'],[18,26,'skillGroup3'],[27,35,'skillGroup4']];
+    for (const [from, to, containerId] of groups) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        for (let i = from; i <= to; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'skill-cell';
+            cell.textContent = i+1;
+            cell.title = SKILLS_36[i];
+            if (s && s.skills[i]) {
+                cell.classList.add('learned');
+            } else if (s && s.level >= requiredLevel(i)) {
+                cell.classList.add('available');
+                cell.onclick = () => learnSkill(i);
+            } else {
+                cell.classList.add('locked');
+            }
+            container.appendChild(cell);
+        }
+    }
+}
+
+// ── 气泡生成 ──
+function generateBubbles() {
+    const container = document.getElementById('bubbles');
+    for (let i = 0; i < 15; i++) {
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        const size = 4 + Math.random() * 20;
+        b.style.width = size + 'px';
+        b.style.height = size + 'px';
+        b.style.left = Math.random() * 100 + '%';
+        b.style.bottom = Math.random() * 30 + '%';
+        b.style.animationDelay = Math.random() * 8 + 's';
+        b.style.animationDuration = (6 + Math.random() * 6) + 's';
+        container.appendChild(b);
+    }
+}
+
+// ── 工具函数 ──
+function calcWaterScore() {
+    const wq = gameState.shrimp?.waterQuality;
+    if (!wq) return 0;
+    let score = 0;
+    if (wq.ph>=65&&wq.ph<=85) score+=25; else if(wq.ph>=55&&wq.ph<=95) score+=15;
+    if (wq.oxygen>=50&&wq.oxygen<=80) score+=25; else if(wq.oxygen>=30&&wq.oxygen<=100) score+=15;
+    if (wq.temp>=22&&wq.temp<=30) score+=25; else if(wq.temp>=18&&wq.temp<=35) score+=15;
+    if (wq.ammonia<=5) score+=25; else if(wq.ammonia<=15) score+=15;
+    return score;
+}
+function calcExpForLevel(level) {
+    if (level<=10) return 100+level*15;
+    if (level<=20) return 250+(level-10)*30;
+    if (level<=35) return 550+(level-20)*50;
+    return 2000;
+}
+function requiredLevel(skillIndex) {
+    if (skillIndex<9) return 1;
+    if (skillIndex<18) return 10;
+    if (skillIndex<27) return 20;
+    return 30;
+}
+function addEvent(text) {
+    const log = document.getElementById('eventLog');
+    const now = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+    const item = document.createElement('div');
+    item.className = 'event-item';
+    item.innerHTML = `<span class="event-time">${now}</span><span class="event-text">${text}</span>`;
+    log.insertBefore(item, log.firstChild);
+    if (log.children.length > 50) log.removeChild(log.lastChild);
+    gameState.events.push({time:now,text});
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function clamp(v,min,max) { return Math.max(min,Math.min(max,v)); }
+function randInt(a,b) { return a + Math.floor(Math.random()*(b-a+1)); }
+
+// ── Init ──
+renderSkillsGrid();
+</script>
+
+</body>
+</html>
