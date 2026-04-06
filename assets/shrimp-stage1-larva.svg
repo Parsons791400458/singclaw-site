@@ -1,0 +1,30 @@
+<!-- Shrimp Stage 1: 虾苗 (Larva) - Tiny, translucent, cute -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="larva-body" x1="30" y1="30" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#88e8d0" stop-opacity=".7"/>
+      <stop offset="1" stop-color="#00d4aa" stop-opacity=".5"/>
+    </linearGradient>
+    <filter id="larva-glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#larva-glow)">
+    <!-- Body: small curved shape -->
+    <path d="M70 35c15 5 20 18 15 30s-15 22-30 25c-10 2-18-3-20-12s2-18 10-25c8-8 18-15 25-18z" fill="url(#larva-body)" stroke="#00d4aa" stroke-width="1.5"/>
+    <!-- Eye -->
+    <circle cx="78" cy="42" r="6" fill="#020408"/>
+    <circle cx="80" cy="40" r="2.5" fill="#fff"/>
+    <!-- Antenna -->
+    <path d="M82 34c5-8 12-10 16-8M80 32c3-8 8-12 12-12" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+    <!-- Tiny legs -->
+    <path d="M55 70c-4 5-3 8 0 8M50 65c-5 4-5 8-2 9M48 58c-6 3-7 7-4 9" stroke="#00d4aa" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+    <!-- Tail fan -->
+    <path d="M38 88c-8 5-12 2-10-3M38 88c-5 8-10 8-10 4M38 88c-2 9-6 11-8 8" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+  </g>
+  <!-- Sparkle -->
+  <circle cx="90" cy="28" r="1.5" fill="#00ff88" opacity=".6">
+    <animate attributeName="opacity" values=".6;.1;.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

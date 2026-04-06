@@ -1,0 +1,142 @@
+/* ═══════════════════════════════════════════
+   SingClaw Design System v1.0
+   Brand Tokens + Typography + Shared Components
+   ═══════════════════════════════════════════ */
+
+/* ── Google Fonts: Inter ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Brand Colors */
+  --sc-bg:          #020408;
+  --sc-bg2:         #080d18;
+  --sc-bg3:         #0c1220;
+  --sc-card:        rgba(255,255,255,.04);
+  --sc-card-hover:  rgba(255,255,255,.07);
+  --sc-border:      rgba(255,255,255,.08);
+  --sc-border-hover:rgba(255,255,255,.14);
+
+  /* Text */
+  --sc-text:        #e8ecf4;
+  --sc-text-bright: #f5f8ff;
+  --sc-dim:         rgba(200,215,240,.55);
+  --sc-muted:       rgba(200,215,240,.35);
+
+  /* Accent */
+  --sc-accent:      #00d4aa;
+  --sc-accent2:     #00ff88;
+  --sc-accent-glow: rgba(0,212,170,.15);
+  --sc-accent-bg:   rgba(0,212,170,.06);
+
+  /* Semantic */
+  --sc-blue:        #4d8ffa;
+  --sc-purple:      #a855f7;
+  --sc-gold:        #fbbf24;
+  --sc-danger:      #ef4444;
+  --sc-success:     #22c55e;
+
+  /* Typography */
+  --sc-font:        'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
+  --sc-mono:        'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Spacing */
+  --sc-max:         1100px;
+  --sc-radius:      12px;
+  --sc-radius-lg:   20px;
+  --sc-radius-xl:   28px;
+
+  /* Transitions */
+  --sc-ease:        cubic-bezier(.4,0,.2,1);
+  --sc-duration:    .25s;
+}
+
+/* ── Base Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--sc-font);
+  background: var(--sc-bg);
+  color: var(--sc-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* ── Utility ── */
+.sc-w { width: min(calc(100% - 40px), var(--sc-max)); margin: 0 auto; }
+
+/* ── Shared Button Styles ── */
+.sc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all var(--sc-duration) var(--sc-ease);
+  font-family: var(--sc-font);
+}
+.sc-btn-primary {
+  background: linear-gradient(135deg, var(--sc-accent), var(--sc-accent2));
+  color: #000;
+}
+.sc-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--sc-accent-glow);
+}
+.sc-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--sc-border);
+  color: var(--sc-text);
+}
+.sc-btn-secondary:hover {
+  border-color: var(--sc-border-hover);
+  background: rgba(255,255,255,.03);
+}
+
+/* ── Glass Card ── */
+.sc-glass {
+  padding: 28px;
+  border-radius: var(--sc-radius-xl);
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  border: 1px solid var(--sc-border);
+  box-shadow: 0 18px 60px rgba(0,0,0,.28);
+}
+
+/* ── Scroll Reveal Animation ── */
+.sc-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .6s var(--sc-ease), transform .6s var(--sc-ease);
+}
+.sc-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Section Labels ── */
+.sc-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--sc-accent);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.sc-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  margin-bottom: 12px;
+}
+.sc-desc {
+  color: var(--sc-dim);
+  font-size: 16px;
+  max-width: 600px;
+  margin-bottom: 40px;
+}

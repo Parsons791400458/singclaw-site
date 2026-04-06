@@ -1,0 +1,37 @@
+<!-- Shrimp Stage 3: 成虾 (Adult) - Full size, vibrant, detailed -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="adult-body" x1="15" y1="25" x2="105" y2="95" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00ff88"/>
+      <stop offset=".5" stop-color="#00d4aa"/>
+      <stop offset="1" stop-color="#0080a0"/>
+    </linearGradient>
+    <filter id="adult-glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#adult-glow)">
+    <!-- Carapace -->
+    <path d="M78 22c20 5 28 22 22 42s-20 32-40 34c-14 3-26-6-28-18s5-24 16-34c12-10 22-20 30-24z" fill="url(#adult-body)" stroke="#00d4aa" stroke-width="1.5"/>
+    <!-- Segment lines -->
+    <path d="M72 48c-14 5-24 14-28 24M68 42c-16 6-26 16-30 28M64 56c-12 4-20 12-24 20" stroke="#009080" stroke-width=".8" opacity=".4"/>
+    <!-- Rostrum (sharp) -->
+    <path d="M88 26c8-5 16-4 22-1" stroke="#00d4aa" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M90 24c4-4 10-6 14-4" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+    <!-- Eye -->
+    <circle cx="86" cy="32" r="8" fill="#020408"/>
+    <circle cx="88" cy="30" r="3.5" fill="#fff"/>
+    <circle cx="89" cy="29" r="1.2" fill="#00ff88" opacity=".5"/>
+    <!-- Antenna (long) -->
+    <path d="M90 24c8-14 20-18 28-14M88 22c5-14 14-20 22-18" stroke="#00d4aa" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Walking legs -->
+    <path d="M60 76c-6 7-5 12 0 12M54 70c-7 6-7 12-2 13M48 64c-8 5-9 10-5 13M44 58c-9 4-10 9-6 12M42 52c-9 3-10 8-6 10" stroke="#00b89a" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Chelipeds (claws) -->
+    <path d="M82 42c8 2 10 8 6 10s-8 0-10-4" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+    <!-- Tail fan (elaborate) -->
+    <path d="M30 94c-12 8-18 4-14-5M30 94c-8 12-16 12-14 6M30 94c-4 14-10 16-12 12M30 94c0 12-5 17-8 14M30 94c2 10-2 16-5 14" stroke="#00d4aa" stroke-width="2" stroke-linecap="round"/>
+    <!-- Uropods detail -->
+    <path d="M18 89c2 2 5 1 6-1M22 100c2 1 4 0 5-2M26 106c2 1 4 0 4-2" stroke="#00ff88" stroke-width="1" opacity=".4"/>
+  </g>
+</svg>
