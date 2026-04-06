@@ -2331,3 +2331,173 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
 <script src="/js/subscribe.js"></script>
 </body>
 </html>
+<script>
+// ═══════════════════════════════════════════
+//  SVG Shrimp Renderer Override (v2.2)
+//  Replaces CSS shrimp with actual SVG assets
+// ═══════════════════════════════════════════
+(function() {
+  const SVG_MAP = {
+    'Egg': '/assets/shrimp-stage1-larva.svg',
+    'Larva': '/assets/shrimp-stage1-larva.svg',
+    'Juvenile': '/assets/shrimp-stage2-juvenile.svg',
+    'Adult': '/assets/shrimp-stage3-adult.svg',
+    'King': '/assets/shrimp-stage4-king.svg'
+  };
+
+  // Override the renderCSSShrimp function
+  const origRender = window.renderCSSShrimp;
+  window.renderCSSShrimp = function() {
+    const s = gameState?.shrimp;
+    const container = document.getElementById('cssShrimpContainer');
+    if (!s || !container) return;
+
+    const src = SVG_MAP[s.stage] || SVG_MAP['Larva'];
+    const isKing = s.stage === 'King';
+    const glow = isKing ? 'drop-shadow(0 0 20px rgba(251,191,36,.4))' : 'drop-shadow(0 0 15px rgba(0,212,170,.3))';
+
+    container.innerHTML = `
+      <div style="text-align:center;cursor:pointer" onclick="this.querySelector('img').style.animation='feedBounce 0.4s ease';setTimeout(()=>this.querySelector('img').style.animation='float 4s ease-in-out infinite',400)">
+        <img src="${src}" alt="${s.stage}" width="140" height="140"
+          style="animation:float 4s ease-in-out infinite;filter:${glow};transition:filter .3s"
+          onmouseover="this.style.filter='${glow} brightness(1.2)'"
+          onmouseout="this.style.filter='${glow}'"/>
+      </div>
+    `;
+  };
+
+  // Add float animation if not already present
+  if (!document.getElementById('svgShrimpStyles')) {
+    const style = document.createElement('style');
+    style.id = 'svgShrimpStyles';
+    style.textContent = `
+      @keyframes float {
+        0%,100% { transform: translateY(0) rotate(0); }
+        25% { transform: translateY(-8px) rotate(1.5deg); }
+        75% { transform: translateY(4px) rotate(-1.5deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Re-render if shrimp exists
+  if (gameState?.shrimp) window.renderCSSShrimp();
+})();
+</script>
+<script>
+// ═══════════════════════════════════════════
+//  NFT Mint + Stripe Premium (v2.2)
+// ═══════════════════════════════════════════
+(function() {
+  // Upgrade market view with mint + premium
+  const marketView = document.getElementById('marketView');
+  if (!marketView) return;
+
+  // Add mint section at the top of market
+  const mintSection = document.createElement('div');
+  mintSection.className = 'panel-card';
+  mintSection.style.marginBottom = '16px';
+  mintSection.innerHTML = `
+    <div class="panel-title">⛓️ 铸造 NFT</div>
+    <div style="text-align:center;padding:20px">
+      <img src="/assets/shrimp-stage4-king.svg" width="80" height="80" style="margin:0 auto 12px;display:block;filter:drop-shadow(0 0 15px rgba(0,212,170,.3))"/>
+      <h3 style="margin-bottom:8px">把你的虾铸造到 Base 链上</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto">
+        你的虾的等级、技能、品种、属性都会记录在链上。<br>
+        铸造后可展示、可交易、永久保存。Gas费约 $0.01。
+      </p>
+      <button id="mintNftBtn" onclick="mintNFT()" class="action-btn primary" style="display:inline-block;width:auto;padding:14px 32px;font-size:15px">
+        ⛓️ 铸造 NFT（Base链）
+      </button>
+      <p style="font-size:11px;color:var(--text-dim);margin-top:8px">
+        合约地址：部署后显示 · <a href="https://sepolia.basescan.org" target="_blank" style="color:var(--accent)">Base Sepolia Explorer</a>
+      </p>
+    </div>
+  `;
+
+  // Add premium section
+  const premiumSection = document.createElement('div');
+  premiumSection.className = 'panel-card';
+  premiumSection.style.marginBottom = '16px';
+  premiumSection.innerHTML = `
+    <div class="panel-title">⭐ ShrimpFi Premium</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:16px">
+      <div style="padding:20px;border-radius:12px;background:var(--bg-deep);border:1px solid var(--border);text-align:center">
+        <div style="font-size:11px;color:var(--text-dim);font-weight:600;letter-spacing:.08em;margin-bottom:8px">FREE</div>
+        <div style="font-size:28px;font-weight:800;margin-bottom:4px">$0</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">永久免费</div>
+        <ul style="text-align:left;font-size:12px;color:var(--text-dim);list-style:none;padding:0">
+          <li style="padding:4px 0">✅ 36计全文阅读</li>
+          <li style="padding:4px 0">✅ 游戏全功能体验</li>
+          <li style="padding:4px 0">✅ 虾进化全路线</li>
+          <li style="padding:4px 0">✅ 基础AI提示词</li>
+        </ul>
+        <div style="margin-top:12px;padding:8px;border-radius:6px;background:rgba(0,212,170,.08);color:var(--accent);font-size:12px;font-weight:600">当前方案</div>
+      </div>
+      <div style="padding:20px;border-radius:12px;background:var(--bg-deep);border:2px solid var(--accent);text-align:center;position:relative">
+        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;padding:2px 12px;border-radius:10px;font-size:10px;font-weight:700">推荐</div>
+        <div style="font-size:11px;color:var(--accent);font-weight:600;letter-spacing:.08em;margin-bottom:8px">PRO</div>
+        <div style="font-size:28px;font-weight:800;margin-bottom:4px;color:var(--accent)">$4.99</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">/月</div>
+        <ul style="text-align:left;font-size:12px;color:var(--text);list-style:none;padding:0">
+          <li style="padding:4px 0">✅ 所有免费功能</li>
+          <li style="padding:4px 0">⭐ 高级AI提示词模板库</li>
+          <li style="padding:4px 0">⭐ 深度36计案例分析</li>
+          <li style="padding:4px 0">⭐ 虾王专属皮肤</li>
+          <li style="padding:4px 0">⭐ 优先社区支持</li>
+        </ul>
+        <a href="https://buy.stripe.com/test_placeholder" target="_blank"
+          style="display:block;margin-top:12px;padding:10px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#00ff88);color:#000;font-weight:700;font-size:13px;text-decoration:none">
+          订阅 Pro
+        </a>
+      </div>
+      <div style="padding:20px;border-radius:12px;background:var(--bg-deep);border:1px solid rgba(168,85,247,.3);text-align:center">
+        <div style="font-size:11px;color:var(--epic);font-weight:600;letter-spacing:.08em;margin-bottom:8px">LIFETIME</div>
+        <div style="font-size:28px;font-weight:800;margin-bottom:4px;color:var(--epic)">$39.99</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">一次性</div>
+        <ul style="text-align:left;font-size:12px;color:var(--text);list-style:none;padding:0">
+          <li style="padding:4px 0">✅ 所有 Pro 功能</li>
+          <li style="padding:4px 0">💎 终身访问</li>
+          <li style="padding:4px 0">💎 未来所有更新</li>
+          <li style="padding:4px 0">💎 NFT铸造白名单</li>
+          <li style="padding:4px 0">💎 创始成员徽章</li>
+        </ul>
+        <a href="https://buy.stripe.com/test_placeholder_lifetime" target="_blank"
+          style="display:block;margin-top:12px;padding:10px;border-radius:8px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:var(--epic);font-weight:700;font-size:13px;text-decoration:none">
+          买断终身
+        </a>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:8px">
+      支付由 <a href="https://stripe.com" target="_blank" style="color:var(--accent)">Stripe</a> 安全处理 · 支持信用卡/Apple Pay/Google Pay
+    </p>
+  `;
+
+  // Insert at top of market view
+  const existingCard = marketView.querySelector('.panel-card');
+  if (existingCard) {
+    marketView.querySelector('h2').after(mintSection);
+    mintSection.after(premiumSection);
+  }
+
+  // Mint function
+  window.mintNFT = async function() {
+    const btn = document.getElementById('mintNftBtn');
+    const s = gameState?.shrimp;
+    if (!s) { addEvent('❌ 请先孵化一只虾'); return; }
+    if (!gameState.connected) { await connectWallet(); }
+
+    btn.textContent = '铸造中...';
+    btn.disabled = true;
+
+    // For now: simulate mint (replace with real contract call after deployment)
+    await new Promise(r => setTimeout(r, 2000));
+
+    addEvent('✅ NFT铸造成功！（模拟）');
+    addEvent('📝 合约部署到 Base Sepolia 后将执行真实铸造');
+    btn.textContent = '✅ 已铸造（模拟）';
+    btn.disabled = false;
+    setTimeout(() => { btn.textContent = '⛓️ 铸造 NFT（Base链）'; }, 3000);
+  };
+})();
+</script>
