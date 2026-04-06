@@ -8,6 +8,9 @@
     <meta property="og:title" content="ShrimpFi — 养虾链游">
     <meta property="og:description" content="36计驱动的链上养虾GameFi">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://singclaw.xyz/assets/shrimp-stage4-king.svg">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <link rel="stylesheet" href="/css/design-tokens.css"/>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.11.1/dist/ethers.umd.min.js"></script>
     <style>
         /* ── Quiz Modal ── */
@@ -289,9 +292,9 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-deep);
-            color: var(--text);
+            font-family: var(--sc-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+            background: var(--sc-bg, #0a0e1a);
+            color: var(--sc-text, #e2e8f0);
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -897,7 +900,7 @@
     <!-- Header -->
     <header class="header">
         <div class="logo">
-            <a href="/home/" style="text-decoration:none;color:var(--text-dim);font-size:13px;margin-right:8px">← SingClaw</a>
+            <a href="/" style="text-decoration:none;color:var(--text-dim);font-size:13px;margin-right:8px;display:flex;align-items:center;gap:6px"><img src="/favicon.svg" width="24" height="24" style="border-radius:4px"/>SingClaw</a>
             <span class="logo-icon">🦐</span>
             <span>ShrimpFi</span>
             <span class="chain-badge">Base</span>
