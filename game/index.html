@@ -2250,7 +2250,7 @@ function showShareCard() {
                 <div style="font-size:11px;padding:4px 8px;background:var(--bg-deep);border-radius:4px">🏆 ${gameState.achievements.length}个成就</div>
                 <div style="font-size:11px;padding:4px 8px;background:var(--bg-deep);border-radius:4px">🍤 喂养${gameState.totalFeeds}次</div>
             </div>
-            <div class="sc-footer">singclaw.xyz/game · Built on Base 🔵</div>
+            <div class="sc-footer">https://singclaw.xyz/game · Built on Base 🔵</div>
         </div>
         <button onclick="copyShareText()" class="action-btn primary" style="margin-top:12px;display:inline-block;width:auto;padding:10px 20px">📋 复制分享文案</button>
         <button onclick="closeQuiz()" class="action-btn" style="margin-top:8px;display:inline-block;width:auto;padding:10px 20px">关闭</button>
@@ -2264,7 +2264,7 @@ function copyShareText() {
     const stageNames = {Egg:'虾卵',Larva:'虾苗',Juvenile:'幼虾',Adult:'成虾',King:'虾王'};
     const name = s.customName || `${stageNames[s.stage]} #${String(s.id).padStart(4,'0')}`;
     const skills = s.skills.filter(Boolean).length;
-    const text = `🦐 我在 ShrimpFi 养了一只${s.rarity}品质的${stageNames[s.stage]}「${name}」！\n📊 Lv.${s.level} | ${skills}/36技能 | HP:${s.hp} ATK:${s.atk}\n🏆 已解锁${gameState.achievements.length}个成就\n\n来养你自己的虾 👉 singclaw.xyz/game`;
+    const text = `🦐 我在 ShrimpFi 养了一只${s.rarity}品质的${stageNames[s.stage]}「${name}」！\n📊 Lv.${s.level} | ${skills}/36技能 | HP:${s.hp} ATK:${s.atk}\n🏆 已解锁${gameState.achievements.length}个成就\n\n来养你自己的虾 👉 https://singclaw.xyz/game`;
     navigator.clipboard.writeText(text).catch(() => {});
     addEvent('📋 分享文案已复制！');
 }
