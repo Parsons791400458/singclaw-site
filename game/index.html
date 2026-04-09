@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShrimpFi — 养虾链游</title>
-    <meta name="description" content="用真实养虾知识养链上的虾。进化、对战、社交、赚钱。Built on Base.">
-    <meta property="og:title" content="ShrimpFi — 养虾链游">
-    <meta property="og:description" content="36计驱动的链上养虾GameFi">
+    <title>ShrimpFi — 养虾养成游戏</title>
+    <meta name="description" content="用真实养虾知识养数字虾。进化、收集、分享、成就。Built on Base.">
+    <meta property="og:title" content="ShrimpFi — 养虾养成游戏">
+    <meta property="og:description" content="36计驱动的趣味养成游戏">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://singclaw.xyz/assets/shrimp-stage4-king.svg">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
@@ -905,7 +905,7 @@
             <span>ShrimpFi</span>
             <span class="chain-badge">Base</span>
         </div>
-        <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">连接钱包</button>
+        <button class="wallet-btn" id="connectBtn" onclick="connectWallet()">连接账号</button>
     </header>
 
     <!-- Main -->
@@ -929,7 +929,7 @@
                 <h2 class="empty-title">你的虾池还是空的</h2>
                 <p class="empty-desc">孵化一只虾苗开始你的养虾之旅。学习36计，让你的虾进化成虾王。</p>
                 <button class="hatch-btn" onclick="hatchShrimp()">🥚 孵化虾苗</button>
-                <p style="margin-top:12px;font-size:12px;color:var(--text-dim)">免费体验 · 上链可选</p>
+                <p style="margin-top:12px;font-size:12px;color:var(--text-dim)">免费体验 · 保存到系统可选</p>
                 <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);max-width:420px">
                   <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">📬 等不及？先订阅，每周收到一计养虾攻略：</p>
                   <form onsubmit="event.preventDefault();handleSubscribe(this,'game-empty')" style="display:flex;gap:8px">
@@ -1151,16 +1151,16 @@
                 <h2 style="margin-bottom:16px">🏪 市场</h2>
                 <div class="panel-card" style="text-align:center;padding:40px">
                     <div style="font-size:64px;margin-bottom:16px">🏗️</div>
-                    <h3 style="margin-bottom:8px">NFT市场即将上线</h3>
+                    <h3 style="margin-bottom:8px">数字收藏市场即将上线</h3>
                     <p style="color:var(--text-dim);max-width:400px;margin:0 auto 20px;font-size:13px">
-                        在这里你可以交易虾NFT、购买装备、出售稀有道具。<br>
-                        合约部署到 Base 测试网后开放。
+                        在这里你可以交换虾数字收藏、购买装备、出售稀有道具。<br>
+                        智能协议部署到 Base 测试网后开放。
                     </p>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:400px;margin:0 auto">
                         <div class="panel-card" style="padding:16px;text-align:center">
                             <div style="font-size:28px">🦐</div>
-                            <div style="font-size:12px;font-weight:600;margin-top:4px">虾NFT</div>
-                            <div style="font-size:11px;color:var(--text-dim)">交易你的虾</div>
+                            <div style="font-size:12px;font-weight:600;margin-top:4px">虾数字收藏</div>
+                            <div style="font-size:11px;color:var(--text-dim)">交换你的虾</div>
                         </div>
                         <div class="panel-card" style="padding:16px;text-align:center">
                             <div style="font-size:28px">⚔️</div>
@@ -1177,7 +1177,7 @@
                         <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px">📊 经济预览</div>
                         <div style="display:flex;justify-content:space-around;font-size:12px">
                             <div><div style="color:var(--text-dim)">$FEED 日产出</div><div style="font-weight:700">100,000</div></div>
-                            <div><div style="color:var(--text-dim)">虾NFT上限</div><div style="font-weight:700">10,000</div></div>
+                            <div><div style="color:var(--text-dim)">虾数字收藏上限</div><div style="font-weight:700">10,000</div></div>
                             <div><div style="color:var(--text-dim)">进化销毁率</div><div style="font-weight:700;color:var(--danger)">50%</div></div>
                         </div>
                     </div>
@@ -1204,7 +1204,7 @@
 
 <script>
 // ═══════════════════════════════════════════
-//  ShrimpFi Game Engine (链下模拟 + 链上预留)
+//  ShrimpFi Game Engine (离线模拟 + 链上预留)
 // ═══════════════════════════════════════════
 
 const SKILLS_36 = [
@@ -1486,7 +1486,7 @@ function renderAchievePage() {
     }).join('');
 }
 
-// ── 钱包连接 (模拟) ──
+// ── 账号连接 (模拟) ──
 async function connectWallet() {
     const btn = document.getElementById('connectBtn');
     if (gameState.connected) return;
@@ -1500,7 +1500,7 @@ async function connectWallet() {
     document.getElementById('chainDot').classList.remove('offline');
     document.getElementById('chainStatus').textContent = 'Base · ' + gameState.address;
     document.getElementById('feedBalance').textContent = gameState.feedBalance;
-    addEvent('✅ 钱包已连接: ' + gameState.address);
+    addEvent('✅ 账号已连接: ' + gameState.address);
 }
 
 // ── 孵化 ──
@@ -2143,10 +2143,10 @@ async function connectWallet() {
             document.getElementById('chainDot').classList.remove('offline');
             document.getElementById('chainStatus').textContent = 'Base Sepolia · ' + shortAddr;
             document.getElementById('feedBalance').textContent = gameState.feedBalance;
-            addEvent('✅ 钱包已连接: ' + shortAddr + ' (Base Sepolia)');
+            addEvent('✅ 账号已连接: ' + shortAddr + ' (Base Sepolia)');
         } catch (e) {
-            btn.textContent = '连接钱包';
-            addEvent('❌ 钱包连接失败: ' + e.message);
+            btn.textContent = '连接账号';
+            addEvent('❌ 账号连接失败: ' + e.message);
         }
     } else {
         // No wallet — demo mode
@@ -2158,9 +2158,9 @@ async function connectWallet() {
         btn.textContent = '演示模式';
         btn.classList.add('connected');
         document.getElementById('chainDot').classList.remove('offline');
-        document.getElementById('chainStatus').textContent = 'Demo · 无钱包';
+        document.getElementById('chainStatus').textContent = 'Demo · 无账号';
         document.getElementById('feedBalance').textContent = gameState.feedBalance;
-        addEvent('ℹ️ 未检测到钱包，进入演示模式');
+        addEvent('ℹ️ 未检测到账号，进入演示模式');
     }
 }
 
@@ -2281,7 +2281,7 @@ function showTutorial() {
         <div class="tutorial-card">
             <div class="t-icon">🦐</div>
             <h3>欢迎来到 ShrimpFi！</h3>
-            <p>用真实养虾知识养链上的虾。<br>学习36计，让你的虾进化成虾王。</p>
+            <p>用真实养虾知识养数字虾。<br>学习36计，让你的虾进化成虾王。</p>
             <div class="tutorial-steps">
                 <div class="step"><span class="step-num">1</span><span>🥚 <strong>孵化</strong>一只虾苗开始</span></div>
                 <div class="step"><span class="step-num">2</span><span>🍤 <strong>喂养</strong>获得经验，升级变强</span></div>
@@ -2329,6 +2329,7 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
 </div>
 
 <script src="/js/subscribe.js"></script>
+  <script src="/js/social-share.js"></script>
 </body>
 </html>
 <script>
@@ -2386,7 +2387,7 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
 </script>
 <script>
 // ═══════════════════════════════════════════
-//  NFT Mint + Stripe Premium (v2.2)
+//  数字收藏 Mint + Stripe Premium (v2.2)
 // ═══════════════════════════════════════════
 (function() {
   // Upgrade market view with mint + premium
@@ -2398,19 +2399,19 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
   mintSection.className = 'panel-card';
   mintSection.style.marginBottom = '16px';
   mintSection.innerHTML = `
-    <div class="panel-title">⛓️ 铸造 NFT</div>
+    <div class="panel-title">⛓️ 领取 数字收藏</div>
     <div style="text-align:center;padding:20px">
       <img src="/assets/shrimp-stage4-king.svg" width="80" height="80" style="margin:0 auto 12px;display:block;filter:drop-shadow(0 0 15px rgba(0,212,170,.3))"/>
-      <h3 style="margin-bottom:8px">把你的虾铸造到 Base 链上</h3>
+      <h3 style="margin-bottom:8px">把你的虾领取到 Base 网络上</h3>
       <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;max-width:400px;margin-left:auto;margin-right:auto">
         你的虾的等级、技能、品种、属性都会记录在链上。<br>
-        铸造后可展示、可交易、永久保存。Gas费约 $0.01。
+        领取后可展示、可交换、永久保存。Gas费约 $0.01。
       </p>
-      <button id="mintNftBtn" onclick="mintNFT()" class="action-btn primary" style="display:inline-block;width:auto;padding:14px 32px;font-size:15px">
-        ⛓️ 铸造 NFT（Base链）
+      <button id="mintNftBtn" onclick="mint数字收藏()" class="action-btn primary" style="display:inline-block;width:auto;padding:14px 32px;font-size:15px">
+        ⛓️ 领取 数字收藏（Base链）
       </button>
       <p style="font-size:11px;color:var(--text-dim);margin-top:8px">
-        合约地址：部署后显示 · <a href="https://sepolia.basescan.org" target="_blank" style="color:var(--accent)">Base Sepolia Explorer</a>
+        智能协议地址：部署后显示 · <a href="https://sepolia.basescan.org" target="_blank" style="color:var(--accent)">Base Sepolia Explorer</a>
       </p>
     </div>
   `;
@@ -2459,7 +2460,7 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
           <li style="padding:4px 0">✅ 所有 Pro 功能</li>
           <li style="padding:4px 0">💎 终身访问</li>
           <li style="padding:4px 0">💎 未来所有更新</li>
-          <li style="padding:4px 0">💎 NFT铸造白名单</li>
+          <li style="padding:4px 0">💎 数字收藏领取白名单</li>
           <li style="padding:4px 0">💎 创始成员徽章</li>
         </ul>
         <a href="https://buy.stripe.com/test_placeholder_lifetime" target="_blank"
@@ -2481,23 +2482,23 @@ if (!loaded) { renderSkillsGrid(); showTutorial(); }
   }
 
   // Mint function
-  window.mintNFT = async function() {
+  window.mint数字收藏 = async function() {
     const btn = document.getElementById('mintNftBtn');
     const s = gameState?.shrimp;
     if (!s) { addEvent('❌ 请先孵化一只虾'); return; }
     if (!gameState.connected) { await connectWallet(); }
 
-    btn.textContent = '铸造中...';
+    btn.textContent = '领取中...';
     btn.disabled = true;
 
     // For now: simulate mint (replace with real contract call after deployment)
     await new Promise(r => setTimeout(r, 2000));
 
-    addEvent('✅ NFT铸造成功！（模拟）');
-    addEvent('📝 合约部署到 Base Sepolia 后将执行真实铸造');
-    btn.textContent = '✅ 已铸造（模拟）';
+    addEvent('✅ 数字收藏领取成功！（模拟）');
+    addEvent('📝 智能协议部署到 Base Sepolia 后将执行真实领取');
+    btn.textContent = '✅ 已领取（模拟）';
     btn.disabled = false;
-    setTimeout(() => { btn.textContent = '⛓️ 铸造 NFT（Base链）'; }, 3000);
+    setTimeout(() => { btn.textContent = '⛓️ 领取 数字收藏（Base链）'; }, 3000);
   };
 })();
 </script>

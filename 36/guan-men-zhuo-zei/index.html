@@ -24,12 +24,14 @@
         <article class="glass"><h2>What</h2><p>关门捉贼，就是在遇到问题时先划定排查边界，然后让虾在这个封闭范围内做穷举分析。不是漫无目的地查日志、猜原因，而是先锁定"贼在哪个房间"，再让虾把房间翻个底朝天。</p></article>
         <article class="glass"><h2>Detail What</h2><ul><li>边界定义：问题出在哪个环节？数据采集 / 处理逻辑 / 输出格式 / 外部依赖？先排除无关环节。</li><li>变量控制：固定其他变量，只改一个——经典的控制变量法，虾执行起来比人快 100 倍。</li><li>快照对比：出问题前的状态 vs 出问题后的状态，差异就是线索。</li><li>二分排查：如果链路很长，先砍一半看问题在上游还是下游，递归缩小范围。</li><li>根因锁定：找到根因后不急着修，先确认"只有这一个贼"——排除是否有连锁问题。</li></ul></article>
         <article class="glass"><h2>So What</h2><p>关门捉贼解决的是排查效率问题。大多数人遇到 bug 或故障的反应是"到处看看"，结果越看越慌。正确的做法是先关门——限定范围、控制变量、缩小搜索空间。虾在封闭环境里的分析能力远强于在开放环境里的盲目搜索。给虾一个小房间，它能翻出所有线索。</p></article>
-        <article class="glass"><h2>How（举一反三）</h2><ol><li>遇到问题先问三个问题：什么时候开始的？哪个环节的输出不对？最近改了什么？</li><li>用这三个答案划定排查边界，排除无关模块。</li><li>让虾在限定范围内做对比分析：正常时的数据 vs 异常时的数据。</li><li>如果范围还是太大，用二分法继续缩小：上游正常吗？正常的话问题就在下游。</li><li>找到根因后，让虾同时检查相邻环节——确认没有连锁故障。</li></ol><p>举一反三：交易虾排查订单异常时先锁定时间窗口和交易对；内容虾排查输出质量下降时先锁定是模板问题还是数据源问题；运维虾排查服务异常时先锁定是网络、应用还是数据库。先关门，再捉贼。</p></article>
+        <article class="glass"><h2>How（举一反三）</h2><ol><li>遇到问题先问三个问题：什么时候开始的？哪个环节的输出不对？最近改了什么？</li><li>用这三个答案划定排查边界，排除无关模块。</li><li>让虾在限定范围内做对比分析：正常时的数据 vs 异常时的数据。</li><li>如果范围还是太大，用二分法继续缩小：上游正常吗？正常的话问题就在下游。</li><li>找到根因后，让虾同时检查相邻环节——确认没有连锁故障。</li></ol><p>举一反三：决策虾排查订单异常时先锁定时间窗口和交易对；内容虾排查输出质量下降时先锁定是模板问题还是数据源问题；运维虾排查服务异常时先锁定是网络、应用还是数据库。先关门，再捉贼。</p></article>
       </div></section>
     <nav class="pn"><a href="/36/jin-chan-tuo-qiao/"><div class="label">← 上一计</div><div class="title">第二十一计 · 金蝉脱壳</div></a><a class="next" href="/36/yuan-jiao-jin-gong/"><div class="label">下一计 →</div><div class="title">第二十三计 · 远交近攻</div></a></nav></main>
     <footer class="footer"><div class="container">© 2026 SingClaw · 关门捉贼</div></footer>
     <script src="/js/prompts-36.js"></script>
   <script src="/js/prompt-inject.js"></script>
   <script src="/js/subscribe.js"></script>
+  <script src="/js/social-share.js"></script>
+  <script src="/js/seo-boost.js"></script>
 </body>
 </html>
