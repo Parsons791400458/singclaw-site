@@ -414,7 +414,22 @@
         </div>
     </div>
     
+    <!-- 降级提示：如果页面空白，请刷新或换个浏览器 -->
+    <noscript>
+        <div style="padding: 40px 20px; text-align: center; color: #e6edf3;">
+            <h2>🦐 三国虾测试</h2>
+            <p style="margin: 20px 0;">需要启用 JavaScript 才能进行测试</p>
+            <p style="color: #8b949e; font-size: 14px;">请刷新页面或检查浏览器设置</p>
+        </div>
+    </noscript>
+    
     <script>
+        // 错误处理：如果 JS 加载失败，显示友好提示
+        window.onerror = function(msg, url, line) {
+            document.body.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#e6edf3;"><h2>🦐 加载失败</h2><p style="margin:20px 0;">页面遇到问题，请刷新重试</p><button onclick="location.reload()" style="background:#00ff9d;color:#000;border:none;padding:12px 24px;border-radius:8px;margin-top:20px;cursor:pointer;">🔄 刷新页面</button></div>';
+            return false;
+        };
+        
         // 12 个三国虾角色配置
         const shrimpRoles = {
             zhugeliang: {
