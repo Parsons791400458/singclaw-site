@@ -239,7 +239,7 @@
             display: none;
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: rgba(10,14,26,0.98);
+            background: rgba(2,4,8,0.98);
             border-top: 1px solid var(--border);
             z-index: 100;
             padding: 8px 0 env(safe-area-inset-bottom, 8px);
@@ -273,22 +273,23 @@
         }
 
         :root {
-            --bg-deep: #020408;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2332;
-            --accent: #00d4aa;
-            --accent-glow: rgba(0, 212, 170, 0.3);
-            --accent2: #ff6b35;
-            --text: #e2e8f0;
-            --text-dim: #64748b;
-            --text-bright: #f8fafc;
-            --border: #1e293b;
-            --danger: #ef4444;
+            /* Design Tokens 映射 (保持向后兼容) */
+            --bg-deep: var(--sc-bg, #020408);
+            --bg-card: var(--sc-bg2, #111827);
+            --bg-card-hover: var(--sc-bg3, #1a2332);
+            --accent: var(--sc-accent, #00d4aa);
+            --accent-glow: var(--sc-accent-glow, rgba(0, 212, 170, 0.3));
+            --accent2: var(--sc-accent2, #00ff88);
+            --text: var(--sc-text, #e2e8f0);
+            --text-dim: var(--sc-muted, #64748b);
+            --text-bright: var(--sc-text-bright, #f8fafc);
+            --border: var(--sc-border, #1e293b);
+            --danger: var(--sc-danger, #ef4444);
             --warning: #f59e0b;
-            --success: #22c55e;
-            --legendary: #fbbf24;
-            --epic: #a855f7;
-            --rare: #3b82f6;
+            --success: var(--sc-success, #22c55e);
+            --legendary: var(--sc-gold, #fbbf24);
+            --epic: var(--sc-purple, #a855f7);
+            --rare: var(--sc-blue, #3b82f6);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {

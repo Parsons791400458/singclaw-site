@@ -82,6 +82,28 @@
     .proof-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--sc-dim)}
     .proof-item strong{color:var(--sc-text);font-weight:700}
 
+
+    /* ── Newbie Guide ── */
+    section.newbie-guide{padding:60px 0;background:rgba(255,255,255,.02)}
+    .newbie-card{background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(77,143,250,.04));border:1px solid rgba(0,212,170,.15);border-radius:24px;padding:40px 32px;text-align:center;position:relative;overflow:hidden}
+    .newbie-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(0,212,170,.08),transparent 60%);pointer-events:none}
+    .newbie-badge{display:inline-block;padding:6px 16px;border-radius:20px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);font-size:12px;font-weight:700;color:var(--sc-gold);margin-bottom:16px}
+    .newbie-card h2{font-size:28px;font-weight:800}
+    .path-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+    .path-card{display:flex;align-items:center;gap:16px;padding:20px 18px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid var(--sc-border);transition:all .3s;text-decoration:none;color:inherit}
+    .path-card:hover{background:rgba(255,255,255,.06);border-color:var(--sc-accent);transform:translateY(-4px)}
+    .path-quick:hover{border-color:var(--sc-gold)}
+    .path-play:hover{border-color:var(--sc-accent)}
+    .path-learn:hover{border-color:var(--sc-purple)}
+    .path-icon{font-size:32px;flex-shrink:0}
+    .path-content{text-align:left;flex:1}
+    .path-content h4{font-size:16px;font-weight:700;margin-bottom:4px}
+    .path-content p{font-size:12px;color:var(--sc-dim);line-height:1.5;margin-bottom:6px}
+    .path-meta{display:flex;gap:10px;font-size:11px;color:var(--sc-muted)}
+    .path-meta span{background:rgba(255,255,255,.05);padding:2px 8px;border-radius:4px}
+    .path-arrow{font-size:20px;color:var(--sc-dim);transition:transform .3s}
+    .path-card:hover .path-arrow{transform:translateX(4px);color:var(--sc-accent)}
+
     /* ── Modules Section ── */
     section.modules{padding:100px 0}
     .tabs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -153,6 +175,7 @@
       .hero-actions{justify-content:center}
       .hero-visual{margin-top:20px}
       .tabs-grid{grid-template-columns:1fr}
+      .path-grid{grid-template-columns:1fr}
       .steps{grid-template-columns:repeat(2,1fr)}
       .skills-preview{grid-template-columns:repeat(6,1fr);gap:5px}
       .sp-cell{font-size:10px}
@@ -205,12 +228,17 @@
     </div>
     <div class="sc-w hero-content">
       <div class="hero-text">
-        <div class="badge"><span class="badge-dot"></span>Built on Base · 免费开玩</div>
-        <h1>学真实养虾方法<br>养<em>链上的虾</em></h1>
-        <p>36计养虾攻略不是纸上谈兵——每一条都变成游戏里的可执行技能。读文章、答题、解锁技能、进化虾王。<strong>知识即装备。</strong></p>
+        <div class="badge"><span class="badge-dot"></span>Built on Base · 免费开玩 · 无需钱包</div>
+        <h1>把你的 AI 助手<br>养成<em>超级员工</em></h1>
+        <p>36 套实战方法论 + 趣味养成游戏。不是装好就行——持续喂养、进化、变强。<strong>你的知识水平，决定它的战斗力。</strong></p>
         <div class="hero-actions">
-          <a class="sc-btn sc-btn-primary" href="/game/">🦐 开始养虾</a>
-          <a class="sc-btn sc-btn-secondary" href="/36/">📖 先看36计攻略</a>
+          <a class="sc-btn sc-btn-primary" href="/shrimp-config/">🔥 3 分钟测试你的 Agent 类型</a>
+          <a class="sc-btn sc-btn-secondary" href="/game/">🦐 直接开始养虾</a>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:var(--sc-dim)">
+          <span style="margin-right:16px">⏱️ 3 分钟出结果</span>
+          <span style="margin-right:16px">🎯 获得专属配置方案</span>
+          <span>📋 附带 AI 提示词</span>
         </div>
       </div>
       <div class="hero-visual">
@@ -254,6 +282,46 @@
     </div>
   </div>
 
+
+  <!-- Newbie Guide -->
+  <section class="newbie-guide">
+    <div class="sc-w">
+      <div class="newbie-card sc-reveal">
+        <div class="newbie-badge">第一次来？</div>
+        <h2 style="margin-bottom:8px">3 条路，选最适合你的</h2>
+        <p style="color:var(--sc-dim);margin-bottom:24px">不知道从哪开始？根据你的时间和目标，我们帮你选。</p>
+        <div class="path-grid">
+          <a class="path-card path-quick" href="/shrimp-config/">
+            <div class="path-icon">⚡</div>
+            <div class="path-content">
+              <h4>快速测试</h4>
+              <p>3 分钟答题，获得专属三国虾角色 + 配置方案</p>
+              <div class="path-meta"><span>⏱️ 3 分钟</span><span>🎯 最适合新手</span></div>
+            </div>
+            <div class="path-arrow">→</div>
+          </a>
+          <a class="path-card path-play" href="/game/">
+            <div class="path-icon">🎮</div>
+            <div class="path-content">
+              <h4>直接开玩</h4>
+              <p>孵化一只虾，边玩边学，游戏化成长</p>
+              <div class="path-meta"><span>🆓 免费</span><span>🚀 即时反馈</span></div>
+            </div>
+            <div class="path-arrow">→</div>
+          </a>
+          <a class="path-card path-learn" href="/36/">
+            <div class="path-icon">📚</div>
+            <div class="path-content">
+              <h4>深度学习</h4>
+              <p>36 计完整方法论，系统掌握养虾精髓</p>
+              <div class="path-meta"><span>📖 36 篇</span><span>💡 深度内容</span></div>
+            </div>
+            <div class="path-arrow">→</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Modules -->
   <section class="modules">
     <div class="sc-w">

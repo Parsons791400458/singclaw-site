@@ -63,13 +63,10 @@
         <article class="glass"><h2>So What</h2><p>关门捉贼解决的是排查效率问题。大多数人遇到 bug 或故障的反应是"到处看看"，结果越看越慌。正确的做法是先关门——限定范围、控制变量、缩小搜索空间。虾在封闭环境里的分析能力远强于在开放环境里的盲目搜索。给虾一个小房间，它能翻出所有线索。</p></article>
         <article class="glass"><h2>How（举一反三）</h2><ol><li>遇到问题先问三个问题：什么时候开始的？哪个环节的输出不对？最近改了什么？</li><li>用这三个答案划定排查边界，排除无关模块。</li><li>让虾在限定范围内做对比分析：正常时的数据 vs 异常时的数据。</li><li>如果范围还是太大，用二分法继续缩小：上游正常吗？正常的话问题就在下游。</li><li>找到根因后，让虾同时检查相邻环节——确认没有连锁故障。</li></ol><p>举一反三：决策虾排查订单异常时先锁定时间窗口和交易对；内容虾排查输出质量下降时先锁定是模板问题还是数据源问题；运维虾排查服务异常时先锁定是网络、应用还是数据库。先关门，再捉贼。</p></article>
       </div></section>
-      <section class="section related"><div class="container">
-        <h3>相关计策</h3>
-        <ul>
-          <li><a href="/36/fu-di-chou-xin/">釜底抽薪</a> — 定位根因后直接消除问题源头</li>
-          <li><a href="/36/qin-zei-qin-wang/">擒贼擒王</a> — 在缩小范围后找到最关键的那个节点</li>
-          <li><a href="/36/tiao-hu-li-shan/">调虎离山</a> — 把问题从复杂环境引出再排查</li>
-        </ul>
+      
+    
+      <section class="section"><div class="container">
+        <article class="glass"><h2>🔗 相关计策</h2><ul><li><a href="/36/chen-huo-da-jie/">趁火打劫</a> — 关门捉贼是围歼，趁火打劫是进攻——战术组合</li><li><a href="/36/shun-shou-qian-yang/">顺手牵羊</a> — 关门捉贼是围歼，顺手牵羊是游击——大小配合</li><li><a href="/36/qin-zei-qin-wang/">擒贼擒王</a> — 关门捉贼是围歼群体，擒贼擒王是打击核心——目标不同</li></ul></article>
       </div></section>
     <nav class="pn"><a href="/36/jin-chan-tuo-qiao/"><div class="label">← 上一计</div><div class="title">第二十一计 · 金蝉脱壳</div></a><a class="next" href="/36/yuan-jiao-jin-gong/"><div class="label">下一计 →</div><div class="title">第二十三计 · 远交近攻</div></a></nav></main>
     <footer class="footer"><div class="container">© 2026 SingClaw · 关门捉贼</div></footer>
