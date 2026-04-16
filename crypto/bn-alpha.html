@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BN Alpha 回测报告 · 只有合约没现货的币到底能不能赚？ | SingClaw</title>
+  <meta name="description" content="Binance 535个合约币分组统计：167个Alpha币（只有合约没现货）占池子31%却霸占67%的每日Top10涨幅榜，超额命中2.14倍。30天回测数据全公开。"/>
+  <meta property="og:title" content="BN Alpha 30天回测 · 超额命中2.14x"/>
+  <meta property="og:description" content="167个Alpha币占31%池子，拿走67%的Top10席位。回测数据+操作策略全公开。"/>
+  <meta property="og:url" content="https://singclaw.xyz/crypto/bn-alpha.html"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/css/design-tokens.css"/>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"BN Alpha 30天回测报告",
+    "description":"Binance合约中只有合约没现货的Alpha币回测分析，超额命中率2.14倍",
+    "url":"https://singclaw.xyz/crypto/bn-alpha.html",
+    "datePublished":"2026-04-16",
+    "author":{"@type":"Organization","name":"SingClaw"},
+    "publisher":{"@type":"Organization","name":"SingClaw","url":"https://singclaw.xyz"}
+  }
+  </script>
+  <style>
+    /* ── Nav ── */
+    nav{position:sticky;top:0;z-index:100;background:rgba(2,4,8,.82);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--sc-border)}
+    .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .logo img{width:32px;height:32px;border-radius:8px}
+    .nav-links{display:flex;gap:4px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+    .nav-links a.active{color:var(--sc-accent);background:rgba(0,212,170,.08)}
+
+    /* ── Hero ── */
+    .hero{padding:80px 0 48px;text-align:center;position:relative}
+    .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .hero-bg .orb{position:absolute;border-radius:50%}
+    .hero-bg .orb1{width:600px;height:600px;top:-20%;right:-10%;background:radial-gradient(circle,rgba(0,212,170,.08),transparent 55%)}
+    .hero-bg .orb2{width:400px;height:400px;bottom:0;left:-5%;background:radial-gradient(circle,rgba(245,158,11,.06),transparent 55%)}
+    .hero h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:16px;position:relative;z-index:2}
+    .hero h1 em{font-style:normal;background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:var(--sc-dim);font-size:17px;max-width:680px;margin:0 auto 28px;line-height:1.7;position:relative;z-index:2}
+    .hero-date{color:var(--sc-muted);font-size:13px;position:relative;z-index:2}
+
+    /* ── Stats Bar ── */
+    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;padding:40px 0}
+    .stat-card{padding:24px;border-radius:16px;background:var(--sc-card);border:1px solid var(--sc-border);text-align:center}
+    .stat-num{font-size:36px;font-weight:900;line-height:1;margin-bottom:6px}
+    .stat-label{font-size:12px;color:var(--sc-dim);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+    .stat-green .stat-num{color:var(--sc-accent)}
+    .stat-orange .stat-num{color:#f59e0b}
+    .stat-blue .stat-num{color:var(--sc-blue, #4d8ffa)}
+    .stat-purple .stat-num{color:var(--sc-purple, #a855f7)}
+
+    /* ── Section ── */
+    .section{padding:48px 0;border-top:1px solid var(--sc-border)}
+    .section-header{margin-bottom:32px}
+    .section-header h2{font-size:28px;font-weight:800;margin-bottom:8px}
+    .section-header p{color:var(--sc-dim);font-size:15px;line-height:1.6}
+
+    /* ── Table ── */
+    .data-table{width:100%;border-collapse:collapse;font-size:14px}
+    .data-table th{text-align:left;padding:12px 16px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--sc-dim);border-bottom:2px solid var(--sc-border);position:sticky;top:64px;background:var(--sc-bg)}
+    .data-table td{padding:10px 16px;border-bottom:1px solid var(--sc-border)}
+    .data-table tr:hover td{background:rgba(255,255,255,.02)}
+    .data-table .num{font-variant-numeric:tabular-nums;font-weight:600}
+    .data-table .pos{color:#22c55e}
+    .data-table .neg{color:#ef4444}
+    .tag-alpha{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.2)}
+    .tag-normal{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(77,143,250,.1);color:#4d8ffa;border:1px solid rgba(77,143,250,.2)}
+
+    /* ── Freq Bar ── */
+    .freq-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+    .freq-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--sc-card);border:1px solid var(--sc-border)}
+    .freq-rank{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;background:rgba(245,158,11,.12);color:#f59e0b;flex-shrink:0}
+    .freq-name{font-weight:700;font-size:15px;flex:1}
+    .freq-bar-wrap{flex:2;height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden}
+    .freq-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#f59e0b,#f97316)}
+    .freq-count{font-size:13px;font-weight:600;color:var(--sc-dim);min-width:50px;text-align:right}
+
+    /* ── Daily Cards ── */
+    .daily-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+    .daily-card{padding:20px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border);transition:all .2s}
+    .daily-card:hover{border-color:var(--sc-border-hover)}
+    .daily-date{font-weight:800;font-size:15px;margin-bottom:4px}
+    .daily-meta{font-size:12px;color:var(--sc-dim);margin-bottom:12px}
+    .daily-meta .alpha-ratio{color:#f59e0b;font-weight:700}
+    .daily-list{list-style:none;padding:0;margin:0}
+    .daily-list li{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px}
+    .daily-list .rank{width:20px;color:var(--sc-muted);font-weight:600;text-align:right;flex-shrink:0}
+    .daily-list .coin{font-weight:700;min-width:80px}
+    .daily-list .chg{font-weight:600;font-variant-numeric:tabular-nums}
+
+    /* ── Strategy Cards ── */
+    .strat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .strat-card{padding:24px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border)}
+    .strat-card h3{font-size:18px;font-weight:800;margin-bottom:8px}
+    .strat-card p{font-size:14px;color:var(--sc-dim);line-height:1.6}
+    .strat-icon{font-size:28px;margin-bottom:12px}
+
+    /* ── Risk Banner ── */
+    .risk-banner{padding:20px 24px;border-radius:14px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);margin-top:40px}
+    .risk-banner h3{color:#ef4444;font-size:15px;font-weight:800;margin-bottom:8px}
+    .risk-banner p{color:var(--sc-dim);font-size:13px;line-height:1.6}
+
+    /* ── Alpha Coin List ── */
+    .alpha-coin-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .alpha-coin{padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.12);color:#f59e0b}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .daily-grid{grid-template-columns:1fr}
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      .freq-list{grid-template-columns:1fr}
+      .strat-grid{grid-template-columns:1fr}
+      .table-wrap{overflow-x:auto}
+    }
+    @media(max-width:480px){
+      .stats-bar{grid-template-columns:1fr}
+    }
+
+    /* ── Footer ── */
+    footer{padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-muted);font-size:13px}
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="/" class="logo">🦞 SingClaw</a>
+      <div class="nav-links">
+        <a href="/">首页</a>
+        <a href="/crypto/">5层分析</a>
+        <a href="/crypto/bn-alpha.html" class="active">BN Alpha</a>
+        <a href="/36/">三十六计</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
+  <div class="container">
+    <h1>BN Alpha <em>30天回测</em></h1>
+    <p>Binance 535个USDT永续合约中，167个只有合约没有现货的"Alpha币"，占池子31%却拿走了每日Top10涨幅榜67%的席位。超额命中率 <strong>2.14倍</strong>。</p>
+    <div class="hero-date">📅 数据截至 2026-04-16 · 数据来源: Binance Futures API</div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="container">
+  <div class="stats-bar">
+    <div class="stat-card stat-orange">
+      <div class="stat-num">535</div>
+      <div class="stat-label">合约总数</div>
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-num">167</div>
+      <div class="stat-label">Alpha币 (无现货)</div>
+    </div>
+    <div class="stat-card stat-blue">
+      <div class="stat-num">368</div>
+      <div class="stat-label">Normal (有现货)</div>
+    </div>
+    <div class="stat-card stat-purple">
+      <div class="stat-num">2.14x</div>
+      <div class="stat-label">超额命中倍数</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section: 核心发现 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>🔥 核心发现</h2>
+      <p>Alpha币只占全部合约的31.2%，但在过去30天中，每日涨幅Top10榜单中Alpha币占据了66.7%的席位。Alpha币产生超额涨幅的概率是普通币的2.14倍。</p>
+    </div>
+
+    <div class="strat-grid">
+      <div class="strat-card">
+        <div class="strat-icon">📊</div>
+        <h3>66.7% 席位占有率</h3>
+        <p>30天×10 = 300个Top10席位，Alpha币拿走了200个。远超其31%的池子占比。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">🔁</div>
+        <h3>连庄效应</h3>
+        <p>RAVE在4/9暴涨215%后，4/10又+61%、4/12又+175%。上一次Top10后2-3天内大概率再上榜。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">♻️</div>
+        <h3>轮动效应</h3>
+        <p>SIREN→BR→ARIA→RAVE→BULLA依次接力。Alpha币之间形成清晰的轮动链。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">⚠️</div>
+        <h3>流动性陷阱</h3>
+        <p>没现货意味着深度全在合约，插针多、止损必须硬。适合小仓高赔率，不适合重仓。</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Section: 高频上榜币 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>🏆 30天高频上榜 Alpha 币</h2>
+      <p>过去30天中出现在每日Top10涨幅榜次数最多的Alpha币</p>
+    </div>
+
+    <div class="freq-list">
+      <div class="freq-item">
+        <div class="freq-rank">1</div>
+        <div class="freq-name">ARIA</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:100%"></div></div>
+        <div class="freq-count">8 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">2</div>
+        <div class="freq-name">RAVE</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:100%"></div></div>
+        <div class="freq-count">8 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">3</div>
+        <div class="freq-name">BR</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:87.5%"></div></div>
+        <div class="freq-count">7 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">4</div>
+        <div class="freq-name">SIREN</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:75%"></div></div>
+        <div class="freq-count">6 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">5</div>
+        <div class="freq-name">LYN</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:62.5%"></div></div>
+        <div class="freq-count">5 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">6</div>
+        <div class="freq-name">PLAY</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:62.5%"></div></div>
+        <div class="freq-count">5 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">7</div>
+        <div class="freq-name">BULLA</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:62.5%"></div></div>
+        <div class="freq-count">5 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">8</div>
+        <div class="freq-name">AKE</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:62.5%"></div></div>
+        <div class="freq-count">5 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">9</div>
+        <div class="freq-name">AGT</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">10</div>
+        <div class="freq-name">EDGE</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">11</div>
+        <div class="freq-name">AIA</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">12</div>
+        <div class="freq-name">AIOT</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">13</div>
+        <div class="freq-name">PTB</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">14</div>
+        <div class="freq-name">BAS</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">15</div>
+        <div class="freq-name">LAB</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-rank">16</div>
+        <div class="freq-name">4</div>
+        <div class="freq-bar-wrap"><div class="freq-bar-fill" style="width:50%"></div></div>
+        <div class="freq-count">4 次</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Section: 今日对比 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>📈 今日 24h 分组涨幅</h2>
+      <p>2026-04-16 · Alpha组 vs Normal组 Top 10 对比</p>
+    </div>
+
+    <div class="daily-grid">
+      <div class="daily-card">
+        <div class="daily-date">🔶 Alpha Top 10</div>
+        <div class="daily-meta">均涨 <span class="alpha-ratio">+3.46%</span> · 123涨 / 43跌</div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span><span class="coin">PLAY</span><span class="chg pos">+67.05%</span></li>
+          <li><span class="rank">2</span><span class="coin">AKE</span><span class="chg pos">+48.89%</span></li>
+          <li><span class="rank">3</span><span class="coin">LYN</span><span class="chg pos">+37.18%</span></li>
+          <li><span class="rank">4</span><span class="coin">ALCH</span><span class="chg pos">+36.80%</span></li>
+          <li><span class="rank">5</span><span class="coin">XNY</span><span class="chg pos">+30.40%</span></li>
+          <li><span class="rank">6</span><span class="coin">BR</span><span class="chg pos">+28.08%</span></li>
+          <li><span class="rank">7</span><span class="coin">1000RATS</span><span class="chg pos">+25.04%</span></li>
+          <li><span class="rank">8</span><span class="coin">ICNT</span><span class="chg pos">+23.80%</span></li>
+          <li><span class="rank">9</span><span class="coin">CYS</span><span class="chg pos">+23.32%</span></li>
+          <li><span class="rank">10</span><span class="coin">UB</span><span class="chg pos">+21.42%</span></li>
+        </ol>
+      </div>
+      <div class="daily-card">
+        <div class="daily-date">🔵 Normal Top 10</div>
+        <div class="daily-meta">均涨 +3.62% · 310涨 / 56跌</div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span><span class="coin">BIO</span><span class="chg pos">+108.79%</span></li>
+          <li><span class="rank">2</span><span class="coin">ORDI</span><span class="chg pos">+63.73%</span></li>
+          <li><span class="rank">3</span><span class="coin">ENJ</span><span class="chg pos">+38.90%</span></li>
+          <li><span class="rank">4</span><span class="coin">BLUR</span><span class="chg pos">+35.50%</span></li>
+          <li><span class="rank">5</span><span class="coin">NEIRO</span><span class="chg pos">+33.76%</span></li>
+          <li><span class="rank">6</span><span class="coin">CTSI</span><span class="chg pos">+28.44%</span></li>
+          <li><span class="rank">7</span><span class="coin">1000SATS</span><span class="chg pos">+25.86%</span></li>
+          <li><span class="rank">8</span><span class="coin">PNUT</span><span class="chg pos">+21.96%</span></li>
+          <li><span class="rank">9</span><span class="coin">D</span><span class="chg pos">+16.95%</span></li>
+          <li><span class="rank">10</span><span class="coin">BOME</span><span class="chg pos">+16.51%</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Section: 30天每日Top10 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>📅 30天每日 Top 10 涨幅榜</h2>
+      <p>🔶 = Alpha币 (无现货) · 🔵 = Normal (有现货)</p>
+    </div>
+
+    <div class="daily-grid">
+
+      <div class="daily-card">
+        <div class="daily-date">4/12</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">10/10 🔥</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">RAVE</span><span class="chg pos">+175.2%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">BULLA</span><span class="chg pos">+60.4%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">TRADOOR</span><span class="chg pos">+60.3%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">INX</span><span class="chg pos">+56.7%</span></li>
+          <li><span class="rank">5</span>🔶 <span class="coin">AIO</span><span class="chg pos">+40.3%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">XNY</span><span class="chg pos">+32.9%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">LAB</span><span class="chg pos">+27.4%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">VELVET</span><span class="chg pos">+27.1%</span></li>
+          <li><span class="rank">9</span>🔶 <span class="coin">BEAT</span><span class="chg pos">+25.3%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">BAN</span><span class="chg pos">+22.8%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">4/13</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">7/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">BLESS</span><span class="chg pos">+247.5%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">ON</span><span class="chg pos">+94.8%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">WET</span><span class="chg pos">+63.1%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">EVAA</span><span class="chg pos">+58.2%</span></li>
+          <li><span class="rank">5</span>🔵 <span class="coin">BROCCOLI</span><span class="chg pos">+44.2%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">RAVE</span><span class="chg pos">+34.6%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">PUMPBTC</span><span class="chg pos">+31.9%</span></li>
+          <li><span class="rank">8</span>🔵 <span class="coin">TST</span><span class="chg pos">+28.0%</span></li>
+          <li><span class="rank">9</span>🔵 <span class="coin">GIGGLE</span><span class="chg pos">+27.0%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">XPIN</span><span class="chg pos">+25.6%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">4/11</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">9/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">AIOT</span><span class="chg pos">+161.2%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">AIN</span><span class="chg pos">+76.8%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">SKYAI</span><span class="chg pos">+59.0%</span></li>
+          <li><span class="rank">4</span>🔵 <span class="coin">TRU</span><span class="chg pos">+48.0%</span></li>
+          <li><span class="rank">5</span>🔶 <span class="coin">RAVE</span><span class="chg pos">+35.1%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">GWEI</span><span class="chg pos">+33.2%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">TAG</span><span class="chg pos">+32.5%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">BLESS</span><span class="chg pos">+25.8%</span></li>
+          <li><span class="rank">9</span>🔶 <span class="coin">CROSS</span><span class="chg pos">+25.4%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">UAI</span><span class="chg pos">+24.5%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">4/14</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">7/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">RAVE</span><span class="chg pos">+96.6%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">APR</span><span class="chg pos">+66.6%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">BR</span><span class="chg pos">+46.5%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">XAN</span><span class="chg pos">+40.1%</span></li>
+          <li><span class="rank">5</span>🔵 <span class="coin">ENJ</span><span class="chg pos">+34.1%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">IN</span><span class="chg pos">+33.2%</span></li>
+          <li><span class="rank">7</span>🔵 <span class="coin">GIGGLE</span><span class="chg pos">+31.8%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">COAI</span><span class="chg pos">+29.4%</span></li>
+          <li><span class="rank">9</span>🔵 <span class="coin">ZAMA</span><span class="chg pos">+23.5%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">AKE</span><span class="chg pos">+23.1%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">4/9</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">7/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">RAVE</span><span class="chg pos">+215.6%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">AGT</span><span class="chg pos">+93.4%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">AKE</span><span class="chg pos">+82.2%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">MAGMA</span><span class="chg pos">+69.7%</span></li>
+          <li><span class="rank">5</span>🔵 <span class="coin">TNSR</span><span class="chg pos">+39.1%</span></li>
+          <li><span class="rank">6</span>🔵 <span class="coin">NOM</span><span class="chg pos">+25.2%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">CHILLGUY</span><span class="chg pos">+20.7%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">BAS</span><span class="chg pos">+20.2%</span></li>
+          <li><span class="rank">9</span>🔵 <span class="coin">PIXEL</span><span class="chg pos">+19.4%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">ARC</span><span class="chg pos">+18.5%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">4/4</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">6/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">SIREN</span><span class="chg pos">+268.6%</span></li>
+          <li><span class="rank">2</span>🔵 <span class="coin">D</span><span class="chg pos">+77.4%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">JCT</span><span class="chg pos">+61.2%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">PIPPIN</span><span class="chg pos">+44.8%</span></li>
+          <li><span class="rank">5</span>🔶 <span class="coin">PTB</span><span class="chg pos">+34.9%</span></li>
+          <li><span class="rank">6</span>🔵 <span class="coin">STO</span><span class="chg pos">+32.5%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">SWARMS</span><span class="chg pos">+24.5%</span></li>
+          <li><span class="rank">8</span>🔵 <span class="coin">COS</span><span class="chg pos">+20.9%</span></li>
+          <li><span class="rank">9</span>🔶 <span class="coin">ESPORTS</span><span class="chg pos">+20.4%</span></li>
+          <li><span class="rank">10</span>🔵 <span class="coin">SOLV</span><span class="chg pos">+19.7%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">3/22</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">8/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">SIREN</span><span class="chg pos">+145.0%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">BR</span><span class="chg pos">+72.9%</span></li>
+          <li><span class="rank">3</span>🔶 <span class="coin">JCT</span><span class="chg pos">+68.1%</span></li>
+          <li><span class="rank">4</span>🔵 <span class="coin">BANANAS31</span><span class="chg pos">+46.7%</span></li>
+          <li><span class="rank">5</span>🔶 <span class="coin">LYN</span><span class="chg pos">+44.5%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">ARIA</span><span class="chg pos">+34.8%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">TRIA</span><span class="chg pos">+30.6%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">BLUAI</span><span class="chg pos">+30.2%</span></li>
+          <li><span class="rank">9</span>🔵 <span class="coin">GUN</span><span class="chg pos">+27.3%</span></li>
+          <li><span class="rank">10</span>🔶 <span class="coin">LIGHT</span><span class="chg pos">+24.2%</span></li>
+        </ol>
+      </div>
+
+      <div class="daily-card">
+        <div class="daily-date">3/25</div>
+        <div class="daily-meta">Alpha占比 <span class="alpha-ratio">8/10</span></div>
+        <ol class="daily-list">
+          <li><span class="rank">1</span>🔶 <span class="coin">SIREN</span><span class="chg pos">+102.6%</span></li>
+          <li><span class="rank">2</span>🔶 <span class="coin">M</span><span class="chg pos">+42.4%</span></li>
+          <li><span class="rank">3</span>🔵 <span class="coin">PROVE</span><span class="chg pos">+22.5%</span></li>
+          <li><span class="rank">4</span>🔶 <span class="coin">ESPORTS</span><span class="chg pos">+18.4%</span></li>
+          <li><span class="rank">5</span>🔶 <span class="coin">BSB</span><span class="chg pos">+15.3%</span></li>
+          <li><span class="rank">6</span>🔶 <span class="coin">MON</span><span class="chg pos">+13.3%</span></li>
+          <li><span class="rank">7</span>🔶 <span class="coin">NAORIS</span><span class="chg pos">+13.0%</span></li>
+          <li><span class="rank">8</span>🔶 <span class="coin">UB</span><span class="chg pos">+12.4%</span></li>
+          <li><span class="rank">9</span>🔶 <span class="coin">ATH</span><span class="chg pos">+11.5%</span></li>
+          <li><span class="rank">10</span>🔵 <span class="coin">CETUS</span><span class="chg pos">+11.2%</span></li>
+        </ol>
+      </div>
+
+    </div>
+
+    <p style="color:var(--sc-muted);font-size:13px;margin-top:24px;text-align:center">
+      * 展示了Alpha占比最高的8天。完整30天数据见回测脚本输出。
+    </p>
+  </section>
+</div>
+
+<!-- Section: 操作策略 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>💡 基于回测的操作策略</h2>
+      <p>从30天数据中提炼出的4条可执行规则</p>
+    </div>
+
+    <div class="strat-grid">
+      <div class="strat-card">
+        <div class="strat-icon">1️⃣</div>
+        <h3>首日暴涨次日追</h3>
+        <p>当Alpha币首次进入Top10且涨幅>50%，次日回调5-10%时追入，持有1-2天。RAVE实测：4/9涨215% → 4/10涨61% → 4/12涨175%。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">2️⃣</div>
+        <h3>龙头见顶换轮动</h3>
+        <p>当一个Alpha龙头连续上榜3天以上后回落，关注同组其他高频币（ARIA/BR/SIREN/BULLA）是否接力启动。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">3️⃣</div>
+        <h3>成交量>$2000万筛选</h3>
+        <p>Alpha币暴涨必须配合足够成交量。PLAY +67%配合$2.7亿成交=真突破；XNY +30%仅$600万成交=高反噬风险。</p>
+      </div>
+      <div class="strat-card">
+        <div class="strat-icon">4️⃣</div>
+        <h3>硬止损 -8% / 止盈 +25%</h3>
+        <p>Alpha币无现货意味着深度差、插针多。小仓高赔率打法，止损必须硬。不适合重仓或抗单。</p>
+      </div>
+    </div>
+
+    <div class="risk-banner">
+      <h3>⚠️ 风险提示</h3>
+      <p>Alpha币（只有合约没现货）的高波动性是双刃剑。回测数据不代表未来表现。合约交易存在爆仓风险，请在充分理解风险的前提下谨慎参与。本页面仅为数据研究，不构成投资建议。</p>
+    </div>
+  </section>
+</div>
+
+<!-- Section: 完整Alpha币列表 -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <h2>📋 完整 Alpha 币列表 (167个)</h2>
+      <p>Binance 合约有交易对但无 USDT 现货交易对的币种</p>
+    </div>
+
+    <div class="alpha-coin-grid">
+      <span class="alpha-coin">1000000BOB</span><span class="alpha-coin">1000000MOG</span><span class="alpha-coin">1000BONK</span><span class="alpha-coin">1000FLOKI</span><span class="alpha-coin">1000LUNC</span><span class="alpha-coin">1000PEPE</span><span class="alpha-coin">1000RATS</span><span class="alpha-coin">1000SHIB</span><span class="alpha-coin">1000XEC</span><span class="alpha-coin">4</span><span class="alpha-coin">ACU</span><span class="alpha-coin">AERGO</span><span class="alpha-coin">AERO</span><span class="alpha-coin">AGT</span><span class="alpha-coin">AIA</span><span class="alpha-coin">AIN</span><span class="alpha-coin">AIOT</span><span class="alpha-coin">AIO</span><span class="alpha-coin">AKE</span><span class="alpha-coin">AKT</span><span class="alpha-coin">ALCH</span><span class="alpha-coin">ALL</span><span class="alpha-coin">APR</span><span class="alpha-coin">ARC</span><span class="alpha-coin">ARIA</span><span class="alpha-coin">ATH</span><span class="alpha-coin">AVAAI</span><span class="alpha-coin">AZTEC</span><span class="alpha-coin">B2</span><span class="alpha-coin">B3</span><span class="alpha-coin">BAN</span><span class="alpha-coin">BASED</span><span class="alpha-coin">BAS</span><span class="alpha-coin">BEAT</span><span class="alpha-coin">BIRB</span><span class="alpha-coin">BLESS</span><span class="alpha-coin">BLUAI</span><span class="alpha-coin">BOB</span><span class="alpha-coin">BRETT</span><span class="alpha-coin">BROCCOLIF3B</span><span class="alpha-coin">BR</span><span class="alpha-coin">BSB</span><span class="alpha-coin">BSV</span><span class="alpha-coin">BTCDOM</span><span class="alpha-coin">BTR</span><span class="alpha-coin">BULLA</span><span class="alpha-coin">B</span><span class="alpha-coin">CARV</span><span class="alpha-coin">CC</span><span class="alpha-coin">CHILLGUY</span><span class="alpha-coin">CLANKER</span><span class="alpha-coin">CLO</span><span class="alpha-coin">COAI</span><span class="alpha-coin">COLLECT</span><span class="alpha-coin">CROSS</span><span class="alpha-coin">CYS</span><span class="alpha-coin">DAM</span><span class="alpha-coin">DEEP</span><span class="alpha-coin">DEGEN</span><span class="alpha-coin">DODOX</span><span class="alpha-coin">DOOD</span><span class="alpha-coin">DRIFT</span><span class="alpha-coin">EDGE</span><span class="alpha-coin">ELSA</span><span class="alpha-coin">ESPORTS</span><span class="alpha-coin">ETHW</span><span class="alpha-coin">EVAA</span><span class="alpha-coin">FARTCOIN</span><span class="alpha-coin">FHE</span><span class="alpha-coin">FIGHT</span><span class="alpha-coin">FLOCK</span><span class="alpha-coin">FLUID</span><span class="alpha-coin">FOLKS</span><span class="alpha-coin">GOAT</span><span class="alpha-coin">GRASS</span><span class="alpha-coin">GRIFFAIN</span><span class="alpha-coin">GUA</span><span class="alpha-coin">GWEI</span><span class="alpha-coin">HANA</span><span class="alpha-coin">H</span><span class="alpha-coin">HYPE</span><span class="alpha-coin">ICNT</span><span class="alpha-coin">IDOL</span><span class="alpha-coin">IN</span><span class="alpha-coin">INX</span><span class="alpha-coin">IP</span><span class="alpha-coin">IR</span><span class="alpha-coin">IRYS</span><span class="alpha-coin">JCT</span><span class="alpha-coin">JELLYJELLY</span><span class="alpha-coin">KAS</span><span class="alpha-coin">KGEN</span><span class="alpha-coin">KOMA</span><span class="alpha-coin">LAB</span><span class="alpha-coin">LIGHT</span><span class="alpha-coin">LIT</span><span class="alpha-coin">LUNA2</span><span class="alpha-coin">LYN</span><span class="alpha-coin">MAGMA</span><span class="alpha-coin">MAVIA</span><span class="alpha-coin">MEGA</span><span class="alpha-coin">MELANIA</span><span class="alpha-coin">MERL</span><span class="alpha-coin">MEW</span><span class="alpha-coin">MOCA</span><span class="alpha-coin">MON</span><span class="alpha-coin">MOODENG</span><span class="alpha-coin">M</span><span class="alpha-coin">MYX</span><span class="alpha-coin">NAORIS</span><span class="alpha-coin">ON</span><span class="alpha-coin">ORDER</span><span class="alpha-coin">PIEVERSE</span><span class="alpha-coin">PIPPIN</span><span class="alpha-coin">PLAY</span><span class="alpha-coin">POPCAT</span><span class="alpha-coin">POWER</span><span class="alpha-coin">PRL</span><span class="alpha-coin">PROMPT</span><span class="alpha-coin">PTB</span><span class="alpha-coin">PUMPBTC</span><span class="alpha-coin">Q</span><span class="alpha-coin">RAVE</span><span class="alpha-coin">RAYSOL</span><span class="alpha-coin">RECALL</span><span class="alpha-coin">RIVER</span><span class="alpha-coin">SAFE</span><span class="alpha-coin">SIREN</span><span class="alpha-coin">SKR</span><span class="alpha-coin">SKYAI</span><span class="alpha-coin">SONIC</span><span class="alpha-coin">SOON</span><span class="alpha-coin">SPACE</span><span class="alpha-coin">SPORTFUN</span><span class="alpha-coin">SPX</span><span class="alpha-coin">SQD</span><span class="alpha-coin">STABLE</span><span class="alpha-coin">STBL</span><span class="alpha-coin">SWARMS</span><span class="alpha-coin">TAC</span><span class="alpha-coin">TAG</span><span class="alpha-coin">TAIKO</span><span class="alpha-coin">TAKE</span><span class="alpha-coin">TA</span><span class="alpha-coin">TOSHI</span><span class="alpha-coin">TRADOOR</span><span class="alpha-coin">TRIA</span><span class="alpha-coin">TRUST</span><span class="alpha-coin">TRUTH</span><span class="alpha-coin">UAI</span><span class="alpha-coin">UB</span><span class="alpha-coin">USELESS</span><span class="alpha-coin">US</span><span class="alpha-coin">VELVET</span><span class="alpha-coin">VINE</span><span class="alpha-coin">VVV</span><span class="alpha-coin">WET</span><span class="alpha-coin">XAN</span><span class="alpha-coin">XMR</span><span class="alpha-coin">XNY</span><span class="alpha-coin">XPIN</span><span class="alpha-coin">ZEREBRO</span><span class="alpha-coin">ZETA</span><span class="alpha-coin">ZKJ</span><span class="alpha-coin">ZORA</span>
+    </div>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p>SingClaw · Crypto Alpha Research · 数据来源: Binance Futures API</p>
+    <p style="margin-top:8px">© 2026 SingClaw. 仅供研究参考，不构成投资建议。</p>
+  </div>
+</footer>
+
+</body>
+</html>
