@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>虾24章经｜SingClaw</title>
 <meta name="description" content="虾24章经：面向龙虾养成者的原则、认知与修炼体系。不是技巧库，而是心法库。"/>
+<link rel="stylesheet" href="/css/design-tokens.css"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 <style>
-:root{--bg:#02040a;--text:#f5f8ff;--muted:rgba(230,238,250,.68);--dim:rgba(200,218,240,.42);--line:rgba(255,255,255,.08);--max:1200px;--brand:rgba(96,165,250,.9);--brand2:rgba(103,232,249,.85);--accent:rgba(192,132,252,.85)}
+:root{--bg:var(--sc-bg,#02040a);--text:var(--sc-text-bright,#f5f8ff);--muted:rgba(230,238,250,.68);--dim:rgba(200,218,240,.42);--line:rgba(255,255,255,.08);--max:var(--sc-max,1100px);--brand:rgba(96,165,250,.9);--brand2:rgba(103,232,249,.85);--accent:rgba(192,132,252,.85)}
 *{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
 body{font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);background:radial-gradient(ellipse at 18% 6%,rgba(192,132,252,.12),transparent 32%),radial-gradient(ellipse at 82% 8%,rgba(96,165,250,.10),transparent 28%),linear-gradient(180deg,#02040a,#050a14 50%,#02040a);line-height:1.62}
 a{color:inherit;text-decoration:none}
@@ -76,7 +78,14 @@ a{color:inherit;text-decoration:none}
 .footer{padding:24px 0 56px;color:rgba(255,255,255,.36);text-align:center;font-size:13px}
 
 @media(max-width:900px){.guide-grid,.ch-grid,.vs,.all-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.nav-r{display:none}}
+/* hamburger */
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.hamburger span{display:block;width:20px;height:2px;background:var(--sc-text,#f5f8ff);margin:4px 0;border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;bottom:0;background:rgba(2,4,10,.96);backdrop-filter:blur(20px);z-index:99;padding:24px;flex-direction:column;gap:8px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:var(--muted);transition:all .2s}
+.mobile-menu a:hover,.mobile-menu a.active{color:var(--sc-accent,#00d4aa);background:rgba(0,212,170,.06)}
+@media(max-width:600px){.nav-r{display:none}.hamburger{display:block}}
 </style>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 </head>
@@ -84,7 +93,11 @@ a{color:inherit;text-decoration:none}
 <header class="nav"><div class="c nav-in">
   <a class="brand" href="/home/"><span class="brand-m">虾</span>SingClaw</a>
   <nav class="nav-r"><a href="/home/">首页</a><a href="#guide">阅读指南</a><a href="#pick">首批章节</a><a href="#all">全目录</a><a href="/36/">养虾36计</a></nav>
+  <button class="hamburger" onclick="document.getElementById('mobileMenu24').classList.toggle('open')" aria-label="菜单"><span></span><span></span><span></span></button>
 </div></header>
+<div class="mobile-menu" id="mobileMenu24">
+  <a href="/home/">首页</a><a href="#guide">阅读指南</a><a href="#pick">首批章节</a><a href="#all">全目录</a><a href="/36/">养虾36计</a>
+</div>
 <div class="wm">@马星克 Maxink</div>
 
 <main>

@@ -275,15 +275,15 @@
         :root {
             /* Design Tokens 映射 (保持向后兼容) */
             --bg-deep: var(--sc-bg, #020408);
-            --bg-card: var(--sc-bg2, #111827);
-            --bg-card-hover: var(--sc-bg3, #1a2332);
+            --bg-card: var(--sc-bg2, #080d18);
+            --bg-card-hover: var(--sc-bg3, #0c1220);
             --accent: var(--sc-accent, #00d4aa);
-            --accent-glow: var(--sc-accent-glow, rgba(0, 212, 170, 0.3));
+            --accent-glow: var(--sc-accent-glow, rgba(0,212,170,.15));
             --accent2: var(--sc-accent2, #00ff88);
-            --text: var(--sc-text, #e2e8f0);
-            --text-dim: var(--sc-muted, #64748b);
-            --text-bright: var(--sc-text-bright, #f8fafc);
-            --border: var(--sc-border, #1e293b);
+            --text: var(--sc-text, #e8ecf4);
+            --text-dim: var(--sc-muted, rgba(200,215,240,.35));
+            --text-bright: var(--sc-text-bright, #f5f8ff);
+            --border: var(--sc-border, rgba(255,255,255,.08));
             --danger: var(--sc-danger, #ef4444);
             --warning: #f59e0b;
             --success: var(--sc-success, #22c55e);
@@ -295,7 +295,7 @@
         body {
             font-family: var(--sc-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
             background: var(--sc-bg, #020408);
-            color: var(--sc-text, #e2e8f0);
+            color: var(--sc-text, #e8ecf4);
             min-height: 100vh;
             overflow-x: hidden;
         }

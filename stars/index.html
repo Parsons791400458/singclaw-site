@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>明星追踪 · SingClaw</title>
+  <meta name="description" content="明星信息采集站 — 微博、小红书、公众号多渠道动态追踪"/>
+  <meta property="og:title" content="明星追踪 · SingClaw"/>
+  <meta property="og:description" content="多渠道明星动态采集与展示"/>
+  <meta property="og:url" content="https://singclaw.xyz/stars/"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/css/design-tokens.css"/>
+  <style>
+    /* ── Nav ── */
+    nav{position:sticky;top:0;z-index:100;background:rgba(2,4,8,.82);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--sc-border)}
+    .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .logo img{width:32px;height:32px;border-radius:8px}
+    .nav-links{display:flex;gap:4px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+    .nav-links a.active{color:var(--sc-accent);background:rgba(0,212,170,.08)}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+    .hamburger span{display:block;width:20px;height:2px;background:var(--sc-text);margin:4px 0;border-radius:2px;transition:all .3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(2,4,8,.96);backdrop-filter:blur(20px);z-index:99;padding:24px;flex-direction:column;gap:8px}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .mobile-menu a:hover,.mobile-menu a.active{color:var(--sc-accent);background:rgba(0,212,170,.06)}
+
+    /* ── Hero ── */
+    .stars-hero{padding:60px 0 40px;text-align:center;position:relative}
+    .stars-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(168,85,247,.08),transparent);pointer-events:none}
+    .stars-hero h1{font-size:clamp(32px,4vw,48px);font-weight:900;margin-bottom:12px}
+    .stars-hero h1 em{font-style:normal;background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .stars-hero p{color:var(--sc-dim);font-size:16px;max-width:500px;margin:0 auto}
+
+    /* ── Stats ── */
+    .stats-bar{display:flex;justify-content:center;gap:32px;padding:24px 0;border-bottom:1px solid var(--sc-border);margin-bottom:40px;flex-wrap:wrap}
+    .stat-item{text-align:center}
+    .stat-num{font-size:28px;font-weight:800}
+    .stat-num.purple{color:#a855f7}
+    .stat-num.pink{color:#ec4899}
+    .stat-num.red{color:#ef4444}
+    .stat-num.blue{color:#3b82f6}
+    .stat-label{font-size:12px;color:var(--sc-dim);margin-top:2px}
+
+    /* ── Celebrity Grid ── */
+    .celeb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-bottom:40px}
+    .celeb-card{background:var(--sc-card);border:1px solid var(--sc-border);border-radius:16px;padding:24px;transition:all .3s var(--sc-ease);cursor:pointer}
+    .celeb-card:hover{border-color:rgba(168,85,247,.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+    .celeb-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+    .celeb-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
+    .celeb-name{font-size:18px;font-weight:700}
+    .celeb-meta{font-size:12px;color:var(--sc-dim)}
+    .celeb-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+    .tag{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+    .tag-weibo{background:rgba(239,68,68,.12);color:#ef4444}
+    .tag-xhs{background:rgba(236,72,153,.12);color:#ec4899}
+    .tag-mp{background:rgba(59,130,246,.12);color:#3b82f6}
+    .tag-cat{background:rgba(168,85,247,.12);color:#a855f7}
+
+    /* ── Posts ── */
+    .posts-section{margin-bottom:60px}
+    .posts-section h2{font-size:22px;font-weight:800;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+    .post-list{display:flex;flex-direction:column;gap:12px}
+    .post-item{background:var(--sc-card);border:1px solid var(--sc-border);border-radius:14px;padding:20px;transition:all .25s}
+    .post-item:hover{border-color:var(--sc-border-hover);background:var(--sc-card-hover)}
+    .post-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+    .post-platform{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+    .post-celeb{font-weight:600;font-size:14px}
+    .post-time{font-size:12px;color:var(--sc-muted);margin-left:auto}
+    .post-link{font-size:12px;color:var(--sc-accent);text-decoration:none}
+    .post-link:hover{text-decoration:underline}
+    .post-title{font-weight:600;font-size:15px;margin-bottom:6px}
+    .post-content{font-size:13px;color:var(--sc-dim);line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .post-stats{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--sc-muted)}
+
+    /* ── Empty State ── */
+    .empty-state{text-align:center;padding:80px 20px}
+    .empty-icon{font-size:64px;margin-bottom:16px}
+    .empty-text{color:var(--sc-dim);font-size:16px;margin-bottom:24px}
+
+    /* ── Loading ── */
+    .loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--sc-border);border-top-color:var(--sc-accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── Footer ── */
+    footer{padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-dim);font-size:13px}
+    footer a{color:var(--sc-accent);transition:opacity .2s}
+    footer a:hover{opacity:.7}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+      .celeb-grid{grid-template-columns:1fr}
+      .stats-bar{gap:20px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="sc-w nav-inner">
+      <a class="logo" href="/"><img src="/favicon.svg" alt="SingClaw"/>SingClaw</a>
+      <div class="nav-links">
+        <a href="/36/">养虾36计</a>
+        <a href="/24/">虾24章经</a>
+        <a href="/game/">ShrimpFi 🎮</a>
+        <a href="/stars/" class="active">明星追踪 ⭐</a>
+      </div>
+      <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/36/">📖 养虾36计</a>
+    <a href="/24/">📜 虾24章经</a>
+    <a href="/game/">🎮 ShrimpFi</a>
+    <a href="/stars/" class="active">⭐ 明星追踪</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="stars-hero">
+    <div class="sc-w">
+      <h1 class="sc-reveal">🌟 <em>明星追踪</em></h1>
+      <p class="sc-reveal">微博 · 小红书 · 公众号 — 多渠道动态采集与展示</p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="sc-w">
+    <div class="stats-bar sc-reveal" id="statsBar">
+      <div class="stat-item"><div class="stat-num purple" id="statCelebs">-</div><div class="stat-label">追踪明星</div></div>
+      <div class="stat-item"><div class="stat-num pink" id="statPosts">-</div><div class="stat-label">动态总数</div></div>
+      <div class="stat-item"><div class="stat-num red" id="statWeibo">-</div><div class="stat-label">微博</div></div>
+      <div class="stat-item"><div class="stat-num pink" id="statXhs">-</div><div class="stat-label">小红书</div></div>
+      <div class="stat-item"><div class="stat-num blue" id="statWeb">-</div><div class="stat-label">网页/公众号</div></div>
+    </div>
+  </div>
+
+  <!-- Celebrity Grid -->
+  <div class="sc-w">
+    <div class="celeb-grid sc-reveal" id="celebGrid">
+      <div style="text-align:center;padding:40px;color:var(--sc-dim)"><div class="loading-spinner"></div><div style="margin-top:12px">加载中...</div></div>
+    </div>
+  </div>
+
+  <!-- Recent Posts -->
+  <div class="sc-w">
+    <div class="posts-section sc-reveal" id="postsSection">
+      <h2>📰 最新动态</h2>
+      <div class="post-list" id="postList">
+        <div style="text-align:center;padding:40px;color:var(--sc-dim)"><div class="loading-spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="sc-w">
+      <p>© 2026 <a href="/">SingClaw</a> · 明星追踪 · 数据来源：微博 / 小红书 / 公众号</p>
+    </div>
+  </footer>
+
+  <script>
+    // 从静态 data.json 加载数据（由 export_static.py 生成）
+    async function loadData() {
+      try {
+        const resp = await fetch('/stars/data.json?' + Date.now());
+        if (!resp.ok) throw new Error('data.json not found');
+        const data = await resp.json();
+
+        // 渲染统计
+        const s = data.stats || {};
+        document.getElementById('statCelebs').textContent = s.celebrities || 0;
+        document.getElementById('statPosts').textContent = s.posts || 0;
+        document.getElementById('statWeibo').textContent = s.weibo_posts || 0;
+        document.getElementById('statXhs').textContent = s.xhs_posts || 0;
+        document.getElementById('statWeb').textContent = s.web_snippets || 0;
+
+        // 渲染明星
+        renderCelebs(data.celebrities || []);
+
+        // 合并 posts + web_snippets 按时间排序
+        const allPosts = [
+          ...(data.posts || []),
+          ...(data.web_snippets || []).map(w => ({
+            ...w,
+            platform: 'web',
+            likes: 0, comments: 0, shares: 0,
+            title: w.title,
+            content: w.content,
+            url: w.source_url,
+          }))
+        ].sort((a, b) => (b.collected_at || '').localeCompare(a.collected_at || ''));
+
+        renderPosts(allPosts.slice(0, 30));
+      } catch (e) {
+        // 降级到内置静态数据
+        renderStaticData();
+      }
+    }
+
+    function renderCelebs(celebs) {
+      const grid = document.getElementById('celebGrid');
+      if (!celebs.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🌟</div><div class="empty-text">暂无追踪明星</div></div>`;
+        return;
+      }
+      grid.innerHTML = celebs.map(c => `
+        <div class="celeb-card" onclick="location.href='#celeb-${c.id}'">
+          <div class="celeb-header">
+            <div class="celeb-avatar">${c.name[0]}</div>
+            <div>
+              <div class="celeb-name">${c.name}</div>
+              <div class="celeb-meta">${c.aliases || ''} ${c.category ? '· ' + c.category : ''}</div>
+            </div>
+          </div>
+          <div class="celeb-tags">
+            ${c.category ? `<span class="tag tag-cat">${c.category}</span>` : ''}
+            ${c.weibo_id ? '<span class="tag tag-weibo">微博</span>' : ''}
+            ${c.xiaohongshu_id ? '<span class="tag tag-xhs">小红书</span>' : ''}
+          </div>
+          ${c.description ? `<p style="font-size:13px;color:var(--sc-dim);line-height:1.5">${c.description.slice(0,100)}</p>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderPosts(posts) {
+      const list = document.getElementById('postList');
+      if (!posts.length) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">📰</div><div class="empty-text">暂无动态数据</div></div>`;
+        return;
+      }
+      list.innerHTML = posts.map(p => {
+        const platformClass = p.platform === 'weibo' ? 'tag-weibo' : p.platform === 'xiaohongshu' ? 'tag-xhs' : 'tag-mp';
+        const platformName = p.platform === 'weibo' ? '微博' : p.platform === 'xiaohongshu' ? '小红书' : '网页';
+        return `
+          <div class="post-item">
+            <div class="post-header">
+              <span class="post-platform ${platformClass}">${platformName}</span>
+              <span class="post-celeb">${p.celebrity_name || ''}</span>
+              <span class="post-time">${p.collected_at || ''}</span>
+              ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="post-link">🔗 原文</a>` : ''}
+            </div>
+            ${p.title ? `<div class="post-title">${p.title}</div>` : ''}
+            <div class="post-content">${(p.content || '').slice(0, 300)}</div>
+            <div class="post-stats">
+              <span>❤️ ${p.likes || 0}</span>
+              <span>💬 ${p.comments || 0}</span>
+              <span>🔄 ${p.shares || 0}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 静态降级数据（API不可用时展示）
+    function renderStaticData() {
+      document.getElementById('statCelebs').textContent = '1';
+      document.getElementById('statPosts').textContent = '5';
+      document.getElementById('statWeibo').textContent = '3';
+      document.getElementById('statXhs').textContent = '2';
+      document.getElementById('statWeb').textContent = '2';
+
+      document.getElementById('celebGrid').innerHTML = `
+        <div class="celeb-card">
+          <div class="celeb-header">
+            <div class="celeb-avatar">杨</div>
+            <div>
+              <div class="celeb-name">杨幂</div>
+              <div class="celeb-meta">大幂幂 · 演员</div>
+            </div>
+          </div>
+          <div class="celeb-tags">
+            <span class="tag tag-cat">演员</span>
+            <span class="tag tag-weibo">微博</span>
+            <span class="tag tag-xhs">小红书</span>
+          </div>
+          <p style="font-size:13px;color:var(--sc-dim);line-height:1.5">中国女演员、歌手、制片人。代表作品：《宫锁心玉》《三生三世十里桃花》等</p>
+        </div>
+      `;
+
+      document.getElementById('postList').innerHTML = `
+        <div class="post-item">
+          <div class="post-header">
+            <span class="post-platform tag-weibo">微博</span>
+            <span class="post-celeb">杨幂</span>
+            <span class="post-time">2026-02-06</span>
+          </div>
+          <div class="post-title">2026微博之夜压轴登场 红唇黑裙美艳高贵</div>
+          <div class="post-content">40岁杨幂微博之夜压轴登场，红唇黑裙美艳又高贵，和杨紫开心热聊。出场前提着裙摆的小动作被镜头捕捉，全场掌声。</div>
+          <div class="post-stats"><span>❤️ 58000</span><span>💬 12000</span><span>🔄 8500</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-header">
+            <span class="post-platform tag-weibo">微博</span>
+            <span class="post-celeb">杨幂</span>
+            <span class="post-time">2026-02-06</span>
+          </div>
+          <div class="post-title">微博之夜「紫醉金幂」名场面引爆全网</div>
+          <div class="post-content">杨幂与杨紫全程贴耳热聊、默契互动的温暖细节，以及全网对聊天话题的趣味推演，共同编织出一幕诠释女性情谊与行业生态的鲜活图景。</div>
+          <div class="post-stats"><span>❤️ 42000</span><span>💬 8900</span><span>🔄 6200</span></div>
+        </div>
+        <div class="post-item">
+          <div class="post-header">
+            <span class="post-platform tag-xhs">小红书</span>
+            <span class="post-celeb">杨幂</span>
+            <span class="post-time">2026-01-15</span>
+          </div>
+          <div class="post-title">2026开年85花首战：杨幂红裙封神</div>
+          <div class="post-content">2026年1月15日杨幂亮相活动，红裙美艳造型引爆热搜。赵丽颖蓝裙甜美，唐嫣冰蓝短裙秀美腿，三位85花同日亮相。</div>
+          <div class="post-stats"><span>❤️ 28000</span><span>💬 5600</span><span>🔄 0</span></div>
+        </div>
+      `;
+    }
+
+    // Scroll Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.sc-reveal').forEach(el => observer.observe(el));
+
+    // Load data on page ready
+    loadData();
+  </script>
+  <script src="/js/social-share.js"></script>
+</body>
+</html>

@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crypto Alpha · 5层分析决策系统 | SingClaw</title>
+  <meta name="description" content="基于 CoinGlass + Binance + Surf 的加密资产分析决策系统。避雷筛查 → 趋势判断 → 选币排序 → 开仓决策 → 止盈止损，一步到位。"/>
+  <meta property="og:title" content="Crypto Alpha · 5层分析决策系统"/>
+  <meta property="og:description" content="避雷12项速查 + OI趋势矩阵 + VVV DNA评分 + 开仓决策 + 止盈止损模板"/>
+  <meta property="og:url" content="https://singclaw.xyz/crypto/"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/css/design-tokens.css"/>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Crypto Alpha 5层分析决策系统",
+    "description":"基于CoinGlass + Binance API的加密资产分析决策框架",
+    "url":"https://singclaw.xyz/crypto/",
+    "author":{"@type":"Organization","name":"SingClaw"},
+    "publisher":{"@type":"Organization","name":"SingClaw","url":"https://singclaw.xyz"}
+  }
+  </script>
+  <style>
+    /* ── Nav ── */
+    nav{position:sticky;top:0;z-index:100;background:rgba(2,4,8,.82);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--sc-border)}
+    .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .logo img{width:32px;height:32px;border-radius:8px}
+    .nav-links{display:flex;gap:4px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+    .nav-links a.active{color:var(--sc-accent);background:rgba(0,212,170,.08)}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+    .hamburger span{display:block;width:20px;height:2px;background:var(--sc-text);margin:4px 0;border-radius:2px;transition:all .3s}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(2,4,8,.96);backdrop-filter:blur(20px);z-index:99;padding:24px;flex-direction:column;gap:8px}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:var(--sc-dim)}
+
+    /* ── Hero ── */
+    .hero{padding:80px 0 60px;text-align:center;position:relative}
+    .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .hero-bg .orb{position:absolute;border-radius:50%}
+    .hero-bg .orb1{width:600px;height:600px;top:-20%;right:-10%;background:radial-gradient(circle,rgba(0,212,170,.08),transparent 55%)}
+    .hero-bg .orb2{width:400px;height:400px;bottom:0;left:-5%;background:radial-gradient(circle,rgba(77,143,250,.06),transparent 55%)}
+    .hero h1{font-size:clamp(36px,5vw,56px);font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:16px;position:relative;z-index:2}
+    .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--sc-accent),var(--sc-accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:var(--sc-dim);font-size:17px;max-width:640px;margin:0 auto 32px;line-height:1.7;position:relative;z-index:2}
+    .hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative;z-index:2}
+    .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid}
+    .badge-green{color:var(--sc-accent);background:rgba(0,212,170,.06);border-color:rgba(0,212,170,.18)}
+    .badge-blue{color:var(--sc-blue);background:rgba(77,143,250,.06);border-color:rgba(77,143,250,.18)}
+    .badge-purple{color:var(--sc-purple);background:rgba(168,85,247,.06);border-color:rgba(168,85,247,.18)}
+
+    /* ── Flow Diagram ── */
+    .flow{padding:60px 0}
+    .flow-steps{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding-bottom:12px}
+    .flow-step{flex:1;min-width:180px;text-align:center;position:relative;padding:0 8px}
+    .flow-num{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;margin:0 auto 12px;position:relative;z-index:2}
+    .flow-step:nth-child(1) .flow-num{background:linear-gradient(135deg,#ef4444,#f97316);color:#fff}
+    .flow-step:nth-child(2) .flow-num{background:linear-gradient(135deg,#f59e0b,#eab308);color:#000}
+    .flow-step:nth-child(3) .flow-num{background:linear-gradient(135deg,var(--sc-blue),#818cf8);color:#fff}
+    .flow-step:nth-child(4) .flow-num{background:linear-gradient(135deg,var(--sc-accent),var(--sc-accent2));color:#000}
+    .flow-step:nth-child(5) .flow-num{background:linear-gradient(135deg,var(--sc-purple),#c084fc);color:#fff}
+    .flow-title{font-size:15px;font-weight:700;margin-bottom:4px}
+    .flow-desc{font-size:12px;color:var(--sc-dim);line-height:1.5}
+    .flow-arrow{position:absolute;right:-12px;top:24px;font-size:18px;color:var(--sc-muted);z-index:1}
+    .flow-step:last-child .flow-arrow{display:none}
+
+    /* ── Section ── */
+    .section{padding:60px 0;border-top:1px solid var(--sc-border)}
+    .section-header{margin-bottom:40px}
+    .section-icon{font-size:32px;margin-bottom:12px}
+
+    /* ── Checklist Grid ── */
+    .check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .check-item{padding:20px;border-radius:var(--sc-radius);background:var(--sc-card);border:1px solid var(--sc-border);transition:all .2s}
+    .check-item:hover{border-color:var(--sc-border-hover);background:var(--sc-card-hover)}
+    .check-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;font-size:11px;font-weight:800;margin-right:8px}
+    .check-pass .check-num{background:rgba(34,197,94,.12);color:var(--sc-success)}
+    .check-fail .check-num{background:rgba(239,68,68,.12);color:var(--sc-danger)}
+    .check-title{font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center}
+    .check-detail{font-size:12px;color:var(--sc-dim);line-height:1.6}
+    .check-redline{color:var(--sc-danger);font-weight:600}
+
+    /* ── Matrix Table ── */
+    .matrix{width:100%;border-collapse:collapse;font-size:13px}
+    .matrix th{padding:12px 16px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--sc-dim);border-bottom:1px solid var(--sc-border);background:rgba(255,255,255,.02)}
+    .matrix td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+    .matrix tr:hover td{background:rgba(255,255,255,.02)}
+    .matrix .sig-bull{color:var(--sc-success)}
+    .matrix .sig-bear{color:var(--sc-danger)}
+    .matrix .sig-warn{color:var(--sc-gold)}
+    .confidence{display:inline-flex;gap:2px}
+    .confidence .star{color:var(--sc-gold);font-size:10px}
+    .confidence .star-empty{color:var(--sc-muted);font-size:10px}
+
+    /* ── DNA Score ── */
+    .dna-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .dna-item{padding:18px;border-radius:var(--sc-radius);background:var(--sc-card);border:1px solid var(--sc-border)}
+    .dna-bar-wrap{height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin:10px 0 6px;overflow:hidden}
+    .dna-bar{height:100%;border-radius:3px;transition:width .6s var(--sc-ease)}
+    .dna-weight{font-size:11px;color:var(--sc-dim)}
+    .dna-name{font-size:14px;font-weight:700}
+    .dna-score{font-size:20px;font-weight:900;float:right}
+
+    /* ── Leverage Table ── */
+    .lev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+    .lev-card{padding:20px;border-radius:var(--sc-radius);background:var(--sc-card);border:1px solid var(--sc-border);text-align:center}
+    .lev-val{font-size:28px;font-weight:900;margin-bottom:4px}
+    .lev-label{font-size:13px;font-weight:600;margin-bottom:8px}
+    .lev-desc{font-size:11px;color:var(--sc-dim)}
+    .lev-safe .lev-val{color:var(--sc-success)}
+    .lev-warn .lev-val{color:var(--sc-gold)}
+    .lev-danger .lev-val{color:var(--sc-danger)}
+
+    /* ── TP/SL Visual ── */
+    .tpsl-visual{display:flex;flex-direction:column;gap:0;max-width:500px;margin:0 auto}
+    .tpsl-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .tpsl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+    .tpsl-label{flex:1;font-size:13px;font-weight:600}
+    .tpsl-pct{font-size:14px;font-weight:800;font-family:var(--sc-mono)}
+    .tpsl-action{font-size:11px;color:var(--sc-dim);padding:4px 10px;border-radius:6px;background:rgba(255,255,255,.04)}
+
+    /* ── Signal Cards ── */
+    .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .sig-card{padding:24px;border-radius:var(--sc-radius-lg);border:1px solid var(--sc-border)}
+    .sig-card h3{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .sig-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .sig-list li{font-size:13px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+    .sig-list li::before{content:'';flex-shrink:0;width:6px;height:6px;border-radius:50%;margin-top:6px}
+    .sig-bull-card{background:rgba(34,197,94,.03);border-color:rgba(34,197,94,.15)}
+    .sig-bull-card li::before{background:var(--sc-success)}
+    .sig-bear-card{background:rgba(239,68,68,.03);border-color:rgba(239,68,68,.15)}
+    .sig-bear-card li::before{background:var(--sc-danger)}
+
+    /* ── Iron Rules ── */
+    .rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+    .rule-item{padding:18px 20px;border-radius:var(--sc-radius);background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.12);display:flex;gap:14px;align-items:flex-start}
+    .rule-num{width:28px;height:28px;border-radius:8px;background:rgba(239,68,68,.12);color:var(--sc-danger);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .rule-text{font-size:13px;line-height:1.6}
+    .rule-text strong{color:var(--sc-text-bright)}
+
+    /* ── OI Principle ── */
+    .oi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .oi-card{padding:18px;border-radius:var(--sc-radius);background:var(--sc-card);border:1px solid var(--sc-border);text-align:center}
+    .oi-formula{font-size:13px;font-weight:600;margin-bottom:8px;font-family:var(--sc-mono)}
+    .oi-meaning{font-size:12px;color:var(--sc-dim);margin-bottom:6px}
+    .oi-signal{font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;display:inline-block}
+
+    /* ── CTA ── */
+    .cta-section{padding:80px 0;text-align:center}
+    .cta-card{padding:48px;border-radius:var(--sc-radius-xl);background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(77,143,250,.04));border:1px solid rgba(0,212,170,.15);max-width:700px;margin:0 auto}
+    .cta-card h2{font-size:28px;font-weight:900;margin-bottom:12px}
+    .cta-card p{color:var(--sc-dim);margin-bottom:24px}
+
+    /* ── Footer ── */
+    footer{padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-muted);font-size:12px}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .hamburger{display:block}
+      .flow-steps{flex-direction:column;align-items:center}
+      .flow-arrow{display:none!important}
+      .flow-step{min-width:auto;width:100%;max-width:300px}
+      .sig-grid{grid-template-columns:1fr}
+      .oi-grid{grid-template-columns:1fr}
+      .check-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="sc-w nav-inner">
+    <a href="/" class="logo"><img src="/favicon.svg" alt="SingClaw"/> SingClaw</a>
+    <div class="nav-links">
+      <a href="/36/">36计</a>
+      <a href="/24/">24节气</a>
+      <a href="/game/">ShrimpFi</a>
+      <a href="/crypto/" class="active">Crypto Alpha</a>
+      <a href="/crypto/bn-alpha.html">BN Alpha</a>
+      <a href="/stars/">明星站</a>
+    </div>
+    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="/36/">36计</a>
+  <a href="/24/">24节气</a>
+  <a href="/game/">ShrimpFi</a>
+  <a href="/crypto/" class="active">Crypto Alpha</a>
+  <a href="/stars/">明星站</a>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+  </div>
+  <div class="sc-w">
+    <h1>Crypto Alpha<br/><em>5层分析决策系统</em></h1>
+    <p>基于 CoinGlass 80+ 端点 + Binance API + 链上数据，从避雷到开仓到止盈，一套框架覆盖全流程。不靠感觉，靠数据。</p>
+    <div class="hero-badges">
+      <span class="hero-badge badge-green">📊 CoinGlass 22工具</span>
+      <span class="hero-badge badge-blue">🔗 Binance 实时API</span>
+      <span class="hero-badge badge-purple">🧠 第一性原理驱动</span>
+    </div>
+  </div>
+</section>
+
+<!-- Flow Diagram -->
+<section class="flow">
+  <div class="sc-w">
+    <div class="section-header" style="text-align:center;margin-bottom:40px">
+      <div class="sc-label">Decision Pipeline</div>
+      <h2 class="sc-title">5 层决策流水线</h2>
+      <p class="sc-desc" style="margin:0 auto">每个币必须从第1层开始，逐层过关。任何一层不合格 = 停止分析。</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-title">避雷筛查</div>
+        <div class="flow-desc">12项速查清单<br/>3红旗以上 = PASS</div>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-title">趋势判断</div>
+        <div class="flow-desc">OI + 费率 + 大户方向<br/>判断1-3个月方向</div>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-title">选币排序</div>
+        <div class="flow-desc">VVV DNA评分模型<br/>满分100，>70入围</div>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-title">开仓决策</div>
+        <div class="flow-desc">方向 + 杠杆 + 仓位<br/>全条件满足才开</div>
+        <span class="flow-arrow">→</span>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <div class="flow-title">止盈止损</div>
+        <div class="flow-desc">分批止盈 + ATR止损<br/>+ OI止损 + 时间止损</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Layer 1: 避雷 -->
+<section class="section" id="layer1">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">🚨</div>
+      <div class="sc-label">Layer 1 · Gate Check</div>
+      <h2 class="sc-title">避雷筛查 · 12项速查</h2>
+      <p class="sc-desc">任何币在深度分析前必须先过这一关。3个以上红旗 = 直接 PASS，不浪费时间。</p>
+    </div>
+    <div class="check-grid">
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">1</span>流通率 > 60%</div>
+        <div class="check-detail">低流通 = 未来大量解锁砸盘。<span class="check-redline">< 20% 直接 PASS。</span></div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">2</span>单次解锁 < 流通量 2%</div>
+        <div class="check-detail">大额解锁 = 定时炸弹。<span class="check-redline">> 5% = 高危。</span>HEMI 每月解锁 12.3%，8次全跌。</div>
+      </div>
+      <div class="check-item check-fail">
+        <div class="check-title"><span class="check-num">3</span>OI/MC < 30%</div>
+        <div class="check-detail">OI/市值 = 杠杆程度。<span class="check-redline">> 50% = 赌场结构，> 100% = 极端危险。</span>HEMI 达到 125%。</div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">4</span>FDV/MC < 3倍</div>
+        <div class="check-detail">完全稀释估值 vs 当前市值。<span class="check-redline">> 5倍 = 未来严重稀释。</span></div>
+      </div>
+      <div class="check-item check-fail">
+        <div class="check-title"><span class="check-num">5</span>Top 10 持仓 < 40%</div>
+        <div class="check-detail">头部集中度过高 = 控盘币。<span class="check-redline">> 80% = 庄家说了算。</span>分仓特征（差异 < 1%）= 跑。</div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">6</span>TVL 稳定或增长</div>
+        <div class="check-detail">锁仓量 = 真实资金沉淀。<span class="check-redline">从高点跌 > 80% = 空心壳。</span>HEMI TVL 从 $4.4亿暴跌 97%。</div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">7</span>DEX 流动性 > $500万</div>
+        <div class="check-detail">流动性太低 = 买得进卖不出。<span class="check-redline">< $100万 = 不参与。</span></div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">8</span>有通缩/Buyback</div>
+        <div class="check-detail">burn + buyback = 供应持续减少。VVV 模式：收入回购销毁 → 价格飞轮。</div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">9</span>有真实产品和用户</div>
+        <div class="check-detail">能在 DefiLlama/DappRadar 查到真实使用数据。纯 PPT 项目 = 高危。</div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">10</span>上线 > 6个月</div>
+        <div class="check-detail">新币波动极大。<span class="check-redline">< 3个月 + ICO后一路跌 = 不碰。</span></div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">11</span>7天涨幅 < 100%</div>
+        <div class="check-detail">暴涨后追高 = 接盘。<span class="check-redline">> 100% 且无基本面催化剂 = 追高陷阱。</span></div>
+      </div>
+      <div class="check-item check-pass">
+        <div class="check-title"><span class="check-num">12</span>社交情绪 > -0.3</div>
+        <div class="check-detail">社区已放弃的项目很难起死回生。<span class="check-redline">< -0.5 = 市场已放弃。</span></div>
+      </div>
+    </div>
+    <div style="margin-top:24px;padding:20px;border-radius:var(--sc-radius);background:rgba(255,255,255,.03);border:1px solid var(--sc-border)">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center">
+        <span style="font-size:13px"><span style="color:var(--sc-success);font-weight:700">🟢 0 红旗</span> = 安全</span>
+        <span style="font-size:13px"><span style="color:var(--sc-gold);font-weight:700">🟡 1-2 红旗</span> = 谨慎</span>
+        <span style="font-size:13px"><span style="color:var(--sc-danger);font-weight:700">🔴 3-4 红旗</span> = 高危</span>
+        <span style="font-size:13px"><span style="font-weight:700">💀 5+ 红旗</span> = 别碰</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Layer 2: 趋势 -->
+<section class="section" id="layer2">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">📈</div>
+      <div class="sc-label">Layer 2 · Trend Analysis</div>
+      <h2 class="sc-title">中长期趋势判断</h2>
+      <p class="sc-desc">用 OI + 费率 + 大户方向 + 爆仓数据，判断一个币未来 1-3 个月的方向。</p>
+    </div>
+
+    <!-- OI 第一性原理 -->
+    <h3 style="font-size:18px;font-weight:800;margin-bottom:20px">📊 OI 第一性原理</h3>
+    <div class="oi-grid" style="margin-bottom:40px">
+      <div class="oi-card">
+        <div class="oi-formula">OI ↑ + 价格 ↑</div>
+        <div class="oi-meaning">新多头入场，看多确认</div>
+        <span class="oi-signal" style="background:rgba(34,197,94,.12);color:var(--sc-success)">✅ 强看多</span>
+      </div>
+      <div class="oi-card">
+        <div class="oi-formula">OI ↑ + 价格 ↓</div>
+        <div class="oi-meaning">新空头入场，看空确认</div>
+        <span class="oi-signal" style="background:rgba(239,68,68,.12);color:var(--sc-danger)">❌ 看空</span>
+      </div>
+      <div class="oi-card">
+        <div class="oi-formula">OI ↓ + 价格 ↑</div>
+        <div class="oi-meaning">空头平仓，轧空反弹</div>
+        <span class="oi-signal" style="background:rgba(245,158,11,.12);color:var(--sc-gold)">⚠️ 短期反弹</span>
+      </div>
+      <div class="oi-card">
+        <div class="oi-formula">OI ↓ + 价格 ↓</div>
+        <div class="oi-meaning">多头平仓，多头投降</div>
+        <span class="oi-signal" style="background:rgba(245,158,11,.12);color:var(--sc-gold)">💀 可能触底</span>
+      </div>
+    </div>
+
+    <!-- 趋势矩阵 -->
+    <h3 style="font-size:18px;font-weight:800;margin-bottom:20px">🔍 趋势判断矩阵</h3>
+    <div style="overflow-x:auto;border-radius:var(--sc-radius);border:1px solid var(--sc-border)">
+      <table class="matrix">
+        <thead>
+          <tr><th>信号组合</th><th>判断</th><th>置信度</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OI 稳步↑ + 价格↑ + 大户偏多 + 费率中性</td><td class="sig-bull">强看多</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></span></td></tr>
+          <tr><td>OI↑ + 价格横盘 + 大户偏多</td><td class="sig-bull">蓄力中，偏多</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>OI↑ + 价格↓ + 大户偏空</td><td class="sig-bear">看空确认</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>OI↓ + 价格↑ + 空头爆仓多</td><td class="sig-warn">轧空反弹（短期）</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>OI↓ + 价格↓ + 多头爆仓多</td><td class="sig-warn">多头投降（可能触底）</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>OI 暴增→回落 + 价格不涨</td><td class="sig-bear">假布局，看空</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>费率极正(>0.05%) + OI高位</td><td class="sig-bear">多头过热，即将回调</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span></span></td></tr>
+          <tr><td>费率极负(<-0.05%) + OI低位</td><td class="sig-bull">空头过热，可能反弹</td><td><span class="confidence"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-empty">★</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Layer 3: 选币 -->
+<section class="section" id="layer3">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div class="sc-label">Layer 3 · Coin Scoring</div>
+      <h2 class="sc-title">VVV DNA 评分模型</h2>
+      <p class="sc-desc">在多个候选币中快速排序，找出最值得做的标的。满分 100，>70 入围，>80 优质。</p>
+    </div>
+    <div class="dna-grid">
+      <div class="dna-item">
+        <div class="dna-name">通缩机制 <span class="dna-score" style="color:var(--sc-accent)">25</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:100%;background:linear-gradient(90deg,var(--sc-accent),var(--sc-accent2))"></div></div>
+        <div class="dna-weight">burn+buyback 强=25 | 有 burn=15 | 全流通无通缩=6 | 持续解锁=0</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">市值弹性 <span class="dna-score" style="color:var(--sc-blue)">20</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:80%;background:var(--sc-blue)"></div></div>
+        <div class="dna-weight">MC<$5000万=20 | <$1亿=16 | <$3亿=10 | <$5亿=6 | >$5亿=3</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">真实产品 <span class="dna-score" style="color:var(--sc-purple)">15</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:60%;background:var(--sc-purple)"></div></div>
+        <div class="dna-weight">有用户+收入=15 | 有产品=10 | 测试网=7 | PPT=3</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">赛道热度 <span class="dna-score" style="color:var(--sc-gold)">15</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:60%;background:var(--sc-gold)"></div></div>
+        <div class="dna-weight">AI=15 | DePIN=13 | BTC生态=10 | GameFi=8 | 其他=5</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">OI 健康度 <span class="dna-score" style="color:var(--sc-success)">10</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:40%;background:var(--sc-success)"></div></div>
+        <div class="dna-weight">OI/MC<15%=10 | <30%=7 | <50%=4 | >50%=1</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">近期动量 <span class="dna-score" style="color:#f97316">10</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:40%;background:#f97316"></div></div>
+        <div class="dna-weight">7d>+10%且有催化剂=10 | 微涨=6 | 横盘=3 | 暴涨>100%=2</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">流通率 <span class="dna-score" style="color:var(--sc-dim)">10</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:40%;background:var(--sc-dim)"></div></div>
+        <div class="dna-weight">>80%=10 | >60%=8 | >40%=5 | >20%=3 | <20%=1</div>
+      </div>
+      <div class="dna-item">
+        <div class="dna-name">催化剂 <span class="dna-score" style="color:#ec4899">5</span></div>
+        <div class="dna-bar-wrap"><div class="dna-bar" style="width:20%;background:#ec4899"></div></div>
+        <div class="dna-weight">本周有重大事件=5 | 本月有=3 | 无=1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Layer 4: 开仓 -->
+<section class="section" id="layer4">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <div class="sc-label">Layer 4 · Entry Decision</div>
+      <h2 class="sc-title">开仓决策 · 杠杆 · 仓位</h2>
+      <p class="sc-desc">全条件满足才开仓。杠杆大小由标的特征决定，不是由贪心决定。</p>
+    </div>
+
+    <!-- 做多/做空信号 -->
+    <div class="sig-grid" style="margin-bottom:40px">
+      <div class="sig-card sig-bull-card">
+        <h3><span style="font-size:20px">✅</span> 做多信号（至少 4/6）</h3>
+        <ul class="sig-list">
+          <li>OI 稳步增加 + 价格涨</li>
+          <li>费率中性或微负（未过热）</li>
+          <li>大户多空比 > 1.5</li>
+          <li>空头爆仓增加（逼空中）</li>
+          <li>交易所余额减少（提币潮）</li>
+          <li>FNG < 30（恐惧中买入）</li>
+        </ul>
+      </div>
+      <div class="sig-card sig-bear-card">
+        <h3><span style="font-size:20px">🔴</span> 跑路信号（至少 4/6）</h3>
+        <ul class="sig-list">
+          <li>OI 暴增但价格不涨</li>
+          <li>费率 > 0.1%（多头过热）</li>
+          <li>散户极度看多（反向指标）</li>
+          <li>多头爆仓激增</li>
+          <li>交易所余额暴增（充币卖）</li>
+          <li>FNG > 80（贪婪中卖出）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 杠杆 -->
+    <h3 style="font-size:18px;font-weight:800;margin-bottom:20px">⚖️ 杠杆倍数指南</h3>
+    <div class="lev-grid" style="margin-bottom:40px">
+      <div class="lev-card lev-safe">
+        <div class="lev-val">3-5x</div>
+        <div class="lev-label">BTC / ETH 大盘</div>
+        <div class="lev-desc">波动可控，趋势明确时可用</div>
+      </div>
+      <div class="lev-card lev-safe">
+        <div class="lev-val">2-3x</div>
+        <div class="lev-label">中盘币 $1-10亿</div>
+        <div class="lev-desc">波动较大，控制风险</div>
+      </div>
+      <div class="lev-card lev-warn">
+        <div class="lev-val">1-2x</div>
+        <div class="lev-label">小盘币 $1千万-$1亿</div>
+        <div class="lev-desc">波动极大，低杠杆或现货</div>
+      </div>
+      <div class="lev-card lev-danger">
+        <div class="lev-val">1x</div>
+        <div class="lev-label">微盘 / OI>50%</div>
+        <div class="lev-desc">仅现货，杠杆 = 送钱</div>
+      </div>
+    </div>
+
+    <!-- 仓位 -->
+    <h3 style="font-size:18px;font-weight:800;margin-bottom:20px">📐 仓位计算</h3>
+    <div style="padding:24px;border-radius:var(--sc-radius);background:var(--sc-card);border:1px solid var(--sc-border);font-family:var(--sc-mono);font-size:13px;line-height:2">
+      <div style="color:var(--sc-dim);margin-bottom:8px">// 单笔仓位 = 总资金 × 风险系数</div>
+      <div>VVV DNA &gt; 80 → <span style="color:var(--sc-accent);font-weight:700">5-10%</span> 总资金</div>
+      <div>VVV DNA 60-80 → <span style="color:var(--sc-blue);font-weight:700">3-5%</span> 总资金</div>
+      <div>VVV DNA 50-60 → <span style="color:var(--sc-gold);font-weight:700">1-3%</span> 总资金</div>
+      <div>VVV DNA &lt; 50 → <span style="color:var(--sc-danger);font-weight:700">&lt; 1%</span> 总资金</div>
+      <div style="margin-top:12px;color:var(--sc-dim)">// 硬限制</div>
+      <div>单币最大敞口: <span style="color:var(--sc-gold);font-weight:700">20%</span></div>
+      <div>总敞口上限: <span style="color:var(--sc-danger);font-weight:700">60%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Layer 5: 止盈止损 -->
+<section class="section" id="layer5">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">📐</div>
+      <div class="sc-label">Layer 5 · Exit Strategy</div>
+      <h2 class="sc-title">止盈止损 · 分批出场</h2>
+      <p class="sc-desc">设了就不改。纪律 > 感觉。</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px">
+      <!-- 止盈 -->
+      <div>
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:20px;color:var(--sc-success)">✅ 分批止盈</h3>
+        <div class="tpsl-visual">
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-accent)"></div>
+            <div class="tpsl-label">入场价</div>
+            <div class="tpsl-pct" style="color:var(--sc-dim)">$X</div>
+            <div class="tpsl-action">建仓</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-success)"></div>
+            <div class="tpsl-label">止盈 1</div>
+            <div class="tpsl-pct" style="color:var(--sc-success)">+15%</div>
+            <div class="tpsl-action">平 1/3</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:#22c55e"></div>
+            <div class="tpsl-label">止盈 2</div>
+            <div class="tpsl-pct" style="color:#22c55e">+30%</div>
+            <div class="tpsl-action">平 1/3</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-gold)"></div>
+            <div class="tpsl-label">止盈 3</div>
+            <div class="tpsl-pct" style="color:var(--sc-gold)">追踪</div>
+            <div class="tpsl-action">最高回撤 10% 平</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 止损 -->
+      <div>
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:20px;color:var(--sc-danger)">🛑 止损规则</h3>
+        <div class="tpsl-visual">
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-danger)"></div>
+            <div class="tpsl-label">ATR 自适应</div>
+            <div class="tpsl-pct" style="color:var(--sc-danger)">-2×ATR</div>
+            <div class="tpsl-action">根据波动率</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-danger)"></div>
+            <div class="tpsl-label">支撑位止损</div>
+            <div class="tpsl-pct" style="color:var(--sc-danger)">-2~3%</div>
+            <div class="tpsl-action">跌破支撑位</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-gold)"></div>
+            <div class="tpsl-label">OI 止损</div>
+            <div class="tpsl-pct" style="color:var(--sc-gold)">OI↓</div>
+            <div class="tpsl-action">跌破布局期低点</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-dim)"></div>
+            <div class="tpsl-label">时间止损</div>
+            <div class="tpsl-pct" style="color:var(--sc-dim)">3天</div>
+            <div class="tpsl-action">无起色就走</div>
+          </div>
+          <div class="tpsl-row">
+            <div class="tpsl-dot" style="background:var(--sc-danger)"></div>
+            <div class="tpsl-label">最大亏损</div>
+            <div class="tpsl-pct" style="color:var(--sc-danger)">-8%/-5%</div>
+            <div class="tpsl-action">现货/合约铁律</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Iron Rules -->
+<section class="section" id="rules">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">⚠️</div>
+      <div class="sc-label">Iron Rules</div>
+      <h2 class="sc-title">铁律 · 不可违反</h2>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-item">
+        <div class="rule-num">1</div>
+        <div class="rule-text"><strong>避雷清单先行</strong> — 任何分析前先跑 12 项清单</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">2</div>
+        <div class="rule-text"><strong>OI/MC > 50% 不开杠杆</strong> — HEMI 6倍爆仓教训</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">3</div>
+        <div class="rule-text"><strong>不追涨 > 100%</strong> — ARIA -86% 暴跌教训</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">4</div>
+        <div class="rule-text"><strong>解锁前跑</strong> — 解锁日前 3-5 天减仓</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">5</div>
+        <div class="rule-text"><strong>止损不动</strong> — 设了就不改，不找借口</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">6</div>
+        <div class="rule-text"><strong>单笔最大亏损 8%</strong> — 超过就认错，不补仓</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">7</div>
+        <div class="rule-text"><strong>分仓 = 控盘币</strong> — 持仓量差异 < 1% 直接跑</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">8</div>
+        <div class="rule-text"><strong>OI暴增后回落 = 假布局</strong> — 不是所有 OI 增加都是好事</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CoinGlass Indicator System -->
+<section class="section" id="coinglass">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">🔬</div>
+      <div class="sc-label">Data Infrastructure</div>
+      <h2 class="sc-title">CoinGlass 8大板块 · 第一性原理</h2>
+      <p class="sc-desc">80+ 端点回答一个终极问题：市场上的钱在往哪走？</p>
+    </div>
+    <div style="overflow-x:auto;border-radius:var(--sc-radius);border:1px solid var(--sc-border)">
+      <table class="matrix">
+        <thead><tr><th>板块</th><th>核心问题</th><th>关键指标</th><th>本质</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:700;color:var(--sc-accent)">Open Interest</td><td>市场下了多少赌注？</td><td>聚合OI · OI分布 · OI/MC</td><td>参与热度 + 杠杆风险</td></tr>
+          <tr><td style="font-weight:700;color:var(--sc-blue)">Funding Rate</td><td>做多的成本多少？</td><td>当前费率 · 累积费率 · 套利</td><td>多空拥挤程度</td></tr>
+          <tr><td style="font-weight:700;color:var(--sc-purple)">Long/Short</td><td>谁看多谁看空？</td><td>散户比 · 大户账户比 · 大户持仓比</td><td>聪明钱 vs 散户方向</td></tr>
+          <tr><td style="font-weight:700;color:var(--sc-danger)">Liquidation</td><td>谁被迫出局了？</td><td>爆仓历史 · 订单流 · 热力图</td><td>清洗进度 + 磁铁效应</td></tr>
+          <tr><td style="font-weight:700;color:var(--sc-gold)">Order Book</td><td>谁在主动买卖？</td><td>买卖深度 · 鲸鱼墙 · Taker比</td><td>即时方向 + 支撑阻力</td></tr>
+          <tr><td style="font-weight:700;color:#ec4899">Whale</td><td>大钱在做什么？</td><td>鲸鱼仓位 · 活跃指数</td><td>聪明钱的具体操作</td></tr>
+          <tr><td style="font-weight:700;color:#f97316">On-Chain + ETF</td><td>钱从哪来到哪去？</td><td>交易所余额 · 净流入 · ETF流</td><td>中长期资金方向</td></tr>
+          <tr><td style="font-weight:700;color:var(--sc-dim)">Indicators</td><td>市场情绪到几度？</td><td>FNG · RSI · Rainbow · Pi Cycle</td><td>情绪极端值 = 反转信号</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 4H起涨抓取法 -->
+<section class="section" id="catch">
+  <div class="sc-w">
+    <div class="section-header">
+      <div class="section-icon">🎣</div>
+      <div class="sc-label">4H Breakout Hunting</div>
+      <h2 class="sc-title">4H 线起涨捕捉法</h2>
+      <p class="sc-desc">复盘 ENJ +170% 暴涨，提炼出可复用的起涨信号。不追 +64%，追 +5.9% 那根 K 线。</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:40px">
+      <div class="sc-glass" style="padding:20px">
+        <div style="font-size:24px;margin-bottom:8px">1️⃣</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">缩量筑底</h4>
+        <p style="font-size:12px;color:var(--sc-dim);line-height:1.6">连续 3+ 根 4H 缩量<br/>价格不再创新低<br/>OI 稳定不大跌<br/>大户 L/S > 1.3</p>
+      </div>
+      <div class="sc-glass" style="padding:20px">
+        <div style="font-size:24px;margin-bottom:8px">2️⃣</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">突破 + 放量确认</h4>
+        <p style="font-size:12px;color:var(--sc-dim);line-height:1.6">单根 4H 涨幅 > 5%<br/>突破近 3 天高点<br/>成交量 > 前 3 根均量 2 倍<br/>OI 同步增加</p>
+      </div>
+      <div class="sc-glass" style="padding:20px">
+        <div style="font-size:24px;margin-bottom:8px">3️⃣</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">入场执行</h4>
+        <p style="font-size:12px;color:var(--sc-dim);line-height:1.6">放量确认后入场<br/>杠杆 2x（小盘）/ 3x（中盘）<br/>仓位 3-5% 总资金<br/>止损：筑底区低点 -3%</p>
+      </div>
+      <div class="sc-glass" style="padding:20px">
+        <div style="font-size:24px;margin-bottom:8px">4️⃣</div>
+        <h4 style="font-size:14px;font-weight:700;margin-bottom:8px">持仓管理</h4>
+        <p style="font-size:12px;color:var(--sc-dim);line-height:1.6">+20% 平 1/3<br/>+50% 平 1/3<br/>剩余追踪止损 -15%<br/>大阴线(-10%+)放量 = 跑</p>
+      </div>
+    </div>
+
+    <!-- ENJ案例 -->
+    <div style="padding:24px;border-radius:var(--sc-radius-lg);background:rgba(0,212,170,.03);border:1px solid rgba(0,212,170,.12)">
+      <h4 style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--sc-accent)">📊 实战案例：ENJ +170%（2026-04-11 → 04-15）</h4>
+      <div style="font-family:var(--sc-mono);font-size:12px;line-height:1.8;color:var(--sc-dim)">
+        <div>04/10  缩量筑底 $0.029  Vol $3-5M  ← <span style="color:var(--sc-gold)">观察期</span></div>
+        <div>04/11 12:00  +5.9% 突破  ← <span style="color:var(--sc-accent)">信号出现</span></div>
+        <div>04/11 16:00  +1.1% 量 3x 放大  ← <span style="color:var(--sc-success)">🎯 最佳上车 $0.030</span></div>
+        <div>04/12 08:00  +22.7% 主升浪  ← 已经涨了</div>
+        <div>04/12 16:00  洗盘回调 -8%  ← <span style="color:var(--sc-blue)">次佳上车 $0.035</span></div>
+        <div>04/13 08:00  +14.6% 二次突破  ← 追高区</div>
+        <div>04/15 12:00  $0.078  ← <span style="color:var(--sc-danger)">+160%（从最佳上车算）</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="sc-w">
+    <div class="cta-card">
+      <h2>发币名，出报告 🎯</h2>
+      <p>在 Telegram 群 @Crypto Alpha Agent，发送任意币名，自动跑完 5 层分析，一步到位输出完整报告。</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="/game/" class="sc-btn sc-btn-primary">🦐 ShrimpFi 游戏</a>
+        <a href="/36/" class="sc-btn sc-btn-secondary">📖 36计方法论</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="sc-w">
+    <p>© 2026 SingClaw · Crypto Alpha 分析系统 · Built with 🧠 by Agent Team</p>
+    <p style="margin-top:8px;font-size:11px">⚠️ 本页面仅供学习研究，不构成投资建议。加密货币投资风险极大，请自行评估。</p>
+  </div>
+</footer>
+
+<!-- Scroll Reveal -->
+<script>
+document.querySelectorAll('.sc-reveal').forEach(el => {
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  }, { threshold: 0.1 }).observe(el);
+});
+</script>
+
+</body>
+</html>

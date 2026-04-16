@@ -1,0 +1,22 @@
+require("@nomicfoundation/hardhat-toolbox");
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  solidity: {
+    version: "0.8.28",
+    settings: {
+      evmVersion: "cancun",
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  },
+  networks: {
+    baseSepolia: {
+      url: "https://sepolia.base.org",
+      chainId: 84532,
+      // accounts: [process.env.PRIVATE_KEY] // 星哥手动配置私钥后启用
+    }
+  }
+};
