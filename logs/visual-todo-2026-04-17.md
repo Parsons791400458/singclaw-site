@@ -35,7 +35,7 @@
 
 ---
 
-### 改进 #2：详情页 Footer 视觉收尾缺失（严重度 🟡 中高）
+### ✅ 改进 #2：详情页 Footer 视觉收尾缺失（严重度 🟡 中高）— 已修复 commit c191ec8
 
 **现状：**
 - 首页 footer：`::before` 渐变光线分隔符（accent 绿色）+ `.footer-links` 导航行（36计/24章经/ShrimpFi/Crypto/明星）+ 版权信息
