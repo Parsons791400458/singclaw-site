@@ -42,7 +42,7 @@
 
 ---
 
-### 改进 #2（🆕）：详情页 Eyebrow 标签使用硬编码蓝色，未引用 Design Token（严重度 🟡 中）
+### ✅ 改进 #2（🆕）：详情页 Eyebrow 标签使用硬编码蓝色，未引用 Design Token（严重度 🟡 中）— 已修复 commit 00a22f0
 
 **现状（detail.css 确认）：**
 ```css
