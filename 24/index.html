@@ -75,7 +75,24 @@ a{color:inherit;text-decoration:none}
 .btn-s{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03);margin-left:12px}
 .actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
 
-.footer{padding:24px 0 56px;color:rgba(255,255,255,.36);text-align:center;font-size:13px}
+.footer{padding:36px 0 56px;color:rgba(255,255,255,.36);text-align:center;font-size:13px;position:relative}
+.footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(192,132,252,.6),transparent)}
+
+/* scroll reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1)}
+.rv.visible{opacity:1;transform:translateY(0)}
+.rv:nth-child(2){transition-delay:.07s}.rv:nth-child(3){transition-delay:.14s}
+
+/* catalog row accent bar */
+.item{position:relative;overflow:hidden}
+.item::after{content:'';position:absolute;left:0;bottom:0;width:0;height:2px;background:linear-gradient(90deg,rgba(192,132,252,.8),var(--brand));transition:width .35s cubic-bezier(.4,0,.2,1)}
+.item:hover::after{width:100%}
+.item:hover .item-name{color:rgba(192,132,252,.9)}
+.item-name{transition:color .25s}
+
+/* chapter card glow */
+.ch{transition:transform .35s,box-shadow .35s}
+.ch:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.35)}
 
 @media(max-width:900px){.guide-grid,.ch-grid,.vs,.all-grid{grid-template-columns:1fr}}
 /* hamburger */
@@ -87,6 +104,18 @@ a{color:inherit;text-decoration:none}
 .mobile-menu a:hover,.mobile-menu a.active{color:var(--sc-accent,#00d4aa);background:rgba(0,212,170,.06)}
 @media(max-width:600px){.nav-r{display:none}.hamburger{display:block}}
 </style>
+<!-- OG Tags -->
+<meta property="og:title" content="虾24章经｜SingClaw"/>
+<meta property="og:description" content="虾24章经：面向龙虾养成者的原则、认知与修炼体系。不是技巧库，而是心法库。"/>
+<meta property="og:url" content="https://singclaw.xyz/24/"/>
+<meta property="og:image" content="https://singclaw.xyz/assets/og-image.png"/>
+<meta property="og:type" content="website"/>
+<!-- Canonical -->
+<link rel="canonical" href="https://singclaw.xyz/24/"/>
+<!-- JSON-LD -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CollectionPage","name":"虾24章经","description":"虾24章经：面向龙虾养成者的原则、认知与修炼体系。不是技巧库，而是心法库。","url":"https://singclaw.xyz/24/","isPartOf":{"@type":"WebSite","name":"SingClaw","url":"https://singclaw.xyz"}}
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 </head>
 <body>
@@ -110,10 +139,10 @@ a{color:inherit;text-decoration:none}
 
 <!-- ═══ READING GUIDE ═══ -->
 <section id="guide" class="sec"><div class="c">
-  <div class="sec-tag">阅读指南</div>
-  <h2 class="sec-h">经不是用来翻的，<br>是用来修的。</h2>
-  <p class="sec-sub">每一章不是知识点，而是一条长期需要反复回来看的原则。</p>
-  <div class="guide-grid">
+  <div class="sec-tag rv">阅读指南</div>
+  <h2 class="sec-h rv">经不是用来翻的，<br>是用来修的。</h2>
+  <p class="sec-sub rv">每一章不是知识点，而是一条长期需要反复回来看的原则。</p>
+  <div class="guide-grid rv">
     <div class="guide-card">
       <div class="num">01 · 定位</div>
       <h3>心法库，不是技巧库</h3>
@@ -139,10 +168,10 @@ a{color:inherit;text-decoration:none}
 
 <!-- ═══ FEATURED CHAPTERS ═══ -->
 <section id="pick" class="sec"><div class="c">
-  <div class="sec-tag">首批章节</div>
-  <h2 class="sec-h">8 章已上线，<br>再逐步做成完整经卷。</h2>
-  <p class="sec-sub">首8章覆盖养虾最底层的核心维度：使命、人格、记忆、协同、复盘、边界、节律、容错。</p>
-  <div class="ch-grid">
+  <div class="sec-tag rv">首批章节</div>
+  <h2 class="sec-h rv">24 章全部上线，<br>完整经卷已成。</h2>
+  <p class="sec-sub rv">从立命到终局，24 条原则覆盖养虾成长的所有核心维度。道术合一，方为完整。</p>
+  <div class="ch-grid rv">
     <article class="ch">
       <div class="vol">卷一 · 第一章</div>
       <h3>立命章<span class="pill">推荐</span></h3>
@@ -166,9 +195,9 @@ a{color:inherit;text-decoration:none}
 
 <!-- ═══ FULL CATALOG ═══ -->
 <section id="all" class="sec"><div class="c">
-  <div class="sec-tag">完整目录</div>
-  <h2 class="sec-h">24 章全览。</h2>
-  <p class="sec-sub">已上线的可以直接点进去，其余会持续补充。经是活的，会随着实践不断修订。</p>
+  <div class="sec-tag rv">完整目录</div>
+  <h2 class="sec-h rv">24 章全览。</h2>
+  <p class="sec-sub rv">已上线的可以直接点进去，其余会持续补充。经是活的，会随着实践不断修订。</p>
 
   <div class="all-grid">
     <div class="item"><a href="/24/li-ming-zhang/"><span class="item-name">第一章 · 立命章</span><span class="item-st live">● 已上线</span></a></div>
@@ -179,22 +208,22 @@ a{color:inherit;text-decoration:none}
     <div class="item"><a href="/24/bian-jie-zhang/"><span class="item-name">第六章 · 边界章</span><span class="item-st live">● 已上线</span></a></div>
     <div class="item"><a href="/24/jie-lv-zhang/"><span class="item-name">第七章 · 节律章</span><span class="item-st live">● 已上线</span></a></div>
     <div class="item"><a href="/24/rong-cuo-zhang/"><span class="item-name">第八章 · 容错章</span><span class="item-st live">● 已上线</span></a></div>
-    <div class="item"><span class="item-name">第九章 · 精进章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十章 · 取舍章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十一章 · 观察章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十二章 · 信任章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十三章 · 工具章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十四章 · 表达章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十五章 · 耐心章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十六章 · 自驱章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十七章 · 守拙章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十八章 · 破局章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第十九章 · 敬畏章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第二十章 · 传承章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第二十一章 · 共生章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第二十二章 · 归零章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第二十三章 · 格局章</span><span class="item-st">即将上线</span></div>
-    <div class="item"><span class="item-name">第二十四章 · 终局章</span><span class="item-st">即将上线</span></div>
+    <div class="item"><a href="/24/jing-jin-zhang/"><span class="item-name">第九章 · 精进章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/qu-she-zhang/"><span class="item-name">第十章 · 取舍章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/guan-cha-zhang/"><span class="item-name">第十一章 · 观察章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/xin-ren-zhang/"><span class="item-name">第十二章 · 信任章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/gong-ju-zhang/"><span class="item-name">第十三章 · 工具章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/biao-da-zhang/"><span class="item-name">第十四章 · 表达章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/nai-xin-zhang/"><span class="item-name">第十五章 · 耐心章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/zi-qu-zhang/"><span class="item-name">第十六章 · 自驱章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/shou-zhuo-zhang/"><span class="item-name">第十七章 · 守拙章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/po-ju-zhang/"><span class="item-name">第十八章 · 破局章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/jing-wei-zhang/"><span class="item-name">第十九章 · 敬畏章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/chuan-cheng-zhang/"><span class="item-name">第二十章 · 传承章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/gong-sheng-zhang/"><span class="item-name">第二十一章 · 共生章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/gui-ling-zhang/"><span class="item-name">第二十二章 · 归零章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/ge-ju-zhang/"><span class="item-name">第二十三章 · 格局章</span><span class="item-st live">● 已上线</span></a></div>
+    <div class="item"><a href="/24/zhong-ju-zhang/"><span class="item-name">第二十四章 · 终局章</span><span class="item-st live">● 已上线</span></a></div>
   </div>
 
   <div class="vs" style="margin-top:48px">
@@ -219,8 +248,8 @@ a{color:inherit;text-decoration:none}
 
 <!-- ═══ CTA ═══ -->
 <section class="cta-sec"><div class="c">
-  <div class="sec-tag">下一步</div>
-  <h2 class="sec-h">看完心法，<br>再看策略。</h2>
+  <div class="sec-tag rv">下一步</div>
+  <h2 class="sec-h rv">看完心法，<br>再看策略。</h2>
   <p class="sec-sub">24 章经给你原则，36 计给你方法。道术合一，才能真正把虾养好。</p>
   <div class="actions">
     <a class="btn btn-p" href="/36/">进入养虾36计</a>
@@ -229,6 +258,13 @@ a{color:inherit;text-decoration:none}
 </div></section>
 </main>
 <footer class="footer"><div class="c">© 2026 SingClaw · 虾24章经</div></footer>
+  <!-- Scroll Reveal -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.rv').forEach(el => observer.observe(el));
+  </script>
   <script src="/js/social-share.js"></script>
 </body>
 </html>

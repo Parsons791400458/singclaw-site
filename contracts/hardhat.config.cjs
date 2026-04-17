@@ -1,4 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -16,7 +17,7 @@ module.exports = {
     baseSepolia: {
       url: "https://sepolia.base.org",
       chainId: 84532,
-      // accounts: [process.env.PRIVATE_KEY] // 星哥手动配置私钥后启用
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
     }
   }
 };
