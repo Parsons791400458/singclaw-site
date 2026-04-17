@@ -7,10 +7,20 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
   <link rel="stylesheet" href="/css/design-tokens.css"/>
   <meta name="description" content="你花了93.6%的社交时间，做不想做的事。开心本身就是目的。当你需要为"开心"找一个理由的时候，你已经不开心了。"/>
+  <meta property="og:title" content="那个饭局上，我举着酒杯笑了两小时，回家路上哭了十分钟"/>
+  <meta property="og:description" content="你花了93.6%的社交时间，做不想做的事。开心本身就是目的。"/>
+  <meta property="og:url" content="https://singclaw.xyz/blog/%E7%A4%BE%E4%BA%A4%E8%87%AA%E7%94%B1/"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://singclaw.xyz/assets/og-image.png"/>
+  <link rel="canonical" href="https://singclaw.xyz/blog/%E7%A4%BE%E4%BA%A4%E8%87%AA%E7%94%B1/"/>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Article","headline":"那个饭局上，我举着酒杯笑了两小时，回家路上哭了十分钟","author":{"@type":"Person","name":"星哥"},"datePublished":"2026-04-17","publisher":{"@type":"Organization","name":"SingClaw"}}
   </script>
   <style>
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(2,4,8,.96);backdrop-filter:blur(20px);z-index:99;padding:24px;flex-direction:column;gap:8px}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .mobile-menu a:hover,.mobile-menu a.active{color:var(--sc-accent);background:rgba(0,212,170,.06)}
     .article-container{max-width:720px;margin:0 auto;padding:80px 24px 100px}
     .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--sc-accent);font-size:14px;font-weight:500;margin-bottom:32px;text-decoration:none;transition:opacity .2s}
     .back-link:hover{opacity:.8}
@@ -50,6 +60,14 @@
       </button>
     </div>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/36/" onclick="this.parentElement.classList.remove('open')">📖 养虾36计</a>
+    <a href="/24/" onclick="this.parentElement.classList.remove('open')">📜 虾24章经</a>
+    <a href="/blog/" class="active" onclick="this.parentElement.classList.remove('open')">📝 思享录</a>
+    <a href="/game/" onclick="this.parentElement.classList.remove('open')">🎮 ShrimpFi</a>
+    <a href="/crypto/" onclick="this.parentElement.classList.remove('open')">📊 Crypto Alpha</a>
+    <a href="/stars/" onclick="this.parentElement.classList.remove('open')">⭐ 明星追踪</a>
+  </div>
 
   <div class="article-container">
     <a href="/blog/" class="back-link">← 返回思享录</a>
@@ -228,6 +246,12 @@
       <a href="#" onclick="alert('小红书版本\n\n3个月47场社交，只有3场让我开心😢\n\n（请复制链接查看）');return false">📕 小红书</a>
     </div>
   </div>
+
+  <footer style="padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-dim);font-size:13px">
+    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
+      <p>© 2026 <a href="/" style="color:var(--sc-accent);text-decoration:none">SingClaw</a> · <a href="/blog/" style="color:var(--sc-accent);text-decoration:none">思享录</a> · <a href="/36/" style="color:var(--sc-accent);text-decoration:none">养虾36计</a> · <a href="/24/" style="color:var(--sc-accent);text-decoration:none">虾24章经</a> · <a href="/game/" style="color:var(--sc-accent);text-decoration:none">ShrimpFi</a> · <a href="/crypto/" style="color:var(--sc-accent);text-decoration:none">Crypto Alpha</a> · <a href="/stars/" style="color:var(--sc-accent);text-decoration:none">明星追踪</a></p>
+    </div>
+  </footer>
 
   <script src="/js/social-share.js"></script>
 </body>
