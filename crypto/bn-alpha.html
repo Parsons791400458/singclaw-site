@@ -102,12 +102,14 @@
     <div class="nav-inner">
       <a href="/" class="logo"><img src="/favicon.svg" alt="SingClaw"/> SingClaw</a>
       <div class="nav-links">
-        <a href="/36/">36计</a>
-        <a href="/24/">24节气</a>
-        <a href="/game/">ShrimpFi</a>
-        <a href="/crypto/">5层分析</a>
+        <a href="/36/">养虾36计</a>
+        <a href="/24/">虾24章经</a>
+        <a href="/blog/">思享录 📝</a>
+        <a href="/game/">ShrimpFi 🎮</a>
+        <a href="/crypto/">Crypto Alpha 📊</a>
         <a href="/crypto/bn-alpha.html" class="active">BN Alpha</a>
-        <a href="/stars/">明星站</a>
+        <a href="/crypto/watchlist.html">观察池 🔭</a>
+        <a href="/stars/">明星追踪 ⭐</a>
       </div>
       <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
         <span></span><span></span><span></span>
@@ -115,13 +117,15 @@
     </div>
   </div>
 </nav>
-<div class="mobile-menu">
-  <a href="/36/">36计</a>
-  <a href="/24/">24节气</a>
-  <a href="/game/">ShrimpFi</a>
-  <a href="/crypto/">5层分析</a>
-  <a href="/crypto/bn-alpha.html" class="active">BN Alpha</a>
-  <a href="/stars/">明星站</a>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/36/" onclick="this.parentElement.classList.remove('open')">📖 养虾36计</a>
+  <a href="/24/" onclick="this.parentElement.classList.remove('open')">📜 虾24章经</a>
+  <a href="/blog/" onclick="this.parentElement.classList.remove('open')">📝 思享录</a>
+  <a href="/game/" onclick="this.parentElement.classList.remove('open')">🎮 ShrimpFi</a>
+  <a href="/crypto/" onclick="this.parentElement.classList.remove('open')">📊 Crypto Alpha</a>
+  <a href="/crypto/bn-alpha.html" class="active" onclick="this.parentElement.classList.remove('open')">📈 BN Alpha</a>
+  <a href="/crypto/watchlist.html" onclick="this.parentElement.classList.remove('open')">🔭 观察池</a>
+  <a href="/stars/" onclick="this.parentElement.classList.remove('open')">⭐ 明星追踪</a>
 </div>
 
 <section class="hero">
