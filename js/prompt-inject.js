@@ -10,7 +10,7 @@
 
   // Extract slug from URL
   const pathParts = location.pathname.split('/').filter(Boolean);
-  const slug = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+  const slug = pathParts[pathParts.length - 1];
   const data = PROMPTS_36[slug];
   if (!data) return;
 
@@ -30,7 +30,7 @@
         <div style="position:relative;background:#0d1117;border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,.1)">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
             <span style="font-size:11px;color:#fbbf24;font-weight:700;letter-spacing:.05em">💬 可直接复制给 AI / 龙虾使用</span>
-            <button id="copyPromptBtn" onclick="copyArticlePrompt()" style="background:#00d4aa;color:#000;border:none;padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">📋 复制提示词</button>
+            <button type="button" id="copyPromptBtn" style="background:#00d4aa;color:#000;border:none;padding:5px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">📋 复制提示词</button>
           </div>
           <pre id="promptText" style="white-space:pre-wrap;font-family:'JetBrains Mono','Fira Code','Consolas',monospace;font-size:13px;line-height:1.7;color:rgba(230,238,250,.85);margin:0;max-height:400px;overflow-y:auto">${escapeHtml(data.prompt)}</pre>
         </div>
@@ -49,28 +49,34 @@
   // Insert before prev/next nav
   pnNav.parentNode.insertBefore(section, pnNav);
 
-  // Copy function
-  window.copyArticlePrompt = function() {
-    const text = data.prompt;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyPromptBtn');
-      btn.textContent = '✅ 已复制';
-      btn.style.background = '#22c55e';
-      setTimeout(() => { btn.textContent = '📋 复制提示词'; btn.style.background = '#00d4aa'; }, 2000);
-    }).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      const btn = document.getElementById('copyPromptBtn');
-      btn.textContent = '✅ 已复制';
-      setTimeout(() => btn.textContent = '📋 复制提示词', 2000);
+  const copyBtn = section.querySelector('#copyPromptBtn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const text = data.prompt;
+      navigator.clipboard.writeText(text).then(() => {
+        setCopyButtonState(copyBtn, true);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        setCopyButtonState(copyBtn, false);
+      });
     });
-  };
+  }
 
   function escapeHtml(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function setCopyButtonState(btn, withBgColor) {
+    btn.textContent = '✅ 已复制';
+    if (withBgColor) btn.style.background = '#22c55e';
+    setTimeout(() => {
+      btn.textContent = '📋 复制提示词';
+      if (withBgColor) btn.style.background = '#00d4aa';
+    }, 2000);
   }
 })();
