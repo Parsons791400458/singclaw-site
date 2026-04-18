@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>观察池 · Crypto Watchlist | SingClaw</title>
+  <meta name="description" content="加密资产观察池：拉链表结构，历史快照+实时状态对比，追踪Alpha币种从筛选到决策的全过程。"/>
+  <meta property="og:title" content="观察池 · Crypto Watchlist"/>
+  <meta property="og:description" content="拉链表结构，每次快照形成链节点，既有历史记录也能筛选最新状态。"/>
+  <meta property="og:url" content="https://singclaw.xyz/crypto/watchlist.html"/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="stylesheet" href="/css/design-tokens.css"/>
+  <style>
+    nav{position:sticky;top:0;z-index:100;background:rgba(2,4,8,.82);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--sc-border)}
+    .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+    .logo img{width:32px;height:32px;border-radius:8px}
+    .nav-links{display:flex;gap:4px}
+    .nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:var(--sc-dim);transition:all .2s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+    .nav-links a.active{color:var(--sc-accent);background:rgba(0,212,170,.08)}
+    .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+    .hamburger span{display:block;width:20px;height:2px;background:var(--sc-text);margin:4px 0;border-radius:2px}
+    .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(2,4,8,.96);backdrop-filter:blur(20px);z-index:99;padding:24px;flex-direction:column;gap:8px}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:var(--sc-dim)}
+    @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}}
+
+    /* Hero */
+    .hero{padding:80px 0 48px;text-align:center;position:relative}
+    .hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .hero-bg .orb{position:absolute;border-radius:50%}
+    .hero-bg .orb1{width:600px;height:600px;top:-20%;right:-10%;background:radial-gradient(circle,rgba(0,212,170,.08),transparent 55%)}
+    .hero-bg .orb2{width:400px;height:400px;bottom:0;left:-5%;background:radial-gradient(circle,rgba(168,85,247,.06),transparent 55%)}
+    .hero h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1.1;margin-bottom:16px;position:relative;z-index:2}
+    .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--sc-accent),#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero p{color:var(--sc-dim);font-size:17px;max-width:680px;margin:0 auto 28px;line-height:1.7;position:relative;z-index:2}
+    .hero-date{color:var(--sc-muted);font-size:13px;position:relative;z-index:2}
+
+    /* Stats bar */
+    .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;padding:40px 0}
+    .stat-card{padding:20px;border-radius:16px;background:var(--sc-card);border:1px solid var(--sc-border);text-align:center}
+    .stat-num{font-size:32px;font-weight:900;line-height:1;margin-bottom:6px}
+    .stat-label{font-size:11px;color:var(--sc-dim);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+    .stat-green .stat-num{color:var(--sc-accent)}
+    .stat-purple .stat-num{color:#a855f7}
+    .stat-blue .stat-num{color:var(--sc-blue)}
+    .stat-gold .stat-num{color:var(--sc-gold)}
+
+    /* Filters */
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+    .filter-btn{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:1px solid var(--sc-border);background:var(--sc-card);color:var(--sc-dim);cursor:pointer;transition:all .2s}
+    .filter-btn:hover,.filter-btn.active{color:var(--sc-accent);border-color:var(--sc-accent);background:rgba(0,212,170,.08)}
+
+    /* Table */
+    .table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--sc-border);background:var(--sc-card)}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    thead{background:rgba(255,255,255,.03)}
+    th{padding:14px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sc-dim);white-space:nowrap;cursor:pointer;user-select:none}
+    th:hover{color:var(--sc-text)}
+    th .sort-icon{font-size:10px;margin-left:4px;opacity:.4}
+    th.sorted .sort-icon{opacity:1;color:var(--sc-accent)}
+    td{padding:12px 16px;border-top:1px solid var(--sc-border);white-space:nowrap}
+    tr:hover{background:rgba(255,255,255,.02)}
+    .coin-name{font-weight:800;font-size:14px}
+    .tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase}
+    .tag-持仓{background:rgba(0,212,170,.12);color:var(--sc-accent)}
+    .tag-观察{background:rgba(168,85,247,.12);color:#a855f7}
+    .tag-新增{background:rgba(251,191,36,.12);color:#fbbf24}
+    .tag-预警{background:rgba(239,68,68,.12);color:#ef4444}
+    .chg-up{color:var(--sc-success)}
+    .chg-down{color:var(--sc-danger)}
+    .chg-flat{color:var(--sc-dim)}
+
+    /* Chain history */
+    .section{padding:48px 0;border-top:1px solid var(--sc-border)}
+    .section h2{font-size:28px;font-weight:800;margin-bottom:8px}
+    .section p.desc{color:var(--sc-dim);font-size:15px;line-height:1.6;margin-bottom:32px}
+
+    .chain{position:relative;padding-left:32px}
+    .chain::before{content:'';position:absolute;left:11px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--sc-accent),rgba(168,85,247,.3),transparent)}
+    .chain-node{position:relative;margin-bottom:32px}
+    .chain-node::before{content:'';position:absolute;left:-32px;top:6px;width:12px;height:12px;border-radius:50%;border:2px solid var(--sc-accent);background:var(--sc-bg)}
+    .chain-node.latest::before{background:var(--sc-accent);box-shadow:0 0 12px var(--sc-accent-glow)}
+    .chain-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .chain-time{font-size:14px;font-weight:800;color:var(--sc-text)}
+    .chain-badge{padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;background:rgba(0,212,170,.12);color:var(--sc-accent)}
+    .chain-body{padding:16px 20px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border)}
+    .chain-body .mini-table{width:100%;font-size:12px}
+    .chain-body .mini-table th{padding:8px 10px;font-size:10px}
+    .chain-body .mini-table td{padding:6px 10px;border-top:1px solid rgba(255,255,255,.04)}
+    .chain-note{margin-top:10px;font-size:12px;color:var(--sc-dim);line-height:1.6}
+    .chain-note strong{color:var(--sc-text)}
+
+    /* Legend */
+    .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+    .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sc-dim)}
+    .legend-dot{width:10px;height:10px;border-radius:50%}
+
+    /* Footer */
+    footer{padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-muted);font-size:12px}
+    .wrap{max-width:var(--sc-max);margin:0 auto;padding:0 24px}
+
+    @media(max-width:768px){
+      .stats-bar{grid-template-columns:repeat(2,1fr)}
+      table{font-size:11px}
+      td,th{padding:8px 10px}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap nav-inner">
+      <a href="/" class="logo"><img src="/favicon.svg" alt="SC"/>SingClaw</a>
+      <div class="nav-links">
+        <a href="/">首页</a>
+        <a href="/crypto/">Crypto</a>
+        <a href="/crypto/bn-alpha.html">BN Alpha</a>
+        <a href="/crypto/watchlist.html" class="active">观察池</a>
+      </div>
+      <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu">
+      <a href="/">首页</a>
+      <a href="/crypto/">Crypto</a>
+      <a href="/crypto/bn-alpha.html">BN Alpha</a>
+      <a href="/crypto/watchlist.html" class="active">观察池</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+      </div>
+      <h1>观察池 · <em>Watchlist</em></h1>
+      <p>拉链表结构追踪——每次快照形成链节点，既有历史数据回溯，也能筛选最新状态对比。</p>
+      <div class="hero-date">📅 首次快照：2026-04-18 13:35 BJT</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card stat-green"><div class="stat-num">14</div><div class="stat-label">观察标的</div></div>
+      <div class="stat-card stat-purple"><div class="stat-num">2</div><div class="stat-label">活跃持仓</div></div>
+      <div class="stat-card stat-gold"><div class="stat-num">1</div><div class="stat-label">快照版本</div></div>
+      <div class="stat-card stat-blue"><div class="stat-num">3</div><div class="stat-label">新增跟踪</div></div>
+    </div>
+
+    <!-- Current Watchlist Table -->
+    <div class="section" style="border:none;padding-top:0">
+      <h2>📋 当前观察池</h2>
+      <p class="desc">点击表头排序 · 标签区分状态 · 数据来源：Binance Futures</p>
+
+      <div class="filters">
+        <button class="filter-btn active" onclick="filterTable('all')">全部</button>
+        <button class="filter-btn" onclick="filterTable('持仓')">持仓</button>
+        <button class="filter-btn" onclick="filterTable('新增')">新增</button>
+        <button class="filter-btn" onclick="filterTable('观察')">观察</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="watchTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">代号 <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable(1)">价格 <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable(2)">24h <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable(3)">OI <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable(4)">24h Vol <span class="sort-icon">↕</span></th>
+              <th>标签</th>
+              <th>来源</th>
+              <th>备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-tag="持仓"><td class="coin-name">TIA</td><td>$0.4262</td><td class="chg-up">+3.10%</td><td>$16.3M</td><td>$75.5M</td><td><span class="tag tag-持仓">持仓</span></td><td>HL 5x多</td><td>ROE+39.9% 浮盈+$7.47</td></tr>
+            <tr data-tag="持仓"><td class="coin-name">HEMI</td><td>$0.00839</td><td class="chg-up">+4.24%</td><td>$3.1M</td><td>$6.7M</td><td><span class="tag tag-预警">预警</span></td><td>OKX 6x多</td><td>ROE-49% ⚠️4/29解锁</td></tr>
+            <tr data-tag="新增"><td class="coin-name">SKL</td><td>$0.00745</td><td class="chg-up">+11.69%</td><td>$2.7M</td><td>$55.8M</td><td><span class="tag tag-新增">新增</span></td><td>机构背书+赔率</td><td>Multicoin/Vodafone 流通84%</td></tr>
+            <tr data-tag="新增"><td class="coin-name">STX</td><td>$0.2390</td><td class="chg-up">+0.38%</td><td>$4.6M</td><td>$10.4M</td><td><span class="tag tag-新增">新增</span></td><td>BTC L2叙事</td><td>Stacks/sBTC Bitcoin生态</td></tr>
+            <tr data-tag="观察"><td class="coin-name">MET</td><td>$0.1508</td><td class="chg-up">+0.53%</td><td>$3.9M</td><td>$3.4M</td><td><span class="tag tag-观察">观察</span></td><td>现货持仓</td><td>Solana DEX 横盘</td></tr>
+            <tr data-tag="新增"><td class="coin-name">M</td><td>$4.5524</td><td class="chg-up">+18.29%</td><td>$37.3M</td><td>$59.0M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>OI $30.8M 涨幅3.3x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">H</td><td>$0.1324</td><td class="chg-up">+11.78%</td><td>$31.0M</td><td>$29.1M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>OI $31M 涨幅3.3x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">GWEI</td><td>$0.0819</td><td class="chg-up">+17.03%</td><td>$12.2M</td><td>$20.7M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>Gas费概念 涨幅3.9x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">UB</td><td>$0.0402</td><td class="chg-up">+12.94%</td><td>$13.1M</td><td>$19.3M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>涨幅2.9x 补涨空间大</td></tr>
+            <tr data-tag="新增"><td class="coin-name">SOON</td><td>$0.2001</td><td class="chg-down">-27.58%</td><td>$6.8M</td><td>$243.9M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>⚠️单日-28% 超跌关注</td></tr>
+            <tr data-tag="新增"><td class="coin-name">TAG</td><td>$0.000718</td><td class="chg-flat">+0.24%</td><td>$7.4M</td><td>$2.3M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>涨幅4.0x 横盘蓄力</td></tr>
+            <tr data-tag="观察"><td class="coin-name">LIGHT</td><td>$0.2358</td><td class="chg-up">+10.34%</td><td>$7.4M</td><td>$19.9M</td><td><span class="tag tag-观察">观察</span></td><td>OI选币池</td><td>涨幅4.1x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">B</td><td>$0.1039</td><td class="chg-down">-2.07%</td><td>$5.6M</td><td>$3.5M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>涨幅2.6x 横盘</td></tr>
+            <tr data-tag="新增"><td class="coin-name">BLUAI</td><td>$0.00954</td><td class="chg-up">+10.97%</td><td>$5.7M</td><td>$4.2M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>AI概念 涨幅3.6x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">EDGE</td><td>$1.4138</td><td class="chg-up">+11.53%</td><td>$24.7M</td><td>$88.4M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>OI最大 涨幅4.1x</td></tr>
+            <tr data-tag="新增"><td class="coin-name">PIEVERSE</td><td>$0.5294</td><td class="chg-up">+13.85%</td><td>$7.8M</td><td>$2.8M</td><td><span class="tag tag-新增">新增</span></td><td>Alpha筛选</td><td>涨幅1.8x 最低涨幅</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Chain History (Linked List) -->
+    <div class="section">
+      <h2>🔗 拉链表 · 快照历史</h2>
+      <p class="desc">每次更新生成一个链节点，记录当时的价格/OI/标签状态。纵向对比追踪每个币从进入观察池到最终决策的全过程。</p>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--sc-accent)"></div>最新快照</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--sc-border);border:1px solid var(--sc-dim)"></div>历史快照</div>
+      </div>
+
+      <div class="chain">
+        <!-- Node 1: Latest -->
+        <div class="chain-node latest">
+          <div class="chain-header">
+            <span class="chain-time">📸 Snapshot #1 — 2026-04-18 13:35 BJT</span>
+            <span class="chain-badge">LATEST</span>
+          </div>
+          <div class="chain-body">
+            <table class="mini-table">
+              <thead>
+                <tr><th>代号</th><th>价格</th><th>24h%</th><th>OI</th><th>标签</th><th>事件</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><b>TIA</b></td><td>$0.4262</td><td class="chg-up">+3.10%</td><td>$16.3M</td><td>🟢持仓</td><td>ROE+39.9% 5x多</td></tr>
+                <tr><td><b>HEMI</b></td><td>$0.00839</td><td class="chg-up">+4.24%</td><td>$3.1M</td><td>🔴预警</td><td>ROE-49% 4/29解锁11天</td></tr>
+                <tr><td><b>SKL</b></td><td>$0.00745</td><td class="chg-up">+11.69%</td><td>$2.7M</td><td>🆕新增</td><td>昨晚泵后-21% 机构吸筹</td></tr>
+                <tr><td><b>STX</b></td><td>$0.2390</td><td class="chg-up">+0.38%</td><td>$4.6M</td><td>🆕新增</td><td>BTC L2叙事 横盘观察</td></tr>
+                <tr><td><b>MET</b></td><td>$0.1508</td><td class="chg-up">+0.53%</td><td>$3.9M</td><td>🟡观察</td><td>Solana DEX 无催化</td></tr>
+                <tr><td><b>M</b></td><td>$4.5524</td><td class="chg-up">+18.29%</td><td>$37.3M</td><td>🆕新增</td><td>Alpha池 OI最大级</td></tr>
+                <tr><td><b>H</b></td><td>$0.1324</td><td class="chg-up">+11.78%</td><td>$31.0M</td><td>🆕新增</td><td>Alpha池 OI大</td></tr>
+                <tr><td><b>GWEI</b></td><td>$0.0819</td><td class="chg-up">+17.03%</td><td>$12.2M</td><td>🆕新增</td><td>Gas费概念</td></tr>
+                <tr><td><b>UB</b></td><td>$0.0402</td><td class="chg-up">+12.94%</td><td>$13.1M</td><td>🆕新增</td><td>涨幅最低组 补涨</td></tr>
+                <tr><td><b>SOON</b></td><td>$0.2001</td><td class="chg-down">-27.58%</td><td>$6.8M</td><td>🆕新增</td><td>⚠️单日暴跌 超跌关注</td></tr>
+                <tr><td><b>TAG</b></td><td>$0.000718</td><td class="chg-flat">+0.24%</td><td>$7.4M</td><td>🆕新增</td><td>横盘蓄力</td></tr>
+                <tr><td><b>LIGHT</b></td><td>$0.2358</td><td class="chg-up">+10.34%</td><td>$7.4M</td><td>🟡观察</td><td>OI选币监控池</td></tr>
+                <tr><td><b>B</b></td><td>$0.1039</td><td class="chg-down">-2.07%</td><td>$5.6M</td><td>🆕新增</td><td>横盘 涨幅低</td></tr>
+                <tr><td><b>BLUAI</b></td><td>$0.00954</td><td class="chg-up">+10.97%</td><td>$5.7M</td><td>🆕新增</td><td>AI概念</td></tr>
+                <tr><td><b>EDGE</b></td><td>$1.4138</td><td class="chg-up">+11.53%</td><td>$24.7M</td><td>🆕新增</td><td>OI最大 流动性好</td></tr>
+                <tr><td><b>PIEVERSE</b></td><td>$0.5294</td><td class="chg-up">+13.85%</td><td>$7.8M</td><td>🆕新增</td><td>涨幅最低1.8x</td></tr>
+              </tbody>
+            </table>
+            <div class="chain-note">
+              <strong>快照说明：</strong>初始建仓。14个标的入池：2个活跃持仓（TIA/HEMI）+ 3个新增跟踪（SKL/HEMI/STX）+ 11个Alpha筛选币（OI≥$5M，涨幅<5倍）。<br/>
+              <strong>市场环境：</strong>BTC $77,287 (+3.53%) | FNG=26 Fear三连确认≥25 | 地缘持续改善
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholder for future snapshots -->
+        <div class="chain-node" style="opacity:.4">
+          <div class="chain-header">
+            <span class="chain-time">📸 Snapshot #2 — 待下次更新...</span>
+          </div>
+          <div class="chain-body" style="padding:20px;text-align:center;color:var(--sc-muted);font-size:13px">
+            下一次快照将在价格/OI发生显著变化或有新标的加入时生成。<br/>
+            每个节点记录：价格、OI、24h变化、标签状态、关键事件。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="section">
+      <h2>📐 拉链表工作原理</h2>
+      <p class="desc">
+        每个快照是一个<strong>链节点</strong>，包含所有标的在该时刻的完整状态。纵向对比同一标的在不同时间点的变化，横向对比同一时刻不同标的的相对强弱。
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+        <div style="padding:20px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border)">
+          <div style="font-size:24px;margin-bottom:8px">📸</div>
+          <div style="font-weight:800;margin-bottom:6px">快照生成</div>
+          <div style="font-size:13px;color:var(--sc-dim);line-height:1.6">每次价格/OI显著变化、标的增减、或标签状态切换时，自动生成新快照。</div>
+        </div>
+        <div style="padding:20px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border)">
+          <div style="font-size:24px;margin-bottom:8px">🔗</div>
+          <div style="font-weight:800;margin-bottom:6px">链式存储</div>
+          <div style="font-size:13px;color:var(--sc-dim);line-height:1.6">快照按时间倒序排列，最新在上。历史快照不可修改，保证数据可追溯。</div>
+        </div>
+        <div style="padding:20px;border-radius:14px;background:var(--sc-card);border:1px solid var(--sc-border)">
+          <div style="font-size:24px;margin-bottom:8px">📊</div>
+          <div style="font-weight:800;margin-bottom:6px">对比分析</div>
+          <div style="font-size:13px;color:var(--sc-dim);line-height:1.6">任意两个快照间可对比：价格变化率、OI变化率、标签变迁、事件时间线。</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>SingClaw · Crypto Watchlist · 拉链表结构 · 数据来源 Binance/CoinGlass</p>
+      <p style="margin-top:8px">⚠️ 仅供研究参考，不构成投资建议</p>
+    </div>
+  </footer>
+
+  <script>
+    // Filter
+    function filterTable(tag) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('#watchTable tbody tr').forEach(tr => {
+        if (tag === 'all' || tr.dataset.tag === tag) {
+          tr.style.display = '';
+        } else {
+          tr.style.display = 'none';
+        }
+      });
+    }
+
+    // Sort
+    let sortDir = {};
+    function sortTable(col) {
+      const table = document.getElementById('watchTable');
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const dir = sortDir[col] = !sortDir[col];
+
+      rows.sort((a, b) => {
+        let aVal = a.cells[col].textContent.trim();
+        let bVal = b.cells[col].textContent.trim();
+        // Try numeric
+        const aNum = parseFloat(aVal.replace(/[$%,M]/g, ''));
+        const bNum = parseFloat(bVal.replace(/[$%,M]/g, ''));
+        if (!isNaN(aNum) && !isNaN(bNum)) {
+          return dir ? aNum - bNum : bNum - aNum;
+        }
+        return dir ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+
+      // Update sort icons
+      table.querySelectorAll('th').forEach((th, i) => {
+        th.classList.toggle('sorted', i === col);
+        const icon = th.querySelector('.sort-icon');
+        if (icon) icon.textContent = i === col ? (dir ? '↑' : '↓') : '↕';
+      });
+    }
+  </script>
+</body>
+</html>
