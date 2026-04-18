@@ -8,6 +8,9 @@
   <meta property="og:title" content="Crypto Alpha · 5层分析决策系统"/>
   <meta property="og:description" content="避雷12项速查 + OI趋势矩阵 + VVV DNA评分 + 开仓决策 + 止盈止损模板"/>
   <meta property="og:url" content="https://singclaw.xyz/crypto/"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:image" content="https://singclaw.xyz/assets/og-image.png"/>
+  <link rel="canonical" href="https://singclaw.xyz/crypto/"/>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
   <link rel="stylesheet" href="/css/design-tokens.css"/>
   <script type="application/ld+json">
@@ -177,24 +180,27 @@
   <div class="sc-w nav-inner">
     <a href="/" class="logo"><img src="/favicon.svg" alt="SingClaw"/> SingClaw</a>
     <div class="nav-links">
-      <a href="/36/">36计</a>
-      <a href="/24/">24节气</a>
-      <a href="/game/">ShrimpFi</a>
-      <a href="/crypto/" class="active">Crypto Alpha</a>
+      <a href="/36/">养虾36计</a>
+      <a href="/24/">虾24章经</a>
+      <a href="/blog/">思享录 📝</a>
+      <a href="/game/">ShrimpFi 🎮</a>
+      <a href="/crypto/" class="active">Crypto Alpha 📊</a>
       <a href="/crypto/bn-alpha.html">BN Alpha</a>
-      <a href="/stars/">明星站</a>
+      <a href="/stars/">明星追踪 ⭐</a>
     </div>
-    <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+    <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="菜单">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
-<div class="mobile-menu">
-  <a href="/36/">36计</a>
-  <a href="/24/">24节气</a>
-  <a href="/game/">ShrimpFi</a>
-  <a href="/crypto/" class="active">Crypto Alpha</a>
-  <a href="/stars/">明星站</a>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/36/" onclick="this.parentElement.classList.remove('open')">📖 养虾36计</a>
+  <a href="/24/" onclick="this.parentElement.classList.remove('open')">📜 虾24章经</a>
+  <a href="/blog/" onclick="this.parentElement.classList.remove('open')">📝 思享录</a>
+  <a href="/game/" onclick="this.parentElement.classList.remove('open')">🎮 ShrimpFi</a>
+  <a href="/crypto/" class="active" onclick="this.parentElement.classList.remove('open')">📊 Crypto Alpha</a>
+  <a href="/crypto/bn-alpha.html" onclick="this.parentElement.classList.remove('open')">📈 BN Alpha</a>
+  <a href="/stars/" onclick="this.parentElement.classList.remove('open')">⭐ 明星追踪</a>
 </div>
 
 <!-- Hero -->

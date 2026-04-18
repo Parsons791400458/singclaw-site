@@ -8,6 +8,12 @@
   <meta property="og:title" content="明星追踪 · SingClaw"/>
   <meta property="og:description" content="多渠道明星动态采集与展示"/>
   <meta property="og:url" content="https://singclaw.xyz/stars/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://singclaw.xyz/assets/og-image.png"/>
+  <link rel="canonical" href="https://singclaw.xyz/stars/"/>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebPage","name":"明星追踪","url":"https://singclaw.xyz/stars/","description":"明星信息采集站 — 微博、小红书、公众号多渠道动态追踪","publisher":{"@type":"Organization","name":"SingClaw","url":"https://singclaw.xyz"}}
+  </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
   <link rel="stylesheet" href="/css/design-tokens.css"/>
   <style>
@@ -107,7 +113,10 @@
       <div class="nav-links">
         <a href="/36/">养虾36计</a>
         <a href="/24/">虾24章经</a>
+        <a href="/blog/">思享录 📝</a>
         <a href="/game/">ShrimpFi 🎮</a>
+        <a href="/crypto/">Crypto Alpha 📊</a>
+        <a href="/crypto/bn-alpha.html">BN Alpha</a>
         <a href="/stars/" class="active">明星追踪 ⭐</a>
       </div>
       <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="菜单">
@@ -116,10 +125,13 @@
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="/36/">📖 养虾36计</a>
-    <a href="/24/">📜 虾24章经</a>
-    <a href="/game/">🎮 ShrimpFi</a>
-    <a href="/stars/" class="active">⭐ 明星追踪</a>
+    <a href="/36/" onclick="this.parentElement.classList.remove('open')">📖 养虾36计</a>
+    <a href="/24/" onclick="this.parentElement.classList.remove('open')">📜 虾24章经</a>
+    <a href="/blog/" onclick="this.parentElement.classList.remove('open')">📝 思享录</a>
+    <a href="/game/" onclick="this.parentElement.classList.remove('open')">🎮 ShrimpFi</a>
+    <a href="/crypto/" onclick="this.parentElement.classList.remove('open')">📊 Crypto Alpha</a>
+    <a href="/crypto/bn-alpha.html" onclick="this.parentElement.classList.remove('open')">📈 BN Alpha</a>
+    <a href="/stars/" class="active" onclick="this.parentElement.classList.remove('open')">⭐ 明星追踪</a>
   </div>
 
   <!-- Hero -->
