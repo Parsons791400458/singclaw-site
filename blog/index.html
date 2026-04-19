@@ -39,6 +39,13 @@
     .article-card .platform-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(255,255,255,.05);color:var(--sc-dim)}
     .empty-state{text-align:center;padding:80px 24px;color:var(--sc-dim)}
     .empty-state .icon{font-size:48px;margin-bottom:16px}
+    footer{padding:48px 0 36px;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-dim);font-size:13px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--sc-accent),transparent)}
+    footer a{color:var(--sc-accent);transition:opacity .2s}
+    footer a:hover{opacity:.7}
+    .footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:14px;font-size:13px;flex-wrap:wrap}
+    .footer-links a{color:var(--sc-dim);transition:color .2s}
+    .footer-links a:hover{color:var(--sc-accent)}
   </style>
 </head>
 <body>
@@ -108,9 +115,17 @@
     </div>
   </div>
 
-  <footer style="padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-dim);font-size:13px">
+  <footer>
     <div style="max-width:1200px;margin:0 auto;padding:0 24px">
-      <p>© 2026 <a href="/" style="color:var(--sc-accent);text-decoration:none">SingClaw</a> · <a href="/blog/" style="color:var(--sc-accent);text-decoration:none">思享录</a> · <a href="/36/" style="color:var(--sc-accent);text-decoration:none">养虾36计</a> · <a href="/24/" style="color:var(--sc-accent);text-decoration:none">虾24章经</a> · <a href="/game/" style="color:var(--sc-accent);text-decoration:none">ShrimpFi</a> · <a href="/crypto/" style="color:var(--sc-accent);text-decoration:none">Crypto Alpha</a> · <a href="/stars/" style="color:var(--sc-accent);text-decoration:none">明星追踪</a></p>
+      <div class="footer-links">
+        <a href="/36/">养虾36计</a>
+        <a href="/24/">虾24章经</a>
+        <a href="/blog/">思享录</a>
+        <a href="/game/">ShrimpFi</a>
+        <a href="/crypto/">Crypto Alpha</a>
+        <a href="/stars/">明星追踪</a>
+      </div>
+      <p>© 2026 <a href="/">SingClaw</a> · 养虾方法论 × 在线游戏 · Built on <a href="https://base.org" target="_blank" rel="noopener">Base</a></p>
     </div>
   </footer>
 
