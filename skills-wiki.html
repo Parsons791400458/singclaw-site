@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skills Wiki | SingClaw</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 40px 20px 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.header h1 { font-size: 2em; background: linear-gradient(135deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.header p { color: #94a3b8; font-size: 0.95em; }
+.stats { display: flex; gap: 20px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.stat { background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 20px; font-size: 0.85em; }
+.stat b { color: #a78bfa; }
+.filters { display: flex; gap: 8px; justify-content: center; padding: 16px 20px; flex-wrap: wrap; position: sticky; top: 0; z-index: 10; background: #0a0a0f; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.filter-btn { padding: 6px 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: #94a3b8; cursor: pointer; font-size: 0.8em; transition: all 0.2s; }
+.filter-btn:hover, .filter-btn.active { background: rgba(167,139,250,0.15); border-color: #a78bfa; color: #a78bfa; }
+.search { margin: 16px auto; max-width: 500px; padding: 0 20px; }
+.search input { width: 100%; padding: 10px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: #e0e0e0; font-size: 0.9em; outline: none; }
+.search input:focus { border-color: #a78bfa; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; padding: 16px 20px; max-width: 1400px; margin: 0 auto; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; transition: all 0.2s; cursor: default; }
+.card:hover { border-color: rgba(167,139,250,0.3); background: rgba(255,255,255,0.05); transform: translateY(-1px); }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.card-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; flex-shrink: 0; }
+.card-name { font-weight: 600; font-size: 0.95em; color: #f0f0f0; line-height: 1.3; }
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.tag { padding: 2px 8px; border-radius: 10px; font-size: 0.7em; background: rgba(255,255,255,0.05); color: #94a3b8; }
+.tag-cat { background: rgba(167,139,250,0.12); color: #a78bfa; }
+.card-desc { font-size: 0.82em; color: #94a3b8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.empty { text-align: center; padding: 60px 20px; color: #64748b; }
+/* Category colors */
+.cat-trade { background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.05)); }
+.cat-content { background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(59,130,246,0.05)); }
+.cat-data { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05)); }
+.cat-tool { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05)); }
+.cat-social { background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(236,72,153,0.05)); }
+.cat-agent { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.05)); }
+.cat-office { background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(6,182,212,0.05)); }
+.cat-search { background: linear-gradient(135deg, rgba(234,179,8,0.2), rgba(234,179,8,0.05)); }
+@media(max-width:640px) { .grid { grid-template-columns: 1fr; } .header h1 { font-size: 1.5em; } }
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🦞 Skills Wiki</h1>
+<p>SingClaw Agent 技能全景图 — 定期复习，常用常新</p>
+<div class="stats">
+<div class="stat"><b>82</b> Skills</div>
+<div class="stat"><b>8</b> 分类</div>
+<div class="stat">更新：2026-04-19</div>
+</div>
+</div>
+
+<div class="filters" id="filters">
+<button class="filter-btn active" data-cat="all">全部</button>
+<button class="filter-btn" data-cat="trade">📈 交易</button>
+<button class="filter-btn" data-cat="content">✍️ 内容</button>
+<button class="filter-btn" data-cat="data">📊 数据</button>
+<button class="filter-btn" data-cat="social">💬 社交</button>
+<button class="filter-btn" data-cat="tool">🔧 工具</button>
+<button class="filter-btn" data-cat="agent">🤖 Agent</button>
+<button class="filter-btn" data-cat="office">📄 办公</button>
+<button class="filter-btn" data-cat="search">🔍 搜索</button>
+</div>
+
+<div class="search"><input type="text" id="searchBox" placeholder="🔍 搜索 Skill 名称或功能..."></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none">没有匹配的 Skill</div>
+
+<script>
+const skills = [
+  // ===== 交易 =====
+  {n:"OI Coin Picker",d:"OI领先价格=大资金提前建仓。基于OI异动筛选潜力币种",cat:"trade",icon:"🎯"},
+  {n:"Crypto Analysis",d:"基于 CoinGlass + Binance API + Surf CLI 的多层加密分析框架",cat:"trade",icon:"📊"},
+  {n:"Surf (Crypto Brain)",d:"AI Agent 的加密大脑。83+命令覆盖14个数据域——实时价格、钱包、社交、DeFi、链上SQL、预测市场等",cat:"trade",icon:"🏄"},
+  {n:"OKX Trading",d:"OKX 交易执行。买入/卖出/做多/做空/止盈/止损，覆盖现货和合约，内置仓位管理和风控规则",cat:"trade",icon:"⚡"},
+  {n:"OKX MCP Trading",d:"OKX Agent Trade Kit / MCP 下单，通过MCP协议连接OKX交易所",cat:"trade",icon:"🔌"},
+  {n:"OKX CEX Market",d:"OKX行情数据——价格、K线、深度、资金费率、持仓量、标记价格等",cat:"trade",icon:"📈"},
+  {n:"OKX CEX Portfolio",d:"OKX账户管理——余额、持仓、盈亏、资金划转、历史交易记录",cat:"trade",icon:"💼"},
+  {n:"OKX CEX Trade",d:"OKX下单执行——市价/限价/止盈止损/修改/撤单",cat:"trade",icon:"🎯"},
+  {n:"OKX CEX Bot",d:"OKX量化机器人——网格交易、DCA马丁策略、止盈止损管理",cat:"trade",icon:"🤖"},
+  {n:"OKX CEX Earn",d:"OKX理财——活期/链上/双币赢/自动赚币",cat:"trade",icon:"💰"},
+  {n:"OKX CEX Skill MP",d:"OKX技能市场——搜索/安装/管理交易技能",cat:"trade",icon:"🛒"},
+  {n:"ClawFi Hyperliquid",d:"Hyperliquid交易集成——Vault/Agent模式、市价/限价/止盈止损、仓位监控",cat:"trade",icon:"🌊"},
+  {n:"TradingView MCP",d:"AI交易智能——实时价格、30+技术指标、回测(6策略)、走向验证、Reddit情绪、新闻",cat:"trade",icon:"📺"},
+  {n:"A股 T+0 做T",d:"A股持仓做T分析、日内交易计划、风控和收盘复盘建议",cat:"trade",icon:"🇨🇳"},
+  {n:"Stock Analyzer",d:"A股个股全方位深度分析——行业竞争力、产业链、财务、技术、资金流向",cat:"trade",icon:"🔬"},
+
+  // ===== 内容创作 =====
+  {n:"Content Writer",d:"多平台中文内容生成器——小红书/知乎/公众号/抖音，平台原生格式+Hook+CTA",cat:"content",icon:"✍️"},
+  {n:"Content Brainstorm",d:"社交媒体选题引擎。生成7天选题计划，含标题、角度、SEO关键词和趋势分",cat:"content",icon:"💡"},
+  {n:"Content Ideas Generator",d:"从参考素材提取结构化帖子大纲，适用于智慧型社交内容创作",cat:"content",icon:"🧠"},
+  {n:"Content Hunter",d:"短视频平台热门内容抓取——小红书、抖音、B站，批量抓取+自动汇报",cat:"content",icon:"🎣"},
+  {n:"Copywriting",d:"营销文案——着陆页、邮件、广告、销售页，写标题/CTA/产品描述",cat:"content",icon:"📝"},
+  {n:"Creator Alpha Feed",d:"AI内容每日精选，KOL追踪，实用教程筛选，适用于创作者发布工作流",cat:"content",icon:"🔥"},
+  {n:"WeChat Article Writer",d:"公众号写作助手——从选题到成稿+自动配图的完整流程",cat:"content",icon:"📱"},
+  {n:"Humanizer 中文",d:"去AI痕迹。检测并修复夸大象征、宣传语言、AI词汇、三段式等AI写作特征",cat:"content",icon:"🎭"},
+  {n:"Zhihu Writer",d:"知乎回答/文章生成器——数据型/故事型/专业型/辩论型多模式",cat:"content",icon:"📖"},
+  {n:"Infographic",d:"从文章/推文/结构化内容生成专业的移动友好信息图",cat:"content",icon:"🖼️"},
+
+  // ===== 数据采集 =====
+  {n:"Celebrity Tracker",d:"明星信息多渠道采集——微博/小红书/公众号/网页，写入数据库+静态JSON展示",cat:"data",icon:"⭐"},
+  {n:"AI News Collector",d:"AI新闻聚合与热度排序——新产品/论文/融资/开源/社区病毒传播",cat:"data",icon:"📰"},
+  {n:"AI News 头条",d:"AI新闻热度排序+来源链接，覆盖产品/论文/行业/融资/开源",cat:"data",icon:"🗞️"},
+  {n:"Bilibili 热门监控",d:"生成B站热门视频日报并发送邮件",cat:"data",icon:"📺"},
+  {n:"抖音热榜",d:"获取抖音热榜/热搜榜——热门视频、挑战赛、音乐等",cat:"data",icon:"🎵"},
+  {n:"Trend",d:"追踪趋势话题——热度、情绪、预警，用于报告/关键词优化/排期",cat:"data",icon:"📈"},
+  {n:"Trend Watcher",d:"监控GitHub Trending和技术社区，发现新兴工具和技术",cat:"data",icon:"👀"},
+  {n:"YouTube Watcher",d:"获取YouTube视频字幕，用于总结/问答/信息提取",cat:"data",icon:"▶️"},
+  {n:"Get笔记",d:"个人笔记和知识库管理——文本/链接/图片笔记，标签管理，知识库组织",cat:"data",icon:"📒"},
+
+  // ===== 社交发布 =====
+  {n:"WeChat Toolkit",d:"微信公众号一站式——文章搜索/下载/AI改写/发布四大功能",cat:"social",icon:"💚"},
+  {n:"WeChat Publisher Pro",d:"一键发布文章到微信公众号草稿箱，支持Markdown/HTML，自动美化排版",cat:"social",icon:"📤"},
+  {n:"MP Draft Push",d:"将文章内容发布到微信公众号草稿箱",cat:"social",icon:"📋"},
+  {n:"X/Twitter",d:"Twitter/X 交互——读推文/搜索/发推/点赞/转推/管理时间线",cat:"social",icon:"🐦"},
+  {n:"Social Media Agent",d:"X/Twitter 自动化运营——自动发推/内容生成/互动追踪/涨粉",cat:"social",icon:"📣"},
+  {n:"Zhihu Post",d:"知乎发布——专栏文章/想法/动态，通过浏览器自动化完成",cat:"social",icon:"✏️"},
+  {n:"Binance Square Post",d:"发布内容到Binance Square，支持纯文本",cat:"social",icon:"🟡"},
+  {n:"TikTok Uploader",d:"TikTok视频上传/排期/批量管理，通过浏览器自动化",cat:"social",icon:"🎬"},
+  {n:"抖音视频发布",d:"抖音创作者平台发布视频，浏览器自动化",cat:"social",icon:"📹"},
+  {n:"Upload Post",d:"多平台发布——TikTok/Instagram/YouTube/LinkedIn/Facebook/X/Threads/Pinterest/Reddit",cat:"social",icon:"🌐"},
+  {n:"Moltbook",d:"Moltbook AI社交网络——发帖/回复/浏览/互动分析",cat:"social",icon:"🦞"},
+  {n:"Molt Registry",d:"Moltbook身份注册——验证/查找/链上声誉",cat:"social",icon:"🪪"},
+  {n:"Moltr",d:"AI Agent社交平台——发帖/转发/标签/提问",cat:"social",icon:"🗣️"},
+  {n:"Growth Agent",d:"成长型总控Agent——持续学习/整理知识/沉淀资产/确保掌握",cat:"social",icon:"🌱"},
+
+  // ===== 工具 =====
+  {n:"McKinsey PPT ⭐新",d:"麦肯锡风格PPT生成——70种布局×12类别，扁平设计，防文件损坏，CJK字体",cat:"tool",icon:"📊"},
+  {n:"PPT Generator",d:"乔布斯风极简科技感竖屏HTML演示稿，一键生成",cat:"tool",icon:"🎤"},
+  {n:"Excel / XLSX",d:"Excel工作簿——公式/日期/格式/重算/模板保留",cat:"office",icon:"📗"},
+  {n:"XLSX (Anthropic)",d:"电子表格处理——打开/读取/编辑/修复xlsx/xlsm/csv/tsv",cat:"office",icon:"📊"},
+  {n:"Word / DOCX",d:"Word文档——样式/编号/修订/表格/节/兼容性检查",cat:"office",icon:"📘"},
+  {n:"DOCX (Anthropic)",d:"Word文档创建/读取/编辑/操作",cat:"office",icon:"📝"},
+  {n:"PDF",d:"PDF处理——读取/提取/合并/拆分/旋转",cat:"office",icon:"📕"},
+  {n:"PPTX (Anthropic)",d:"PowerPoint处理——创建/读取/解析/提取",cat:"office",icon:"📙"},
+  {n:"Video Frames",d:"用ffmpeg从视频中提取帧或短片段",cat:"tool",icon:"🎞️"},
+  {n:"Weather",d:"天气查询——当前天气和预报，无需API Key",cat:"tool",icon:"🌤️"},
+  {n:"Vercel",d:"Vercel部署——应用/项目/域名/环境变量管理",cat:"tool",icon:"▲"},
+  {n:"GitHub",d:"GitHub交互——issue/PR/CI/API查询，通过gh CLI",cat:"tool",icon:"🐙"},
+  {n:"Gmail",d:"Gmail——读取/发送/管理邮件/线程/标签/草稿，OAuth集成",cat:"tool",icon:"📧"},
+  {n:"Obsidian",d:"Obsidian笔记库——Markdown笔记操作+obsidian-cli自动化",cat:"tool",icon:"💎"},
+  {n:"飞书文档管理",d:"飞书Doc发布——Markdown自动格式化/权限管理/批量写入",cat:"tool",icon:"📄"},
+  {n:"Summarize",d:"URL或文件总结——网页/PDF/图片/音频/YouTube",cat:"tool",icon:"📋"},
+  {n:"Frontend Design",d:"高质量前端界面——网页组件/页面/海报/应用",cat:"tool",icon:"🎨"},
+
+  // ===== Agent 系统 =====
+  {n:"Agent Browser",d:"Rust高速无头浏览器自动化，支持Node.js回退，AI Agent导航/点击/输入/截图",cat:"agent",icon:"🌐"},
+  {n:"Web Access",d:"全能联网——搜索/抓取/登录操作/浏览器CDP，处理小红书/微博/推特等",cat:"agent",icon:"🕸️"},
+  {n:"Agent Reach",d:"14平台可见——Twitter/Reddit/YouTube/GitHub/B站/小红书/抖音/微博/微信等",cat:"agent",icon:"👁️"},
+  {n:"Agent Memory",d:"持久记忆系统——跨会话记忆事实/学习经验/追踪实体",cat:"agent",icon:"🧠"},
+  {n:"Agent Team Orchestration",d:"多Agent团队编排——角色/任务生命周期/交接协议/评审工作流",cat:"agent",icon:"👥"},
+  {n:"Multi-Agent 中文",d:"通用多Agent调度系统——5个持久化子Agent+轮询调度+先回复再派遣",cat:"agent",icon:"🎛️"},
+  {n:"Self-Improving Agent",d:"自我反思+自我批评+自我学习+自组织记忆，Agent永久性改进",cat:"agent",icon:"🔄"},
+  {n:"Skill Creator",d:"创建/修改/优化Skill，运行评估测试Skill性能",cat:"agent",icon:"🛠️"},
+  {n:"女娲造人",d:"输入人名→深度调研→思维框架提炼→生成可运行的人物Skill",cat:"agent",icon:"🔮"},
+  {n:"Claude Mem",d:"Claude持久记忆插件——跨会话系统提示注入",cat:"agent",icon:"💾"},
+  {n:"PUA",d:"高压问题解决模式——穷尽所有方案，不允许放弃",cat:"agent",icon:"💪"},
+  {n:"Find Skills",d:"最高优先级技能发现——搜索/安装Skill",cat:"agent",icon:"🔍"},
+  {n:"SkillHub Preference",d:"技能发现优先级——先skillhub后clawhub",cat:"agent",icon:"🏪"},
+  {n:"Daily Knowledge Mgmt",d:"日常知识管理工作流",cat:"agent",icon:"📚"},
+
+  // ===== 搜索 =====
+  {n:"Multi Search Engine",d:"17引擎搜索（8中国+9全球），支持高级运算符/时间过滤/站内搜索/隐私引擎",cat:"search",icon:"🔎"},
+  {n:"Brave Search",d:"Brave Search API搜索——轻量无浏览器",cat:"search",icon:"🦁"},
+  {n:"Tavily",d:"AI优化搜索——Tavily API返回简洁相关结果",cat:"search",icon:"🎯"},
+];
+
+const catNames = {trade:"📈 交易",content:"✍️ 内容",data:"📊 数据",social:"💬 社交",tool:"🔧 工具",agent:"🤖 Agent",office:"📄 办公",search:"🔍 搜索"};
+let currentCat = "all";
+
+function render() {
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  const grid = document.getElementById("grid");
+  const filtered = skills.filter(s => {
+    if (currentCat !== "all" && s.cat !== currentCat) return false;
+    if (q && !s.n.toLowerCase().includes(q) && !s.d.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  
+  grid.innerHTML = filtered.map(s => `
+    <div class="card" data-cat="${s.cat}">
+      <div class="card-head">
+        <div class="card-icon cat-${s.cat}">${s.icon}</div>
+        <div class="card-name">${s.n}</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag tag-cat">${catNames[s.cat]||s.cat}</span>
+      </div>
+      <div class="card-desc">${s.d}</div>
+    </div>
+  `).join("");
+  
+  document.getElementById("empty").style.display = filtered.length ? "none" : "block";
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentCat = btn.dataset.cat;
+    render();
+  });
+});
+document.getElementById("searchBox").addEventListener("input", render);
+render();
+</script>
+</body>
+</html>
