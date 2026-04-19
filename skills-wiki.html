@@ -12,8 +12,40 @@
 <meta property="og:site_name" content="SingClaw"/>
 <meta property="og:image" content="https://singclaw.xyz/assets/og-image.png"/>
 <link rel="canonical" href="https://singclaw.xyz/skills-wiki.html"/>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebPage",
+  "name":"Skills Wiki | SingClaw",
+  "description":"SingClaw Skills Wiki — AI技能知识库，82+技能分类索引，涵盖加密交易、内容创作、数据分析、自动化等领域。",
+  "url":"https://singclaw.xyz/skills-wiki.html",
+  "publisher":{"@type":"Organization","name":"SingClaw","url":"https://singclaw.xyz"}
+}
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="stylesheet" href="/css/design-tokens.css"/>
 <style>
+/* Nav */
+.sc-nav{position:sticky;top:0;z-index:200;background:rgba(2,4,8,.82);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06)}
+.sc-nav-inner{max-width:1400px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.sc-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:#f0f0f0;text-decoration:none}
+.sc-logo img{width:32px;height:32px;border-radius:8px}
+.sc-nav-links{display:flex;gap:4px}
+.sc-nav-links a{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;color:#94a3b8;text-decoration:none;transition:all .2s}
+.sc-nav-links a:hover{color:#fff;background:rgba(255,255,255,.05)}
+.sc-nav-links a.active{color:#00d4aa;background:rgba(0,212,170,.08)}
+.sc-hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.sc-hamburger span{display:block;width:20px;height:2px;background:#e0e0e0;margin:4px 0;border-radius:2px}
+.sc-mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(2,4,8,.96);backdrop-filter:blur(20px);z-index:199;padding:24px;flex-direction:column;gap:8px}
+.sc-mobile-menu.open{display:flex}
+.sc-mobile-menu a{padding:14px 16px;border-radius:10px;font-size:16px;font-weight:500;color:#94a3b8;text-decoration:none}
+.sc-mobile-menu a:hover,.sc-mobile-menu a.active{color:#00d4aa;background:rgba(0,212,170,.06)}
+@media(max-width:768px){.sc-nav-links{display:none}.sc-hamburger{display:block}}
+/* Footer */
+.sc-footer{padding:48px 20px 36px;border-top:1px solid rgba(255,255,255,.06);text-align:center;color:#94a3b8;font-size:13px}
+.sc-footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:14px;font-size:13px;flex-wrap:wrap}
+.sc-footer-links a{color:#94a3b8;text-decoration:none;transition:color .2s}
+.sc-footer-links a:hover{color:#00d4aa}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; min-height: 100vh; }
 .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 40px 20px 30px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -52,6 +84,36 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </style>
 </head>
 <body>
+<nav class="sc-nav">
+  <div class="sc-nav-inner">
+    <a class="sc-logo" href="/"><img src="/favicon.svg" alt="SingClaw"/>SingClaw</a>
+    <div class="sc-nav-links">
+      <a href="/">首页</a>
+      <a href="/36/">养虾36计</a>
+      <a href="/24/">虾24章经</a>
+      <a href="/blog/">思享录 📝</a>
+      <a href="/crypto/">Crypto Alpha 📊</a>
+      <a href="/crypto/bn-alpha.html">BN Alpha</a>
+      <a href="/stars/">明星追踪 ⭐</a>
+      <a href="/skills-wiki.html" class="active">Skills Wiki 🧠</a>
+      <a href="/opc-onboarding.html">OPC 入门 🚀</a>
+    </div>
+    <button class="sc-hamburger" onclick="document.getElementById('skMobileMenu').classList.toggle('open')" aria-label="菜单">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="sc-mobile-menu" id="skMobileMenu">
+  <a href="/" onclick="this.parentElement.classList.remove('open')">🏠 首页</a>
+  <a href="/36/" onclick="this.parentElement.classList.remove('open')">📖 养虾36计</a>
+  <a href="/24/" onclick="this.parentElement.classList.remove('open')">📜 虾24章经</a>
+  <a href="/blog/" onclick="this.parentElement.classList.remove('open')">📝 思享录</a>
+  <a href="/crypto/" onclick="this.parentElement.classList.remove('open')">📊 Crypto Alpha</a>
+  <a href="/crypto/bn-alpha.html" onclick="this.parentElement.classList.remove('open')">📈 BN Alpha</a>
+  <a href="/stars/" onclick="this.parentElement.classList.remove('open')">⭐ 明星追踪</a>
+  <a href="/skills-wiki.html" class="active" onclick="this.parentElement.classList.remove('open')">🧠 Skills Wiki</a>
+  <a href="/opc-onboarding.html" onclick="this.parentElement.classList.remove('open')">🚀 OPC 入门</a>
+</div>
 <div class="header">
 <h1>🦞 Skills Wiki</h1>
 <p>SingClaw Agent 技能全景图 — 定期复习，常用常新</p>
@@ -216,5 +278,18 @@ document.querySelectorAll(".filter-btn").forEach(btn => {
 document.getElementById("searchBox").addEventListener("input", render);
 render();
 </script>
+<footer class="sc-footer">
+  <div class="sc-footer-links">
+    <a href="/36/">养虾36计</a>
+    <a href="/24/">虾24章经</a>
+    <a href="/blog/">思享录</a>
+    <a href="/game/">ShrimpFi</a>
+    <a href="/crypto/">Crypto Alpha</a>
+    <a href="/stars/">明星追踪</a>
+    <a href="/skills-wiki.html">Skills Wiki</a>
+    <a href="/opc-onboarding.html">OPC 入门</a>
+  </div>
+  <p>© 2026 <a href="/" style="color:#00d4aa">SingClaw</a> · AI技能知识库 · 82+ Skills</p>
+</footer>
 </body>
 </html>
