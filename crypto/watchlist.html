@@ -91,14 +91,27 @@
       <a href="/" class="logo"><img src="/favicon.svg" alt="SC"/>SingClaw</a>
       <div class="nav-links">
         <a href="/">首页</a>
-        <a href="/crypto/">Crypto</a>
+        <a href="/36/">养虾36计</a>
+        <a href="/24/">虾24章经</a>
+        <a href="/blog/">思享录</a>
+        <a href="/game/">ShrimpFi</a>
+        <a href="/crypto/">Crypto Alpha</a>
         <a href="/crypto/bn-alpha.html">BN Alpha</a>
         <a href="/crypto/watchlist.html" class="active">观察池</a>
+        <a href="/stars/">明星追踪</a>
       </div>
       <button class="hamburger" onclick="document.querySelector('.mobile-menu').classList.toggle('open')"><span></span><span></span><span></span></button>
     </div>
     <div class="mobile-menu">
-      <a href="/">首页</a><a href="/crypto/">Crypto</a><a href="/crypto/bn-alpha.html">BN Alpha</a><a href="/crypto/watchlist.html" class="active">观察池</a>
+      <a href="/" onclick="this.parentElement.classList.remove('open')">首页</a>
+      <a href="/36/" onclick="this.parentElement.classList.remove('open')">养虾36计</a>
+      <a href="/24/" onclick="this.parentElement.classList.remove('open')">虾24章经</a>
+      <a href="/blog/" onclick="this.parentElement.classList.remove('open')">思享录</a>
+      <a href="/game/" onclick="this.parentElement.classList.remove('open')">ShrimpFi</a>
+      <a href="/crypto/" onclick="this.parentElement.classList.remove('open')">Crypto Alpha</a>
+      <a href="/crypto/bn-alpha.html" onclick="this.parentElement.classList.remove('open')">BN Alpha</a>
+      <a href="/crypto/watchlist.html" class="active" onclick="this.parentElement.classList.remove('open')">观察池</a>
+      <a href="/stars/" onclick="this.parentElement.classList.remove('open')">明星追踪</a>
     </div>
   </nav>
   <main class="wrap">
@@ -581,10 +594,22 @@
       </div>
     </div>
   </main>
-  <footer><div class="wrap">
-    <p>SingClaw · Crypto Watchlist · 每4h自动更新 · 数据来源 Binance</p>
-    <p style="margin-top:6px">⚠️ 仅供研究参考，不构成投资建议</p>
-  </div></footer>
+  <footer style="border-top:1px solid var(--sc-border);padding:40px 0 32px;margin-top:48px">
+    <div class="wrap" style="text-align:center">
+      <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:16px">
+        <a href="/" style="color:var(--sc-dim);font-size:13px;font-weight:500">首页</a>
+        <a href="/36/" style="color:var(--sc-dim);font-size:13px;font-weight:500">养虾36计</a>
+        <a href="/24/" style="color:var(--sc-dim);font-size:13px;font-weight:500">虾24章经</a>
+        <a href="/blog/" style="color:var(--sc-dim);font-size:13px;font-weight:500">思享录</a>
+        <a href="/game/" style="color:var(--sc-dim);font-size:13px;font-weight:500">ShrimpFi</a>
+        <a href="/crypto/" style="color:var(--sc-dim);font-size:13px;font-weight:500">Crypto Alpha</a>
+        <a href="/stars/" style="color:var(--sc-dim);font-size:13px;font-weight:500">明星追踪</a>
+      </div>
+      <p style="color:var(--sc-muted);font-size:12px">SingClaw · Crypto Watchlist · 每4h自动更新 · 数据来源 Binance</p>
+      <p style="color:var(--sc-muted);font-size:11px;margin-top:6px">⚠️ 仅供研究参考，不构成投资建议</p>
+      <p style="color:var(--sc-muted);font-size:11px;margin-top:8px">© 2026 SingClaw. All rights reserved.</p>
+    </div>
+  </footer>
   <script>
     function filterTable(tag){
       document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));

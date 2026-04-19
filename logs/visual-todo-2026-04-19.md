@@ -20,7 +20,7 @@
 
 ## 🚨 TOP 2 视觉改进点
 
-### 改进 #1：Blog Footer 仍为纯 inline style，第三轮连续未修复（严重度 🟡 中）
+### 改进 #1：Blog Footer 仍为纯 inline style，第三轮连续未修复（严重度 🟡 中） ✅ 已修复 — 2026-04-19 01:30 UTC commit 136edd1
 
 **现状（blog/index.html L111-115）：**
 ```html
