@@ -158,7 +158,13 @@
     .cta-card p{color:var(--sc-dim);margin-bottom:24px}
 
     /* ── Footer ── */
-    footer{padding:40px 0;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-muted);font-size:12px}
+    footer{padding:48px 0 36px;border-top:1px solid var(--sc-border);text-align:center;color:var(--sc-dim);font-size:13px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--sc-accent),transparent)}
+    footer a{color:var(--sc-accent);transition:opacity .2s}
+    footer a:hover{opacity:.7}
+    .footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:14px;font-size:13px}
+    .footer-links a{color:var(--sc-dim);transition:color .2s}
+    .footer-links a:hover{color:var(--sc-accent)}
 
     /* ── Responsive ── */
     @media(max-width:768px){
@@ -741,8 +747,19 @@
 <!-- Footer -->
 <footer>
   <div class="sc-w">
-    <p>© 2026 SingClaw · Crypto Alpha 分析系统 · Built with 🧠 by Agent Team</p>
-    <p style="margin-top:8px;font-size:11px">⚠️ 本页面仅供学习研究，不构成投资建议。加密货币投资风险极大，请自行评估。</p>
+    <div class="footer-links">
+      <a href="/36/">养虾36计</a>
+      <a href="/24/">虾24章经</a>
+      <a href="/blog/">思享录</a>
+      <a href="/game/">ShrimpFi</a>
+      <a href="/crypto/">Crypto Alpha</a>
+      <a href="/stars/">明星追踪</a>
+      <a href="/skills-wiki.html">Skills Wiki</a>
+      <a href="/opc-onboarding.html">OPC 入门</a>
+    </div>
+    <p>© 2026 <a href="/">SingClaw</a> · Crypto Alpha 分析系统 · Built with 🧠 by Agent Team</p>
+    <p style="margin-top:6px;font-size:11px">@马星克 Maxink</p>
+    <p style="margin-top:6px;font-size:11px">⚠️ 本页面仅供学习研究，不构成投资建议。加密货币投资风险极大，请自行评估。</p>
   </div>
 </footer>
 
