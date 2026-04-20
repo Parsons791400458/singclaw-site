@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SingClaw Docs · NPDP产品团队知识库</title>
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/docsifyjs/docsify/themes/dark.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <style>
+    :root {
+      --theme-color: #4f46e5;
+      --sidebar-name-font-size: 1.1rem;
+      --sidebar-nav-link-font-size: 0.9rem;
+      --content-max-width: 900px;
+      --navbar-root-color: #333;
+      --navbar-root--active-color: var(--theme-color);
+    }
+    .app-name { font-weight: 700; color: var(--theme-color); }
+    .sidebar-nav li { margin: 2px 0; }
+    .sidebar-nav a { line-height: 1.5; }
+    .markdown-section { padding: 2rem 1rem; }
+    .markdown-section table { font-size: 0.85rem; }
+    .markdown-section table th,
+    .markdown-section table td { padding: 6px 12px; }
+    @media print { .sidebar, .sidebar-toggle { display: none; } }
+  </style>
+</head>
+<body>
+  <div id="app">加载中...</div>
+  <script>
+    window.$docsify = {
+      name: '🦞 SingClaw Docs',
+      repo: 'https://github.com/Parsons791400458/singclaw-site',
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      search: {
+        maxAge: 3600000,
+        paths: 'auto',
+        placeholder: '搜索文档...',
+        noData: '没有找到结果',
+        depth: 3
+      },
+      pagination: {
+        previousText: '上一篇',
+        nextText: '下一篇',
+        crossChapter: true,
+        crossChapterText: true
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.beforeEach(function(html) {
+            return html;
+          });
+          hook.afterEach(function(html) {
+            var footer = '<hr><p style="text-align:center;color:#999;font-size:12px">SingClaw NPDP Docs · 自动同步 · 最后更新: ' + new Date().toLocaleDateString('zh-CN') + '</p>';
+            return html + footer;
+          });
+        }
+      ]
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/dist/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+</body>
+</html>
