@@ -13,6 +13,7 @@
 
 - **🚀 Go-To-Market**
   - [SC-001 SingClaw GTM渠道策略](gtm/sc-001-channel-strategy.md)
+  - [SC-001 首条社交帖子文案（草案）](gtm/sc-001-first-post-draft.md)
 
 - **📚 学习材料**
   - [团队学习：Product management on the AI exponential](learning/product-management-ai-exponential-2026-04-20.md)
