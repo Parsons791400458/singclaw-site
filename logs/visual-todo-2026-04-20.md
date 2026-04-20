@@ -44,7 +44,7 @@ Footer HTML 已升级至 `footer-links` 结构 + 8 项标准链接 ✅，但 CSS
 
 ---
 
-### 改进 #2：Blog Footer hover 存在双重效果叠加（严重度 🟢 低）
+### 改进 #2：Blog Footer hover 存在双重效果叠加（严重度 🟢 低） ✅ 已修复 commit b92611b
 
 **现状（blog/index.html CSS 第 44-48 行）：**
 ```css

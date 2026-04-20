@@ -3,8 +3,6 @@
   "cleanUrls": true,
   "trailingSlash": true,
   "rewrites": [
-    { "source": "/", "destination": "/home/index.html" },
-    { "source": "/docs", "destination": "/docs-docs/index.html" },
-    { "source": "/docs/:path*", "destination": "/docs-docs/index.html" }
+    { "source": "/", "destination": "/home/index.html" }
   ]
 }

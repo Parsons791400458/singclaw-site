@@ -1,7 +1,7 @@
 #!/bin/bash
 # 自动从 docs/ 目录生成 _sidebar.md
 DOCS_DIR="../docs"
-SIDEBAR_FILE="../docs-docs/_sidebar.md"
+SIDEBAR_FILE="../docs/_sidebar.md"
 
 cat > "$SIDEBAR_FILE" << 'EOF'
 - **🏠 首页**
