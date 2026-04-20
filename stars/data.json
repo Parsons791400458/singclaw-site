@@ -14,7 +14,7 @@
       "avatar_url": "",
       "weibo_id": "1727858283",
       "xiaohongshu_id": "",
-      "category": "品质艺人",
+      "category": "近期热点艺人",
       "description": "",
       "created_at": "2026-04-15 08:24:26",
       "updated_at": "2026-04-15 08:24:26",
@@ -510,11 +510,11 @@
       "avatar_url": "",
       "weibo_id": "",
       "xiaohongshu_id": "",
-      "category": "短剧明星",
+      "category": "环大陆艺人",
       "description": "《吾岸》主演，饰演樊霄。中泰合拍剧，改编自小说《四面佛》。2026年商务代言大户，花西子/花间颂等品牌。",
       "created_at": "2026-04-15 06:45:38",
       "updated_at": "2026-04-15 08:08:13",
-      "bio": "新生代短剧/网剧演员，活跃于短剧赛道。",
+      "bio": "环大陆耽美剧男艺人，耽美圈高人气，CP向内容热度高",
       "upcoming_dramas": "",
       "recent_business": "待补充",
       "hot_news": ""
@@ -526,11 +526,11 @@
       "avatar_url": "",
       "weibo_id": "",
       "xiaohongshu_id": "",
-      "category": "短剧明星",
+      "category": "环大陆艺人",
       "description": "《吾岸》主演，饰演游书朗。1995年9月12日出生于山东菏泽，毕业于北京电影学院。Instagram粉丝97K。2026年2-3月澳门百老汇演唱会。",
       "created_at": "2026-04-15 06:45:38",
       "updated_at": "2026-04-15 08:08:13",
-      "bio": "新生代短剧/网剧演员，活跃于短剧赛道。",
+      "bio": "环大陆耽美剧男艺人，以男男CP组合获得大量关注和粉丝氪金",
       "upcoming_dramas": "",
       "recent_business": "待补充",
       "hot_news": ""
@@ -622,11 +622,11 @@
       "avatar_url": "",
       "weibo_id": "",
       "xiaohongshu_id": "",
-      "category": "短剧明星",
+      "category": "环大陆艺人",
       "description": "",
       "created_at": "2026-04-15 06:46:49",
       "updated_at": "2026-04-15 06:46:49",
-      "bio": "新生代短剧/网剧演员，活跃于短剧赛道。",
+      "bio": "环大陆耽美剧男艺人，以耽美题材/男男CP获得大量关注和粉丝氪金",
       "upcoming_dramas": "",
       "recent_business": "待补充",
       "hot_news": ""
@@ -718,11 +718,11 @@
       "avatar_url": "",
       "weibo_id": "",
       "xiaohongshu_id": "",
-      "category": "短剧明星",
+      "category": "环大陆艺人",
       "description": "",
       "created_at": "2026-04-15 06:46:10",
       "updated_at": "2026-04-15 06:46:10",
-      "bio": "新生代短剧/网剧演员，活跃于短剧赛道。",
+      "bio": "环大陆耽美剧男艺人，以男男CP卖腐获得流量，粉丝活跃度高",
       "upcoming_dramas": "",
       "recent_business": "待补充",
       "hot_news": ""
@@ -758,6 +758,31 @@
       "upcoming_dramas": "",
       "recent_business": "Versace全球代言人、伊利金典代言人、溪木源代言人、Stuart Weitzman代言人",
       "hot_news": ""
+    },
+    {
+      "name": "汪苏泷",
+      "category": "品质艺人",
+      "bio": "实力歌手/音乐人，多首国民级热曲，综艺表现自然，国民度高"
+    },
+    {
+      "name": "周杰伦",
+      "category": "品质艺人",
+      "bio": "华语乐坛顶级歌手/音乐人，作品传唱度极高，影响力跨越多代人"
+    },
+    {
+      "name": "李小冉",
+      "category": "近期热点艺人",
+      "bio": "演员，因参与浪姐综艺话题度窜升，社交媒体讨论度高"
+    },
+    {
+      "name": "张翅",
+      "category": "短剧明星",
+      "bio": "短剧演员，主业出演各类热门短剧，短剧圈代表性面孔"
+    },
+    {
+      "name": "陈添祥",
+      "category": "短剧明星",
+      "bio": "短剧演员，出演多部热门短剧，短剧圈人气艺人"
     }
   ],
   "posts": [
