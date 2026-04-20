@@ -1,5 +1,5 @@
 - **🏠 首页**
-  - [项目总览](/)
+  - [项目总览](README.md)
   - [Sprint看板](SPRINT.md)
   - [Backlog](BACKLOG.md)
   - [团队协作](TEAM_PROTOCOL.md)

@@ -1,24 +1,21 @@
 #!/bin/bash
-# 自动从 docs/ 目录生成 _sidebar.md
-DOCS_DIR="../docs"
-SIDEBAR_FILE="../docs/_sidebar.md"
+# 从 docs/ 目录生成 _sidebar.md
+# 供 Docsify 使用（basePath=/docs/，所以路径相对于docs/目录）
+DOCS_DIR="."
+SIDEBAR_FILE="_sidebar.md"
 
 cat > "$SIDEBAR_FILE" << 'EOF'
 - **🏠 首页**
-  - [项目总览](/)
+  - [项目总览](README.md)
   - [Sprint看板](SPRINT.md)
   - [Backlog](BACKLOG.md)
   - [团队协作](TEAM_PROTOCOL.md)
 
 EOF
 
-# 遍历子目录生成导航
-for dir in $(ls -d "$DOCS_DIR"/*/ 2>/dev/null | sort); do
-  dirname=$(basename "$dir")
-  # 跳过backtest（可能有二进制）
+for dir in $(ls -d */ 2>/dev/null | sort); do
+  dirname=${dir%/}
   [ "$dirname" = "backtest" ] && continue
-  
-  # 首字母大写+emoji映射
   case $dirname in
     sprints) label="🏃 Sprint日志" ;;
     prd) label="📋 产品需求" ;;
@@ -32,17 +29,13 @@ for dir in $(ls -d "$DOCS_DIR"/*/ 2>/dev/null | sort); do
     user-stories) label="👤 用户故事" ;;
     *) label="$dirname" ;;
   esac
-  
   echo "- **${label}**" >> "$SIDEBAR_FILE"
-  
-  # 列出该目录下的md文件
   for f in $(find "$dir" -maxdepth 1 -name "*.md" | sort); do
     fname=$(basename "$f")
     title=$(head -5 "$f" | grep "^#" | head -1 | sed 's/^#\+ *//')
     [ -z "$title" ] && title="${fname%.md}"
     echo "  - [${title}](${dirname}/${fname})" >> "$SIDEBAR_FILE"
   done
-  
   echo "" >> "$SIDEBAR_FILE"
 done
 
