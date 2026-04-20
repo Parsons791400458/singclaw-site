@@ -3,6 +3,8 @@
   "cleanUrls": false,
   "trailingSlash": false,
   "routes": [
-    { "src": "/", "dest": "/home/index.html" }
+    { "src": "/", "dest": "/home/index.html" },
+    { "src": "/wiki$", "status": 301, "headers": { "Location": "/wiki/" }},
+    { "src": "/wiki/$", "dest": "/wiki/index.html" }
   ]
 }
