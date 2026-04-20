@@ -82,6 +82,7 @@
   - [Sprint #1 小时报告 — 2026-04-20 00:28 UTC (08:28 CST)](sprints/hourly-2026-04-20-00.md)
   - [Sprint #1 小时报告 — 2026-04-20 01:48 UTC (09:48 CST)](sprints/hourly-2026-04-20-01.md)
   - [Sprint #1 小时报告 — 2026-04-20 03:18 UTC (11:18 CST)](sprints/hourly-2026-04-20-03.md)
+  - [Sprint #1 小时报告 — 2026-04-20 04:25 UTC (12:25 CST)](sprints/hourly-2026-04-20-11.md)
   - [📚 NPDP团队学习会 + 产品优化头脑风暴](sprints/learning-session-2026-04-20.md)
   - [🗓️ Daily Standup — 2026-04-17 (Sprint #1 Day 1)](sprints/standup-2026-04-17.md)
   - [🏃 Sprint #1 每日站会 — 2026-04-20 (周一)](sprints/standup-2026-04-20.md)
